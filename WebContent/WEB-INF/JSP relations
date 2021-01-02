@@ -1,0 +1,2 @@
+JSP relations to each other.
+Class.jsp -> FileUpload.jsp -> StudentFromFile.java -> FileUploadConfirmation -> Class.jsp
