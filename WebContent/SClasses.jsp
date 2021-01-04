@@ -135,7 +135,7 @@
 						<%for(String cname : classnames){
 							ClassObject thisclass = classtoprof.get(cname);
 						%>
-							<button class="SClassesbutton" name="classid" value = "=<%thisclass.getClassid();%>"> 
+							<button class="SClassesbutton" name="classid" value = "<%out.println(thisclass.getClassid());%>"> 
 								<%out.println(thisclass.getCoursename());%><br>
 								Instructor: <%out.println(thisclass.getInstructorName());%><br>
 								DateStart-DateEnd: <%out.println(thisclass.getdateStart()+" to "+thisclass.getdateEnd());%><br>

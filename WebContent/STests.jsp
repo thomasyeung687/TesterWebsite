@@ -36,7 +36,7 @@
     	try {
 			Statement st = connection.createStatement();
 			ResultSet rSet;
-			rSet = st.executeQuery("SELECT * FROM testersitedatabase.allclasses WHERE idclass = '"+classid+"'"); //getting the row in allclasses in db (basically the class information)
+			rSet = st.executeQuery("SELECT * FROM testersitedatabase.testdns WHERE idclass = '"+classid+"'"); //getting the test ids from db
 			rSet.next();
 			
 			Statement st1 = connection.createStatement(); 
@@ -59,8 +59,8 @@
     	}catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("SShowClass.jsp SQL ERROR");
-			out.print("SShowClass.jsp SQL ERROR");
+			System.out.println("STests.jsp SQL ERROR");
+			out.print("STests.jsp SQL ERROR");
 		}
     %>        
           
@@ -102,7 +102,7 @@
                         <a href="SClasses.jsp" ><i class="fa fa-desktop "></i>Classes <!-- <span class="badge">Included</span> --></a>
                     </li>
                     
-                    <li class="link-of-link">
+                    <li class="active-link">
                         <a href="STests.jsp" ><i class="fa fa-desktop "></i>Tests <!-- <span class="badge">Included</span> --></a>
                     </li>
                     
@@ -119,7 +119,7 @@
                     <div class="col-md-12">
                      <h2><%out.println(thisclass.getCoursename()); %></h2>
 					<hr>
-					<h3>Announcements</h3>
+					<h3>Tests</h3>
 					<hr>
                     </div>
                 </div>          

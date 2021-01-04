@@ -61,7 +61,6 @@ border-color: #F0F0F0;
 min-height: 80px;
 }
 
-
 .nav > li > a > i {
     margin-right:10px;
 }
@@ -79,6 +78,10 @@ min-height: 80px;
     }
 .active-link {
     background-color:#f3f3f3;
+}
+.link-of-link {
+	background-color:#f3f3f3;
+	text-align:center;
 }
     
 /*==============================================

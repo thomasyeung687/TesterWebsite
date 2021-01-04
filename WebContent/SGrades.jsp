@@ -106,7 +106,7 @@
                         <a href="STests.jsp" ><i class="fa fa-desktop "></i>Tests <!-- <span class="badge">Included</span> --></a>
                     </li>
                     
-                    <li class="link-of-link">
+                    <li class="active-link">
                         <a href="SGrades.jsp" ><i class="fa fa-desktop "></i>Grades <!-- <span class="badge">Included</span> --></a>
                     </li>
                 </ul>
@@ -119,7 +119,7 @@
                     <div class="col-md-12">
                      <h2><%out.println(thisclass.getCoursename()); %></h2>
 					<hr>
-					<h3>Announcements</h3>
+					<h3>Grades</h3>
 					<hr>
                     </div>
                 </div>          

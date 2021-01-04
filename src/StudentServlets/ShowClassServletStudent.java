@@ -16,6 +16,7 @@ public class ShowClassServletStudent extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String classid = request.getParameter("classid");
+		System.out.println("hello"+classid);
 		HttpSession session = request.getSession();
 		session.setAttribute("classid", classid);
 		response.sendRedirect("SShowClass.jsp");
