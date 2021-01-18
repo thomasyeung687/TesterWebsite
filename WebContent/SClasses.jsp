@@ -133,7 +133,7 @@
 					<hr>
 					<form action="ShowClassServletStudent" method="get">
 						<%for(String cname : classnames){
-							ClassObject thisclass = classtoprof.get(cname);
+							ClassObject thisclass = classtoprof.get(cname); //getting classobject from classtoprof tree using cname as the key
 						%>
 							<button class="SClassesbutton" name="classid" value = "<%out.println(thisclass.getClassid());%>"> 
 								<%out.println(thisclass.getCoursename());%><br>

@@ -32,8 +32,8 @@
     <%
     	Connection connection = DBConnection.getDBConnection();
     	String classid = ((String) session.getAttribute("classid")).trim();
-    	ClassObject thisclass = new ClassObject();
-    	try {
+    	ClassObject thisclass = (ClassObject) session.getAttribute("thisclass"); //the class object created in ShowClassServlet
+    	/* try {
 			Statement st = connection.createStatement();
 			ResultSet rSet;
 			rSet = st.executeQuery("SELECT * FROM testersitedatabase.allclasses WHERE idclass = '"+classid+"'"); //getting the row in allclasses in db (basically the class information)
@@ -61,7 +61,7 @@
 			e.printStackTrace();
 			System.out.println("SShowClass.jsp SQL ERROR");
 			out.print("SShowClass.jsp SQL ERROR");
-		}
+		} */
     %>        
           
     <div id="wrapper">
@@ -91,22 +91,23 @@
         <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse">
                 <ul class="nav" id="main-menu">
-                 
-
-
                     <li >
                         <a href="HomeStudent.jsp" ><i class="fa fa-desktop "></i>Home <!-- <span class="badge">Included</span> --></a>
                     </li>
-                    
-                    <li class="active-link">
+                
+                    <li>
                         <a href="SClasses.jsp" ><i class="fa fa-desktop "></i>Classes <!-- <span class="badge">Included</span> --></a>
                     </li>
                     
-                    <li class="link-of-link">
+                    <li>
+                        <a href="SShowClass.jsp" ><i class="fa fa-desktop "></i><%out.println(thisclass.getCoursename());%> <!-- <span class="badge">Included</span> --></a>
+                    </li>
+                    
+                    <li class="link-of-linkcenter">
                         <a href="STests.jsp" ><i class="fa fa-desktop "></i>Tests <!-- <span class="badge">Included</span> --></a>
                     </li>
                     
-                    <li class="active-link">
+                    <li class="link-of-link">
                         <a href="SGrades.jsp" ><i class="fa fa-desktop "></i>Grades <!-- <span class="badge">Included</span> --></a>
                     </li>
                 </ul>

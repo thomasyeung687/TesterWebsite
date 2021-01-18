@@ -169,6 +169,7 @@
  --%>
  
  <!DOCTYPE html>
+<%@page import="com.testersite.model.Question"%>
 <%@page import="com.testersite.model.Test"%>
 <%@page import="java.util.Date"%>
 <%@page import="com.testersite.model.ClassObject"%>
@@ -201,11 +202,13 @@
 		}
 	%>
     <%
-    	Connection connection = DBConnection.getDBConnection();
-    	String classid = ((String) session.getAttribute("classid")).trim();
-    	ClassObject thisclass = (ClassObject) session.getAttribute("thisclass"); //the class object created in ShowClassServlet
-    	ArrayList<Test> availibleTests = new ArrayList<>(); //arraylist of test objects of available tests.
-    	try {
+    	Connection connection = DBConnection.getDBConnection(); 
+   	 	ClassObject thisclass = (ClassObject) session.getAttribute("thisclass"); //the class object created in ShowClassServlet
+    	Test thisTest = (Test) session.getAttribute("thistest"); //the test object created in TakeTestServlet
+    	
+    	ArrayList<Question> testQuestions = new ArrayList<>(); //arraylist of test objects of available tests.
+    	
+    	/* try {
 			Statement st = connection.createStatement();
 			ResultSet rSet;
 			rSet = st.executeQuery("SELECT * FROM testersitedatabase.testdns WHERE idclass = '"+classid+"'"); //getting all tests in testdns 
@@ -242,7 +245,7 @@
 			e.printStackTrace();
 			System.out.println("SShowClass.jsp SQL ERROR");
 			out.print("SShowClass.jsp SQL ERROR");
-		}
+		} */
     %>        
           
     <div id="wrapper">
@@ -301,17 +304,28 @@
                     <div class="col-md-12">
                      <h2><%out.println(thisclass.getCoursename()); %></h2>
 					<hr>
-					<h3>Tests</h3>
+					<h3>Test name: <%out.println(thisTest.getTestName()); %></h3>
+					<h4>Test description: <%out.println(thisTest.getTestDescription()); %></h4>
+					<h4>Test instructions: <%out.println(thisTest.getTestInstructions()); %></h4>
 					<hr>
-					<form action="TakeTestServlet" method="get">
-						<%for(Test test : availibleTests){
-							%>
-								<button class="STestsbutton" name="testid" value = "<%out.println(test.getTestId());%>"> 
-									<%out.println(test.getTestName());%><br>
-									Test description: <%out.println(test.getTestDescription());%><br>
-									Due Date: <%out.println(test.gettestDateEnd());%><br>
-								</button> <br>
-							<%} %>
+					
+					<% if(thisTest.isForcedCompletion()){out.println("Once you start this exam, you have to complete it in one sitting.");} %> <br>
+					<% if(!(thisTest.getTimelimit() == 0)){
+							out.println("You will have "+thisTest.getTimelimit()+" minutes to complete this exam.");
+						}else{
+							out.println("You have unlimited time to complete this exam.");
+						}%> <br>
+					<% if(thisTest.getAllowBackButton()){
+							out.println("Going back to previous questions will not be permitted in this exam.");
+						}else{
+							out.println("You may traverse to previous questions in this exam.");
+						}%> <br>
+						
+					<!-- implement amt of attempts checker -->
+					
+					<br>
+					<form action="StartTestServlet" method="get">
+						<button>Start Test</button>
 					</form>
                     </div>
                 </div>          
