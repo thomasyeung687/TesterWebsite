@@ -302,30 +302,32 @@
         	<div id="page-inner">
                 <div class="row">
                     <div class="col-md-12">
-                     <h2><%out.println(thisclass.getCoursename()); %></h2>
+                    <h2><%out.println(thisclass.getCoursename()); %></h2>
 					<hr>
-					<h3>Test name: <%out.println(thisTest.getTestName()); %></h3>
-					<h4>Test description: <%out.println(thisTest.getTestDescription()); %></h4>
-					<h4>Test instructions: <%out.println(thisTest.getTestInstructions()); %></h4>
-					<hr>
-					
-					<% if(thisTest.isForcedCompletion()){out.println("Once you start this exam, you have to complete it in one sitting.");} %> <br>
-					<% if(!(thisTest.getTimelimit() == 0)){
-							out.println("You will have "+thisTest.getTimelimit()+" minutes to complete this exam.");
-						}else{
-							out.println("You have unlimited time to complete this exam.");
-						}%> <br>
-					<% if(thisTest.getAllowBackButton()){
-							out.println("Going back to previous questions will not be permitted in this exam.");
-						}else{
-							out.println("You may traverse to previous questions in this exam.");
-						}%> <br>
+					<div class="SShowTestText">
+						<h3>Test name: <%out.println(thisTest.getTestName()); %></h3>
+						<h4>Test description: <%out.println(thisTest.getTestDescription()); %></h4>
+						<h4>Test instructions: <%out.println(thisTest.getTestInstructions()); %></h4>
+						<hr>
 						
-					<!-- implement amt of attempts checker -->
-					
-					<br>
+						<% if(thisTest.isForcedCompletion()){out.println("Once you start this exam, you have to complete it in one sitting.");} %> <br>
+						<% if(!(thisTest.getTimelimit() == 0)){
+								out.println("You will have "+thisTest.getTimelimit()+" minutes to complete this exam.");
+							}else{
+								out.println("You have unlimited time to complete this exam.");
+							}%> <br>
+						<% if(thisTest.getAllowBackButton()){
+								out.println("Going back to previous questions will not be permitted in this exam.");
+							}else{
+								out.println("You may traverse to previous questions in this exam.");
+							}%> <br>
+							
+						<!-- implement amt of attempts checker -->
+						
+						<br>
+					</div>
 					<form action="StartTestServlet" method="get">
-						<button>Start Test</button>
+						<button class="SShowTestbutton">Start Test</button>
 					</form>
                     </div>
                 </div>          

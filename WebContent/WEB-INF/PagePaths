@@ -1,0 +1,13 @@
+Student taking test:
+HomeStudent->SClasses->ShowClassServletStudent->SShowClass->STests->TakeTestServlet->SShowTest->StartTestServlet->TestPage
+											  ->SGrade
+HomeStudent (Student Home page)
+SClasses (Shows student's classes)
+ShowClassServletStudent (Gets class information from mysql using classid and sends it to SShowClass)
+SShowClass (Shows the class's announcements. Also, there will be two new nav bar elements : Tests, and Grades) 
+STests/Grades (Shows all the tests/Grades in the class)
+TakeTestServlet (after clicking on a test in STests, You get sent to this servlet where the tests information is gathered from the DB)
+SShowTest (Page before you start the test which shows the test name, description, instructions as well as limitations of the student while taking the test timelimit etc)
+StartTestServlet (After clicking start test. Here we gather all the questions from the database and put it into the test object)
+TestPage (here the student will be able to answer questions of the test)
+

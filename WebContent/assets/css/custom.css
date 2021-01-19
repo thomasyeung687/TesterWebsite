@@ -149,5 +149,16 @@ min-height: 80px;
     =============================================*/
 .SClassesbutton {
 	width: 20%;
+	min-width: fit-content;
 	text-align: left;
+}
+.SShowTestText {
+	margin-left: 5%;
+}
+.SShowTestbutton {
+	float: right;
+	margin-right: 20%;
+}
+.TestPageTestQuestionsDiv {
+	margin-left: 5%;
 }

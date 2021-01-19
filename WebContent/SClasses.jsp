@@ -128,7 +128,7 @@
 	              		<%session.removeAttribute("joinclasserror"); 
 	              		session.removeAttribute("joinclassSuccess");%>
 						<input type="text" name="coursecode" placeholder="Course Code">
-						<input type="submit" value="create class">
+						<input type="submit" value="Join Class">
 					</form>
 					<hr>
 					<form action="ShowClassServletStudent" method="get">
