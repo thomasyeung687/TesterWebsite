@@ -12,10 +12,31 @@ public class FillInTheBlankQuestion extends Question{
 	private String str2;
 	public FillInTheBlankQuestion(int questionid,  int pointsWorth,String questiontitle, String question, String correctans, boolean casesensitive) {
 		super(questionid, questiontitle,"FillInTheBlankQuestion", pointsWorth, question); //default #question title is the num answers there are.
-		String[] questionstrings= question.split("[x]");
-		System.out.println(questionstrings[0]);
-		this.str1 = questionstrings[0];
-		this.str2 = questionstrings[1];
+		
+		ArrayList<String> strings = new ArrayList<String>();
+		int start = 0;
+		int endIndex = 0;
+		while(question.indexOf("[",start)> -1) {
+			//System.out.println(start);
+			int startIndex = question.indexOf("[", start)+1;
+			endIndex = question.indexOf("]", start);
+			strings.add(question.substring(start, startIndex-1).trim());
+			//System.out.println(startIndex);
+			//System.out.println(endIndex);
+			String blankString = question.substring(startIndex, endIndex); //this will contain x for [x] in question.
+			//System.out.println(blankString);
+			start = endIndex+1; //so we dont find the same ]
+		}
+		strings.add(question.substring(endIndex+1).trim());
+		
+		System.out.println("Arraylist length="+strings.size());
+		
+		str1 = strings.get(0);
+		str2 = strings.get(1);
+//		String[] questionstrings= question.split("[x]");
+//		System.out.println(questionstrings[0]);
+//		this.str1 = questionstrings[0];
+//		this.str2 = questionstrings[1];
 		this.correctans = Arrays.asList(correctans.split("~"));
 		this.casesensitive = casesensitive;
 	}

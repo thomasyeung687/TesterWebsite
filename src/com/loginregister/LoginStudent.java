@@ -45,6 +45,7 @@ public class LoginStudent extends HttpServlet {
 				rd.forward(request, response);
 			}
 		}catch (Exception e) {
+			System.out.println("Error in LoginStudentServlet");
 			System.out.println(e.getMessage());
 		}
 	}

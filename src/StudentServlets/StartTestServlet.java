@@ -76,6 +76,7 @@ public class StartTestServlet extends HttpServlet {
 						MultipartQuestion multi = new MultipartQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("questioncomponentids"));
 						//System.out.println(newfib.toString());
 						thisTest.addQuestionToQuestions(multi);
+						System.out.println("Question ids: "+multi.getQuestionCompoentids());
 					}
 					//here you can add it for others.
 				}else{

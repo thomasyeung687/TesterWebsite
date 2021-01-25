@@ -160,5 +160,10 @@ min-height: 80px;
 	margin-right: 20%;
 }
 .TestPageTestQuestionsDiv {
-	margin-left: 5%;
+/* 	margin-left: 5%;
+	width: 50%; */
+}
+.shortresponsequestion{
+	width:100%;
+	height:200px;
 }
