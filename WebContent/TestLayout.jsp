@@ -114,6 +114,7 @@
 	//System.out.println(test.toString());
 	ResultSet rset;
 	try{
+		System.out.println("Testlayout starts here!");
 		Statement st = con.createStatement();
 		rset = st.executeQuery("SELECT * FROM questionsdatabase.allquestiontable WHERE idtest = '"+test.getTestId()+"';");
 		while(rset.next()){ //while there are questions from allquestionstable with that idtest. we go into each row and get the table and questionid and find that question

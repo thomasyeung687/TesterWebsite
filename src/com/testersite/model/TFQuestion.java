@@ -5,36 +5,40 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TFQuestion extends Question{
-	private List<String> answers = new ArrayList<String>();
-	private String correctans;
-	public TFQuestion(int questionid,  int pointsWorth,String questiontitle, String question,  String correctans) {
+	public TFQuestion(int questionid,  int pointsWorth,String questiontitle, String question, String correctans) {
 		super(questionid, questiontitle,"TFQuestion", pointsWorth, question);
-		this.answers = Arrays.asList("True", "False");
-		this.correctans = correctans;
+		setCorrectAnswerString(correctans);
 	}
-	public void addAnswers(String ans) {
-		answers.add(ans);
-	}
-	public List<String> getAnswers(){
-		return answers;
-	}
-	public String getCorrectAns(){
-		return correctans;
+	public TFQuestion(int questionid,  int pointsWorth,String questiontitle, String question,  String answerChosen, String correctans) {
+		super(questionid, questiontitle,"TFQuestion", pointsWorth, question);
+		setAnswerChosen(answerChosen);
+		setCorrectAnswerString(correctans);
 	}
 	public static void main(String[] args) {
 		TFQuestion mc1 = new TFQuestion(1, 10,"1", "helloo", "True");
-		List<String> anschoicess = mc1.getAnswers();
-		System.out.println(anschoicess.toString());
-		System.out.println(mc1.toString());
+		System.out.println(mc1.calculatePtsReceived());
 	}
 	public String toString() {
 		String tostring = "";
 		tostring += getQuestionid()+" ";
 		tostring += getQuestiontitle()+" ";
 		tostring += getQuestion()+" ";
-		tostring += getAnswers()+" ";
-		tostring += getCorrectAns()+" ";
+		tostring += getCorrectAnswerString()+" ";
 		tostring += getPointsWorth();
 		return tostring;
+	}
+	@Override
+	public double calculatePtsReceived() {
+		if(getAnswerChosen() == null) {
+			System.out.println("There is no answer given. ID = " +this.getQuestionid());
+			return -1;
+		}
+		if(getAnswerChosen().trim().equals(getCorrectAnswerString().trim())) {
+			//System.out.println(getAnswerChosen() +"=="+ getCorrectAnswerString());
+			return setPointsReceived(getPointsWorth()); //sets ptsreceived to ptsworth and returns ptsreceived
+		}else {
+			//System.out.println(getAnswerChosen() +"!="+ getCorrectAnswerString());
+			return setPointsReceived(0);//sets ptsreceived to 0 and returns 0
+		}
 	}
 }

@@ -75,7 +75,6 @@ public class MultipartQuestion extends Question {
 					}else if(tablename.equals("questionsdatabase.truefalse")){
 						System.out.println("Adding new TF question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
 						TFQuestion newmcq = new TFQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"));
-						System.out.println(newmcq.getAnswers().toString());
 						questions.add(newmcq);
 					}else if(tablename.equals("questionsdatabase.shortanswer")){
 						System.out.println("Adding new SR question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
@@ -108,5 +107,14 @@ public class MultipartQuestion extends Question {
 			System.out.println("MultipartQuestion Exception trying to fetch question components");
 			System.out.println(exception.getLocalizedMessage());
 		}
+	}
+
+	@Override
+	public double calculatePtsReceived() {
+		int totalPtsReceived = 0;
+		for(Question question: questions) { //for each question in this multipart question, calculate pts received.
+			totalPtsReceived += question.calculatePtsReceived(); //accumulating the ptsreceived of each question.
+		}
+		return totalPtsReceived;
 	}
 }

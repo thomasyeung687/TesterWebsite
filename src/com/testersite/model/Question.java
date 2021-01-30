@@ -1,11 +1,17 @@
 package com.testersite.model;
 
-public class Question {
+public abstract class Question {
 	private int questionid;
 	private String questionType;
-	private int pointsWorth;
 	private String question;
 	private String questiontitle;
+	
+	private int pointsWorth;
+	private double pointsReceived; //amount of points received for this question
+
+	private String correctAnswerString; //taken from DB
+	private String answerChosen; //answer given by student
+	
 	public Question(String questionType, int pointsWorth, String question) {
 		this.questionType = questionType;
 		this.pointsWorth = pointsWorth;
@@ -18,12 +24,39 @@ public class Question {
 		this.pointsWorth = pointsWorth;
 		this.question = question;
 	}
+	public Question(int questionid, String questiontitle, String questionType, int pointsWorth, String question, String answerChosen) {
+		this.questionid = questionid;
+		this.questiontitle = questiontitle;
+		this.questionType = questionType;
+		this.pointsWorth = pointsWorth;
+		this.question = question;
+		this.answerChosen = answerChosen.trim();
+	}
+	public Question(int questionid, String questiontitle, String questionType, int pointsWorth, String question, String answerChosen, String correctAnswerString) {
+		this.questionid = questionid;
+		this.questiontitle = questiontitle;
+		this.questionType = questionType;
+		this.pointsWorth = pointsWorth;
+		this.question = question;
+		this.answerChosen = answerChosen.trim();
+		this.correctAnswerString = correctAnswerString.trim();
+	}
 	public String getQuestionType() {
 		return questionType;
 	}
 	public int getPointsWorth() {
 		return pointsWorth;
 	}
+	
+	public double setPointsReceived(double ptsreceived) {
+		this.pointsReceived = ptsreceived;
+		return ptsreceived;
+	}
+	
+	public double getPointsReceived() {
+		return pointsReceived;
+	}
+	
 	public String getQuestion() {
 		return question;
 	}
@@ -36,6 +69,23 @@ public class Question {
 	public int getQuestionid() {
 		return questionid;
 	}
+	
+	public String getCorrectAnswerString() {
+		return correctAnswerString;
+	}
+	public void setCorrectAnswerString(String CAnString) {
+		this.correctAnswerString = CAnString.trim();
+	}
+	
+	public String getAnswerChosen() { 
+		return answerChosen;
+	}
+	public void setAnswerChosen(String AnswerChosen) {
+		this.answerChosen = AnswerChosen.trim();
+	}
+	
+	public abstract double calculatePtsReceived() ;
+	
 	/*
 	 * public void setQuestionid(int questionid) { this.questionid = questionid; }
 	 */

@@ -152,10 +152,10 @@
                   	</div>
                   	<hr/>
 					
-					<form action="" method="post">
+					<form action="TestSubmitServlet" method="post">
 					<div class="TestPageTestQuestionsDiv">
-				  <% for(int n = 0; n<thisTest.getQuestionArray().size(); n++){ 
-					  Question question = thisTest.getQuestionArray().get(n);
+				  <% for(int n = 1; n<thisTest.getQuestionArray().size()+1; n++){
+					  Question question = thisTest.getQuestionArray().get(n-1); //no idea why this works
 					  //System.out.println(question.getQuestion());
 				  %>
 				  
@@ -205,7 +205,7 @@
 							FillInTheBlankQuestion fib = (FillInTheBlankQuestion) question;
 							List<String> correctans = fib.getCorrectans();
 							out.println(fib.getStr1());%>
-							<input type="text" class="fiblank">
+							<input type="text" class="fiblank" name="q<%=n %>">
 							<% out.println(fib.getStr2() +"<br>");
 							if(fib.isCasesensitive()){%>
 								</br>
@@ -218,25 +218,26 @@
 							FillInMultipleBlankQuestion fimb = (FillInMultipleBlankQuestion) question;
 							List<List<String>> correctans = fimb.getCorrectans();
 							ArrayList<String> strings = fimb.getStrings();
+							ArrayList<String> blank = fimb.getBlank();
 							for(int i = 0; i < strings.size()-1; i++){
 								out.println(strings.get(i));
-								%><input type="text" class="fiblank"> <%
+								%><input type="text" class="fiblank" name="q<%=n+blank.get(i)%>"> <%
 							}
 							out.println(strings.get(strings.size()-1)+"<br>");
 							if(fimb.isCasesensitive()){%>
 							</br>
 							<span>Case Sensitive: &#10004;</span>	
-						<%}else{%>
-							</br>
-							<span>Case Sensitive: </span>
-						<%}
-							if(fimb.isPartialcredit()){%>
-							</br>
-							<span>Partial Credit: &#10004;</span>	
-						<%}else{%>
-							</br>
-							<span>Partial Credit: </span>
-						<%}
+							<%}else{%>
+								</br>
+								<span>Case Sensitive: </span>
+							<%}
+								if(fimb.isPartialcredit()){%>
+								</br>
+								<span>Partial Credit: &#10004;</span>	
+							<%}else{%>
+								</br>
+								<span>Partial Credit: </span>
+							<%}
 						}else if(question instanceof MultipartQuestion){
 							MultipartQuestion multi = (MultipartQuestion) question;
 							/* String questionids = multi.getQuestions().toString(); */
@@ -266,7 +267,7 @@
 									List<String> anschoices = mc.getAnswers();
 									for(String s : anschoices){
 										//System.out.println(mc.getCorrectAns());
-										%> <input type="radio" name="q<%=n %>" value="<%out.println(s); %>" required> <%out.println(s); %><br> <%
+										%> <input type="radio" name="q<%=questionNum %>" value="<%out.println(s); %>" required> <%out.println(s); %><br> <%
 									}
 								}else if(questionComponent instanceof TFQuestion){
 									TFQuestion tf = (TFQuestion) questionComponent;
@@ -274,7 +275,7 @@
 									List<String> anschoices = tf.getAnswers();
 									for(String s: anschoices){
 										//System.out.println(tf.getCorrectAns());
-										%> <input type="radio" name="q<%=n %>" value="<%out.println(s); %>" required> <%out.println(s); %><br> <%
+										%> <input type="radio" name="q<%=questionNum %>" value="<%out.println(s); %>" required> <%out.println(s); %><br> <%
 									}
 									
 								}else if(questionComponent instanceof ShortResponseQuestion){
@@ -287,13 +288,13 @@
 									List<String> correctans = ca.getCorrectanswers();
 									for(String s: anschoices){
 										//System.out.println(tf.getCorrectAns());
-										%> <input type="checkbox" name="q<%=n %>" value="<%out.println(s); %>" > <%out.println(s); %><br> <%
+										%> <input type="checkbox" name="q<%=questionNum %>" value="<%out.println(s); %>" > <%out.println(s); %><br> <%
 									}
 								}else if(questionComponent instanceof FillInTheBlankQuestion){
 									FillInTheBlankQuestion fib = (FillInTheBlankQuestion) questionComponent;
 									List<String> correctans = fib.getCorrectans();
 									out.println(fib.getStr1());%>
-									<input type="text" class="fiblank">
+									<input type="text" class="fiblank" name="q<%=questionNum %>">
 									<% out.println(fib.getStr2() +"<br>");
 									for(String s: correctans){
 										//System.out.println(tf.getCorrectAns());%>
@@ -310,10 +311,12 @@
 								}else if(questionComponent instanceof FillInMultipleBlankQuestion){
 									FillInMultipleBlankQuestion fimb = (FillInMultipleBlankQuestion) questionComponent;
 									List<List<String>> correctans = fimb.getCorrectans();
+									ArrayList<String> blank = fimb.getBlank();
 									ArrayList<String> strings = fimb.getStrings();
 									for(int i = 0; i < strings.size()-1; i++){
 										out.println(strings.get(i));
-										%><input type="text" class="fiblank"> <%
+										String inputname = questionNum+blank.get(i);
+										%><input type="text" class="fiblank" name="q<%=inputname%>"> <%
 									}
 									out.println(strings.get(strings.size()-1)+"<br>");
 									int blankindex =0; 
