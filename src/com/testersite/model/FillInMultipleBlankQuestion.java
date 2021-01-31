@@ -14,7 +14,7 @@ public class FillInMultipleBlankQuestion extends Question{
 	private boolean casesensitive;
 	private boolean partialcredit;
 	public FillInMultipleBlankQuestion(int questionid,  int pointsWorth,String questiontitle, String question, String correctans, boolean casesensitive, boolean partialcredit) {
-		super(questionid, questiontitle,"FillInTheBlankQuestion", pointsWorth, question); //default #question title is the num answers there are.
+		super(questionid, questiontitle,"FillInMultipleBlankQuestion", pointsWorth, question); //default #question title is the num answers there are.
 		if(!casesensitive) {
 			setCorrectAnswerString(correctans.toLowerCase());
 		}else {
@@ -43,7 +43,7 @@ public class FillInMultipleBlankQuestion extends Question{
 			strings.add(" ");
 		}
 			
-		/**/eachblankscorrectanswers= Arrays.asList(getCorrectAnswerString().split("\\|")); //fat~skinny~big~large~|smelly~disgusting~tasty~|napped~slept~coughed~| -> fat~skinny~big~large~,smelly~disgusting~tasty~,napped~slept~coughed~
+		eachblankscorrectanswers= Arrays.asList(getCorrectAnswerString().split("\\|")); //fat~skinny~big~large~|smelly~disgusting~tasty~|napped~slept~coughed~| -> fat~skinny~big~large~,smelly~disgusting~tasty~,napped~slept~coughed~
 		//System.out.println(eachblankscorrectanswers);
 		List<List<String>> correctlyformatedcorrectans = new ArrayList<List<String>>();
 		for(int i = 0; i < blank.size(); i++) {
@@ -58,10 +58,8 @@ public class FillInMultipleBlankQuestion extends Question{
 		super(questionid, questiontitle,"FillInTheBlankQuestion", pointsWorth, question); //default #question title is the num answers there are.
 		if(!casesensitive) {
 			setCorrectAnswerString(correctans.toLowerCase());
-			answersGiven = Arrays.asList(answerChosen.toLowerCase().split("~")); //retrieving each blanks given answer
 		}else {
 			setCorrectAnswerString(correctans);
-			answersGiven = Arrays.asList(answerChosen.split("~")); //retrieving each blanks given answer
 		}
 		setAnswerChosen(answerChosen);
 		
@@ -84,7 +82,7 @@ public class FillInMultipleBlankQuestion extends Question{
 			strings.add(" ");
 		}
 			
-		/**/eachblankscorrectanswers= Arrays.asList(getCorrectAnswerString().split("\\|")); //fat~skinny~big~large~|smelly~disgusting~tasty~|napped~slept~coughed~| -> fat~skinny~big~large~,smelly~disgusting~tasty~,napped~slept~coughed~
+		eachblankscorrectanswers= Arrays.asList(getCorrectAnswerString().split("\\|")); //fat~skinny~big~large~|smelly~disgusting~tasty~|napped~slept~coughed~| -> fat~skinny~big~large~,smelly~disgusting~tasty~,napped~slept~coughed~
 		//System.out.println(eachblankscorrectanswers);
 		List<List<String>> correctlyformatedcorrectans = new ArrayList<List<String>>();
 		for(int i = 0; i < blank.size(); i++) {
@@ -126,6 +124,17 @@ public class FillInMultipleBlankQuestion extends Question{
 	public List<String> getEachBlanksCorrectAnswers(){
 		return eachblankscorrectanswers;
 	}
+	public void setAnswerChosen(String answerChosen) {
+		super.setAnswerChosen(answerChosen.trim());
+		if(!casesensitive) {
+			answersGiven = Arrays.asList(answerChosen.toLowerCase().split("~")); //retrieving each blanks given answer
+		}else {
+			answersGiven = Arrays.asList(answerChosen.split("~")); //retrieving each blanks given answer
+		}
+	}
+	public List<String> getAnswersGiven() {
+		return answersGiven;
+	}
 	public String toString() {
 		String tostring = "";
 		tostring += "Questionid ="+getQuestionid()+" \n";
@@ -140,9 +149,11 @@ public class FillInMultipleBlankQuestion extends Question{
 		tostring += "Points Worth ="+getPointsWorth();
 		return tostring;
 	}
+	
 	public static void main(String[] arg) {
-		FillInMultipleBlankQuestion question = new FillInMultipleBlankQuestion(46, 10,"1", "The [a] cat ate its [b] food and [c]","Fat~skinny~big~large~|smelly~disgusting~tasty~|napped~slept~coughed~|", false, true, "fat~disgusting~napped~");
-		System.out.println(question.toString());
+		FillInMultipleBlankQuestion question = new FillInMultipleBlankQuestion(46, 10,"1", "The [a] cat ate its [b] food and [c]","Fat~skinny~big~large~|smelly~disgusting~tasty~|napped~slept~coughed~|", true, false);
+		question.setAnswerChosen("fat~disgusting~napped~");
+		//System.out.println(question.toString());
 		
 		ArrayList<String> blank = question.getBlank();
 		for(String blanks:blank) {
@@ -153,11 +164,15 @@ public class FillInMultipleBlankQuestion extends Question{
 	}
 	@Override
 	public double calculatePtsReceived() {
+		System.out.println("Question: "+this.getQuestion());
+		System.out.println("Answer  : "+this.getCorrectAnswerString());
 		double numberOfCorrectAnswers = 0;
 		if(getAnswerChosen()==null) {
 			System.out.println("There is no answer given. ID = " +this.getQuestionid());
 			return -1;
 		}
+		System.out.println("Answers Given: "+this.getAnswerChosen());
+		System.out.println("Case Sensitive?: "+this.isCasesensitive() + " Partial Credit?: "+this.isPartialcredit());
 		if(answersGiven.size() != correctans.size()) {
 			System.out.println("There are a different number of blanks and correct answers");
 			return -1;
@@ -169,11 +184,14 @@ public class FillInMultipleBlankQuestion extends Question{
 			}
 		}
 		if(partialcredit) {
+			System.out.println("Points Received: ("+numberOfCorrectAnswers+"/"+answersGiven.size()+")*"+getPointsWorth()+" = " +((numberOfCorrectAnswers/answersGiven.size())*getPointsWorth()));
 			return setPointsReceived((numberOfCorrectAnswers/answersGiven.size())*getPointsWorth());
 		}else {
 			if(numberOfCorrectAnswers != answersGiven.size()) {
+				System.out.println("Points Received: 0");
 				return setPointsReceived(0);
 			}else {
+				System.out.println("Points Received: "+this.getPointsWorth());
 				return setPointsReceived(getPointsWorth()); //if not every blank is correct, then return 0 else return full pts for this question
 			}
 		}

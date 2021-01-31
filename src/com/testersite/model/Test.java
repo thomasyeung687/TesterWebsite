@@ -109,6 +109,9 @@ public class Test{
 	public void addQuestionToQuestions(Question newQuestion) {
 		this.questions.add(newQuestion);
 	}
+	public void setQuestionInQuestionsArray(int index, Question question) {
+		questions.set(index, question);
+	}
 	public ArrayList<Question> getQuestionArray(){
 		return questions;
 	}
@@ -175,6 +178,7 @@ public class Test{
 	public void setShowQuestionOnebyOne(boolean showQuestionOnebyOne) {
 		this.showQuestionOnebyOne = showQuestionOnebyOne;
 	}
+	
 	public String toString() {
 		String tostring = "";
 		tostring += testid+" ";

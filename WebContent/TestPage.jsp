@@ -182,12 +182,10 @@
 							}
 						}else if(question instanceof TFQuestion){
 							TFQuestion tf = (TFQuestion) question;
-							//System.out.println(tf.getAnswers().toString());
-							List<String> anschoices = tf.getAnswers();
-							for(String s: anschoices){
-								//System.out.println(tf.getCorrectAns());
-								%> <input type="radio" name="q<%=n %>" value="<%out.println(s); %>" required> <%out.println(s); %><br> <%
-							}
+							//System.out.println(tf.getAnswers().toString());]
+							%> 	<input type="radio" name="q<%=n %>" value="True" required> True<br> 
+								<input type="radio" name="q<%=n %>" value="False" required> False<br> 
+							<%
 							
 						}else if(question instanceof ShortResponseQuestion){
 							ShortResponseQuestion sr = (ShortResponseQuestion) question;
@@ -272,11 +270,9 @@
 								}else if(questionComponent instanceof TFQuestion){
 									TFQuestion tf = (TFQuestion) questionComponent;
 									//System.out.println(tf.getAnswers().toString());
-									List<String> anschoices = tf.getAnswers();
-									for(String s: anschoices){
-										//System.out.println(tf.getCorrectAns());
-										%> <input type="radio" name="q<%=questionNum %>" value="<%out.println(s); %>" required> <%out.println(s); %><br> <%
-									}
+									%> 	<input type="radio" name="q<%=questionNum %>" value="True" required> True<br> 
+										<input type="radio" name="q<%=questionNum %>" value="False" required> False<br> 
+									<%
 									
 								}else if(questionComponent instanceof ShortResponseQuestion){
 									ShortResponseQuestion sr = (ShortResponseQuestion) question;
@@ -317,17 +313,6 @@
 										out.println(strings.get(i));
 										String inputname = questionNum+blank.get(i);
 										%><input type="text" class="fiblank" name="q<%=inputname%>"> <%
-									}
-									out.println(strings.get(strings.size()-1)+"<br>");
-									int blankindex =0; 
-									for(List<String> lst : correctans){
-										 out.println("Correct answers for "+ fimb.getBlank().get(blankindex++)+": </br>");
-										for(String s: lst){
-											//System.out.println(tf.getCorrectAns());%>
-												<span>&#10004; <%out.println(s); %></span>
-										<%
-										}
-										out.println("<br>");
 									}
 									if(fimb.isCasesensitive()){%>
 									</br>

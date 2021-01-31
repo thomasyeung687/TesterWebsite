@@ -28,7 +28,8 @@ public class MultipleChoiceQuestion extends Question{
 		MultipleChoiceQuestion mc1 = new MultipleChoiceQuestion(1, 10,"1", "helloo", "asdad~1 3 6 9~asd~", "asdad");
 		List<String> anschoicess = mc1.getAnswers();
 		System.out.println(anschoicess.toString());
-		System.out.println(mc1.calculatePtsReceived());
+		mc1.setAnswerChosen("asdad");
+		mc1.calculatePtsReceived();
 	}
 	public String toString() {
 		String tostring = "";
@@ -42,15 +43,22 @@ public class MultipleChoiceQuestion extends Question{
 	}
 	@Override
 	public double calculatePtsReceived() {
+		System.out.println("Question: "+this.getQuestion());
+		System.out.println("Answer choices  : "+this.getAnswers());
+		System.out.println("Correct Answer  : "+this.getCorrectAnswerString());
 		if(getAnswerChosen() == null) {
 			System.out.println("There is no answer given. ID = " +this.getQuestionid());
+			System.out.println("Points Received: -1");
 			return -1;
 		}
+		System.out.println("Answer Chosen: "+this.getAnswerChosen());
 		if(getAnswerChosen().trim().equals(getCorrectAnswerString().trim())) {
 			//System.out.println(getAnswerChosen() +"=="+ getCorrectAnswerString());
+			System.out.println("Points Received: "+this.getPointsWorth());
 			return setPointsReceived(getPointsWorth()); //sets ptsreceived to ptsworth and returns ptsreceived
 		}else {
 			//System.out.println(getAnswerChosen() +"!="+ getCorrectAnswerString());
+			System.out.println("Points Received: 0");
 			return setPointsReceived(0);//sets ptsreceived to 0 and returns 0
 		}
 	}

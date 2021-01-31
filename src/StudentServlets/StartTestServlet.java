@@ -48,7 +48,6 @@ public class StartTestServlet extends HttpServlet {
 					}else if(tablename.equals("questionsdatabase.truefalse")){
 						System.out.println("Adding new TF question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
 						TFQuestion newmcq = new TFQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"));
-						System.out.println(newmcq.getAnswers().toString());
 						thisTest.addQuestionToQuestions(newmcq);
 					}else if(tablename.equals("questionsdatabase.shortanswer")){
 						System.out.println("Adding new SR question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));

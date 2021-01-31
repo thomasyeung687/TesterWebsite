@@ -12,7 +12,7 @@ public class FillInTheBlankQuestion extends Question{
 	private String str2;
 	public FillInTheBlankQuestion(int questionid,  int pointsWorth,String questiontitle, String question, String correctans, boolean casesensitive) {
 		super(questionid, questiontitle,"FillInTheBlankQuestion", pointsWorth, question); //default #question title is the num answers there are.
-		
+		setCorrectAnswerString(correctans);
 		ArrayList<String> strings = new ArrayList<String>();
 		int start = 0;
 		int endIndex = 0;
@@ -117,16 +117,39 @@ public class FillInTheBlankQuestion extends Question{
 		tostring += getPointsWorth();
 		return tostring;
 	}
+	public static void main(String[] args) {
+		FillInTheBlankQuestion fib = new FillInTheBlankQuestion(2, 5, "1", "Write two! [x]", "two", true);
+		fib.setAnswerChosen("Two");
+		fib.calculatePtsReceived();
+	}
 	@Override
 	public double calculatePtsReceived() {
+		System.out.println("Question: "+this.getQuestion());
+		System.out.println("Correct Answer(s)  : "+this.correctans);
 		String answerChosen = getAnswerChosen();
+		if(getAnswerChosen() == null) {
+			System.out.println("There is no answer given. ID = " +this.getQuestionid());
+			System.out.println("Points Received: -1");
+			return -1;
+		}
+		System.out.println("Answer Chosen: "+this.getAnswerChosen());
 		if(!isCasesensitive()) {
-			answerChosen.toLowerCase();
-		}
-		if(correctans.contains(answerChosen)) { //if correct answer set contains the given answer(answer chosen)
-			return setPointsReceived(getPointsWorth()); //student gets full marks on this question
+			if(correctans.contains(answerChosen.toLowerCase())) { //if correct answer set contains the given answer(answer chosen)
+				System.out.println("Points Received: "+this.getPointsWorth());
+				return setPointsReceived(getPointsWorth()); //student gets full marks on this question
+			}else {
+				System.out.println("Points Received: 0");
+				return setPointsReceived(0);
+			}
 		}else {
-			return setPointsReceived(0);
+			if(correctans.contains(answerChosen)) { //if correct answer set contains the given answer(answer chosen)
+				System.out.println("Points Received: "+this.getPointsWorth());
+				return setPointsReceived(getPointsWorth()); //student gets full marks on this question
+			}else {
+				System.out.println("Points Received: 0");
+				return setPointsReceived(0);
+			}
 		}
+		
 	}
 }

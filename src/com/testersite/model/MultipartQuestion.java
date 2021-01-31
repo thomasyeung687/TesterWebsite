@@ -27,7 +27,9 @@ public class MultipartQuestion extends Question {
 	public void addQuestion(Question question) {
 		questions.add(question);
 	}
-	
+	public void setQuestionInQuestionsArray(int index, Question question) {
+		questions.set(index, question);
+	}
 	public ArrayList<Question> getQuestions(){
 		return questions;
 	}
