@@ -136,7 +136,7 @@
 						Question  <textarea name="questiontext" cols="100" rows="2" required><%out.println(tf.getQuestion());%></textarea> <br>
 						
 					<hr />
-						<% if(tf.getCorrectAns().equals("True")){%>
+						<% if(tf.getCorrectAnswerString().equals("True")){%>
 				  		<select name="correctanswer">
 				  			<option value="True">True</option>
 				  			<option value="False">False</option>

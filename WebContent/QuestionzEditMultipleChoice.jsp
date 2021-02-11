@@ -151,7 +151,7 @@
 						<% List<String> answers = mc.getAnswers();
 						for(int i = 0; i<answers.size();i++){
 							String answer = answers.get(i);
-							if(answer.equals(mc.getCorrectAns())){%>
+							if(answer.equals(mc.getCorrectAnswerString())){%>
 								<input type="radio" name="correctans" value="<%= "ans"+i%>" required checked>
 								Answer <%out.println(i+1);%><input type="text" name="<%= "ans"+i%>" required style="width: 50em" value="<% out.println(answer);%>"> <br>
 							<%}else{ %>

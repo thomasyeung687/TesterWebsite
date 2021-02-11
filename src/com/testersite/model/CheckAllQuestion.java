@@ -60,6 +60,9 @@ public class CheckAllQuestion extends Question{
 		super.setAnswerChosen(answersChosen);
 		answersGiven = Arrays.asList(answersChosen.split("~"));
 	}
+	public List<String> getAnswersGiven(){
+		return answersGiven;
+	}
 	public String toString() {
 		String tostring = "";
 		tostring += getQuestionid()+" ";

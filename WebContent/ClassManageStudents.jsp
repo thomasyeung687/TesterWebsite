@@ -1,3 +1,4 @@
+<%@page import="com.testersite.model.Student"%>
 <%@page import="Random.RandomString"%>
 <%@page import="com.testersite.dao.DBConnection"%>
 <%@page import="com.testersite.model.Question"%>
@@ -30,18 +31,6 @@
 		//}
 	%>
 	<%
-	class Student{
-		String name;
-		String profid;
-		//String schoolid;
-		public Student(String name, String profid){
-			this.name = name;
-			this.profid = profid;
-		}
-		public String getname(){return name;}
-		public String getprofid(){return profid;}
-		//public String getschoolid(){return schoolid;}
-	}
 	System.out.println("ClassManageStudents.jsp");
 	Connection con = DBConnection.getDBConnection();
 	//System.out.println(session.getAttribute("username"));
@@ -55,8 +44,6 @@
 	String classcode="";
 	ArrayList<String> idStudentProfiles = new ArrayList<String>();
 	ArrayList<Student> students = new ArrayList<Student>();//arraylist of students
-	//System.out.println("1");
-	//System.out.println(session.getAttribute("classid"));
 	try {
 		Statement st = con.createStatement();
 		rset = st.executeQuery("SELECT * FROM testersitedatabase.allclasses WHERE idclass = '"+session.getAttribute("classid")+"';");
@@ -70,23 +57,27 @@
 		dateend = rset.getString("dateend");
 		classcode = rset.getString("classcode");
 		
-		rset = st.executeQuery("SELECT * FROM testersitedatabase.studenttoclass WHERE classcode = '"+session.getAttribute("classid")+"';"); //gets the idstudentprofile of students in this class
+		rset = st.executeQuery("SELECT * FROM testersitedatabase.testdns WHERE idclass = "+idclass+";");
+		ArrayList<Integer> testids = new ArrayList<Integer>();
+		while(rset.next()){
+			testids.add(rset.getInt("idtest")); //getting testids arraylist
+		}
+		
+		rset = st.executeQuery("SELECT * FROM testersitedatabase.studenttoclass WHERE classid = '"+idclass+"';"); //gets the idstudentprofile of students in this class
 		while(rset.next()){//while there are more students.
 			idStudentProfiles.add(rset.getString("idstudentprofiles"));
 		}
 		System.out.println(idStudentProfiles);
 		for(String id:idStudentProfiles){	
 			ResultSet studentinfo = st.executeQuery("SELECT * FROM testersitedatabase.studentprofiles WHERE idstudentprofiles = '"+id+"';");//looking for that particular student and getting their info 
-			//System.out.println("2");
 			if(studentinfo.next()){//if found we do
-				Student stud = new Student(studentinfo.getString("name"), studentinfo.getString("idstudentprofiles"));
-				//System.out.println("3");
+				Student stud = new Student(studentinfo.getString("name"), studentinfo.getString("idstudentprofiles"), testids);
 				students.add(stud);
-				//System.out.println("4");
 			}else{//student with id = idStudentprofile not found????
 				System.out.println(id+" This student not found!");
 			}
 		}
+		
 	}catch(Exception e){
 		System.out.println(e.getMessage());
 	}
@@ -176,14 +167,24 @@
                   <hr /> <!-- adds line -->
               	 <h3>Students: </h3>
               	 <form action="ShowStudentServlet" method="post">
-				<%
-					for(int i = 0; i<students.size(); i++){
-						Student stud = students.get(i);
-				%>
-					 <button type="submit" name="studprofid" value="<%out.println(stud.getprofid());%>"><%out.println(stud.getname()); %></button> <br> 
-				<%
-					}
-				%>
+              	 <div class="flexbox">
+              	 
+					<%
+						%> <span> Student Name:</span>
+						<span> Student Name:</span>
+						<span> Student Name:</span>
+						<span> Student Name:</span> <br>
+						
+						<%
+						for(int i = 0; i<students.size(); i++){
+							Student stud = students.get(i);
+					%>
+						 <button type="submit" name="studprofid" value="<%out.println(stud.getprofid());%>"><%out.println(stud.getname()); %></button> <br> 
+						
+					<%
+						}
+					%>
+				</div>
 				</form>
                  <!-- /. ROW  -->           
     </div>

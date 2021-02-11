@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<%@page import="com.testersite.model.TestAttemptObject"%>
+ <!DOCTYPE html>
+<%@page import="com.testersite.model.Question"%>
 <%@page import="com.testersite.model.Test"%>
 <%@page import="java.util.Date"%>
 <%@page import="com.testersite.model.ClassObject"%>
@@ -19,7 +19,6 @@
     <link href="assets/css/font-awesome.css" rel="stylesheet" />
         <!-- CUSTOM STYLES-->
     <link href="assets/css/custom.css" rel="stylesheet" />
-    <link href="assets/css/grades.css" rel="stylesheet" />
      <!-- GOOGLE FONTS-->
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
@@ -30,61 +29,16 @@
 		if(session.getAttribute("username")==null || session.getAttribute("student")==null){
 			response.sendRedirect("LoginStudent.jsp");
 			return;
+		}else if(session.getAttribute("thistest")== null){
+			response.sendRedirect("SClasses.jsp");
+			return;
 		}
 	%>
     <%
-	Connection connection = DBConnection.getDBConnection();
-	String classid = ((String) session.getAttribute("classid")).trim();
-	String studentid = (String) session.getAttribute("studentid");
-	ClassObject thisclass = (ClassObject) session.getAttribute("thisclass"); //the class object created in ShowClassServlet
-	ArrayList<Test> availibleTests = new ArrayList<>(); //arraylist of test objects of available tests.
-	if(thisclass == null){
-		response.sendRedirect("SClasses.jsp");
-		return;
-	}
-	try {
-		Statement st = connection.createStatement();
-		ResultSet rSet;
-		rSet = st.executeQuery("SELECT * FROM testersitedatabase.testdns WHERE idclass = '"+classid+"'"); //getting all tests in testdns 
-
-		Statement st1 = connection.createStatement(); //used to get the actual test information using testid from rSet
-		ResultSet rSet1;
-		
-		
-		
-		while(rSet.next()){
-			
-			String idtest = rSet.getString("idtest");
-			
-			//System.out.println("tests?id = "+idtest);
-			
-			rSet1 = st1.executeQuery("SELECT * FROM testersitedatabase.testprofiles where idtest = '"+idtest+"'");
-			rSet1.next();
-			Test test = new Test();
-			test.setTestId(rSet1.getString("idtest"));
-			test.setDisplaystart(rSet1.getString("displaystart")); //display start and end can be used later on with conjunction with a function in test that determins whether test should be displayed or not.
-			test.setDisplaystart(rSet1.getString("displayend"));
-			test.setTestName(rSet1.getString("testname"));
-			test.setTestDescription(rSet1.getString("testdescription"));
-			test.settestDateEnd(rSet1.getString("testdateend"));
-			System.out.println("SELECT * FROM testersitedatabase.attemptbook WHERE idtest = "+test.getTestId()+" AND idstudentprofiles= "+studentid+";");
-			rSet1 = st1.executeQuery("SELECT * FROM testersitedatabase.attemptbook WHERE idtest = "+test.getTestId()+" AND idstudentprofiles= "+studentid+";");
-			if(rSet1.next()){
-				TestAttemptObject tao = new TestAttemptObject(rSet1.getInt("idattempt"), rSet1.getInt("attemptNumber"), rSet1.getInt("idstudentprofiles"), rSet1.getInt("idtest") ,rSet1.getInt("grade"), rSet1.getInt("gradeOutOf"));
-				System.out.println(tao.getPercentageScore());
-				test.addAttemptObject(tao);
-			}
-			availibleTests.add(test);
-		}
-		//all availible tests have been added to availibleTests
-		
-		
-	}catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		System.out.println("SShowClass.jsp SQL ERROR");
-		out.print("SShowClass.jsp SQL ERROR");
-	}
+    	Connection connection = DBConnection.getDBConnection(); 
+   	 	ClassObject thisclass = (ClassObject) session.getAttribute("thisclass"); //the class object created in ShowClassServlet
+    	Test thisTest = (Test) session.getAttribute("thistest"); //the test object created in TakeTestServlet
+    	int grade = thisTest.getTotalPtsReceived();
     %>        
           
     <div id="wrapper">
@@ -126,11 +80,11 @@
                         <a href="SShowClass.jsp" ><i class="fa fa-desktop "></i><%out.println(thisclass.getCoursename());%> <!-- <span class="badge">Included</span> --></a>
                     </li>
                     
-                    <li class="link-of-linkcenter">
+                    <li class="link-of-link">
                         <a href="STests.jsp" ><i class="fa fa-desktop "></i>Tests <!-- <span class="badge">Included</span> --></a>
                     </li>
                     
-                    <li class="link-of-link">
+                    <li class="link-of-linkcenter">
                         <a href="SGrades.jsp" ><i class="fa fa-desktop "></i>Grades <!-- <span class="badge">Included</span> --></a>
                     </li>
                 </ul>
@@ -141,35 +95,39 @@
         	<div id="page-inner">
                 <div class="row">
                     <div class="col-md-12">
-                     <h2><%out.println(thisclass.getCoursename()); %></h2>
+                    <h2>Test Complete</h2>
 					<hr>
-					<h3>Grades</h3>
-					<hr>
+					<div class="SShowTestText">
+						<h3>Test name: <%out.println(thisTest.getTestName()); %></h3>
+						<h4>Test description: <%out.println(thisTest.getTestDescription()); %></h4>
+						<h4>Test instructions: <%out.println(thisTest.getTestInstructions()); %></h4>
+						<hr>
+						
+						<% if(thisTest.isForcedCompletion()){out.println("Once you start this exam, you have to complete it in one sitting.");} %> <br>
+						<% if(!(thisTest.getTimelimit() == 0)){
+								out.println("You will have "+thisTest.getTimelimit()+" minutes to complete this exam.");
+							}else{
+								out.println("You have unlimited time to complete this exam.");
+							}%> <br>
+						<% if(thisTest.getAllowBackButton()){
+								out.println("Going back to previous questions will not be permitted in this exam.");
+							}else{
+								out.println("You may traverse to previous questions in this exam.");
+							}%> <br>
+							
+						<!-- implement amt of attempts checker -->
+						
+						<br>
+						Raw score: <%out.println(thisTest.getTotalPtsReceived()); %> / <%out.println(thisTest.getTotalPts()); %><br/>
+						Calculated grade: <%out.println((double)((double)thisTest.getTotalPtsReceived()/thisTest.getTotalPts())*100); %>
+					</div>
+					
+					<form action="AfterTestPageLinker" method="get">
+						<input type="submit" class="SShowTestbutton" name="action" value="back">
+						<input type="submit" class="SShowTestbutton" name="action" value="moreDetails">
+					</form>
                     </div>
-                </div>
-               		<div>
-                    <% for(Test test: availibleTests){ 
-                    	if(test.getAttempts().size()==0){
-                    %>
-		                     <div class="flexbox">
-		                    	<span><% out.println(test.getTestName()); %></span>
-		                    	<span> Grade: incomplete</span>
-		                     </div>
-                    <%
-                    	}else{ 
-                    		TestAttemptObject tao = test.getAttempts().get(0);
-                    	%>
-	                    	<div class="flexbox">
-		                    	<span><% out.println(test.getTestName()); %></span>
-		                    	<div>
-		                    		Raw Grade: <%out.println(tao.getgrade()+"/"+tao.getgradeOutOf()); %><br>
-		                    		Calculated: <%out.println(tao.getPercentageScore()+"%"); %>
-		                    	</div>
-		                    </div>
-                    	<%}
-                    } %>
-                   	</div>
-               
+                </div>          
             </div>    
         </div>
         
@@ -187,3 +145,4 @@
    
 </body>
 </html>
+ 

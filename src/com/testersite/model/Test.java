@@ -21,6 +21,8 @@ public class Test{
 	private int timelimit = 0; 
 	private int amtOfAttempts = 1;
 	private ArrayList<Question> questions = new ArrayList<Question>();
+	private int totalPtsReceived = 0;
+	private ArrayList<TestAttemptObject> attempts = new ArrayList<TestAttemptObject>();
 	
 	public Test() {}
 	public Test(String testName, String testDateStart, String testDateEnd, String testid, String testDescription, String testInstructions) {
@@ -209,5 +211,32 @@ public class Test{
 	}
 	public void setDisplaystart(String displaystart) {
 		this.displaystart = displaystart;
+	}
+	public double scoreTest() {
+		int totalPtsReceived = 0;
+		for(Question question: questions) { //for each question in this multipart question, calculate pts received.
+			totalPtsReceived += question.calculatePtsReceived(); //accumulating the ptsreceived of each question.
+		}
+		this.totalPtsReceived = totalPtsReceived;
+		return totalPtsReceived;
+	}
+	public int getTotalPtsReceived() {
+		if(totalPtsReceived == 0) {
+			this.scoreTest();
+		}
+		return totalPtsReceived;
+	}
+	public int getTotalPts() {//total pts of this test by adding all the ptsworth of each question in questions list
+		int sumOfPts = 0;
+		for(Question question : questions) {
+			sumOfPts += question.getPointsWorth();
+		}
+		return sumOfPts;
+	}
+	public ArrayList<TestAttemptObject> getAttempts() {
+		return attempts;
+	}
+	public void addAttemptObject(TestAttemptObject attempt) {
+		attempts.add(attempt);
 	}
 }

@@ -132,7 +132,6 @@
 				}else if(tablename.equals("questionsdatabase.truefalse")){
 					System.out.println("Adding new TF question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
 					TFQuestion newmcq = new TFQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"));
-					System.out.println(newmcq.getAnswers().toString());
 					test.addQuestionToQuestions(newmcq);
 				}else if(tablename.equals("questionsdatabase.shortanswer")){
 					System.out.println("Adding new SR question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
@@ -297,7 +296,7 @@
 							List<String> anschoices = mc.getAnswers();
 							for(String s : anschoices){
 								//System.out.println(mc.getCorrectAns());
-								if(s.equals(mc.getCorrectAns())){%>
+								if(s.equals(mc.getCorrectAnswerString())){%>
 									<span>&#10004; <%out.println(s); %></span></br>
 								<%}else{%>
 									<span><%out.println(s); %></span></br>
@@ -306,10 +305,10 @@
 						}else if(question instanceof TFQuestion){
 							TFQuestion tf = (TFQuestion) question;
 							//System.out.println(tf.getAnswers().toString());
-							List<String> anschoices = tf.getAnswers();
+							List<String> anschoices = Arrays.asList("True", "False");
 							for(String s: anschoices){
 								//System.out.println(tf.getCorrectAns());
-								if(s.equals(tf.getCorrectAns())){%>
+								if(s.equals(tf.getCorrectAnswerString())){%>
 									<span>&#10004; <%out.println(s); %></span></br>
 								<%}else{%>
 									<span><%out.println(s); %></span></br>

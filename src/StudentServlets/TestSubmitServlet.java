@@ -1,16 +1,22 @@
 package StudentServlets;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.testersite.dao.DBConnection;
 
 import com.testersite.model.CheckAllQuestion;
 import com.testersite.model.FillInMultipleBlankQuestion;
@@ -32,7 +38,12 @@ public class TestSubmitServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		Test test = (Test) session.getAttribute("thistest");
+		String studentid = ((String) session.getAttribute("studentid")).trim();
+		String idtest = test.getTestId();
 		
+		int attemptnum = 1; // when implemented. change to request.parameter object
+		
+		System.out.println(studentid);
 		for(int i = 0; i < test.getQuestionArray().size(); i++) {
 			Question question = test.getQuestionArray().get(i);
 			System.out.println();
@@ -65,7 +76,6 @@ public class TestSubmitServlet extends HttpServlet {
 				System.out.println("pts received: "+sr.calculatePtsReceived());
 				test.setQuestionInQuestionsArray(i, sr);
 				
-				
 			}else if(question instanceof CheckAllQuestion){
 				CheckAllQuestion ca = (CheckAllQuestion) question;
 				String[] answersArray = request.getParameterValues("q"+(i+1));
@@ -78,8 +88,7 @@ public class TestSubmitServlet extends HttpServlet {
 				
 				System.out.println("pts received: "+ca.calculatePtsReceived());
 				test.setQuestionInQuestionsArray(i, ca);
-				
-				
+
 			}else if(question instanceof FillInTheBlankQuestion){
 				FillInTheBlankQuestion fib = (FillInTheBlankQuestion) question;
 				String answerChosen = request.getParameter("q"+(i+1));
@@ -101,7 +110,7 @@ public class TestSubmitServlet extends HttpServlet {
 				fimb.setAnswerChosen(answerChosen);
 				System.out.println("pts received: "+fimb.calculatePtsReceived());
 				test.setQuestionInQuestionsArray(i, fimb);
-				
+
 			}else if(question instanceof MultipartQuestion){
 				MultipartQuestion multi = (MultipartQuestion) question;
 				ArrayList<Question> questions = multi.getQuestions();
@@ -114,21 +123,26 @@ public class TestSubmitServlet extends HttpServlet {
 					if(questionComponent instanceof MultipleChoiceQuestion){ 
 						MultipleChoiceQuestion mc = (MultipleChoiceQuestion) questionComponent;
 						mc.setAnswerChosen(request.getParameter("q"+questionNum));
-						
+							System.out.println("q"+questionNum +" "+ request.getParameter("q"+questionNum));
 						multi.setQuestionInQuestionsArray(j, mc);
+
 					}else if(questionComponent instanceof TFQuestion){
 						TFQuestion tf = (TFQuestion) questionComponent;
 						tf.setAnswerChosen(request.getParameter("q"+questionNum));
-						
+							System.out.println("q"+questionNum +" "+ request.getParameter("q"+questionNum));
 						multi.setQuestionInQuestionsArray(j, questionComponent);
+
 					}else if(questionComponent instanceof ShortResponseQuestion){
 						ShortResponseQuestion sr = (ShortResponseQuestion) question;
 						sr.setAnswerChosen(request.getParameter("q"+questionNum));
-						
+							System.out.println("q"+questionNum +" "+ request.getParameter("q"+questionNum));
 						multi.setQuestionInQuestionsArray(j, sr);
+
 					}else if(questionComponent instanceof CheckAllQuestion){
 						CheckAllQuestion ca = (CheckAllQuestion) questionComponent;
 						String[] answersArray = request.getParameterValues("q"+questionNum);
+						System.out.println("q"+questionNum +" "+ request.getParameterValues("q"+questionNum));
+						
 						List<String> answersList = Arrays.asList(answersArray);
 						String answerChosen = "";
 						for(String ans : answersList) {
@@ -137,29 +151,68 @@ public class TestSubmitServlet extends HttpServlet {
 						ca.setAnswerChosen(answerChosen);
 						
 						multi.setQuestionInQuestionsArray(j, ca);
+
 					}else if(questionComponent instanceof FillInTheBlankQuestion){
 						FillInTheBlankQuestion fib = (FillInTheBlankQuestion) questionComponent;
 						String answerChosen = request.getParameter("q"+questionNum);
 						fib.setAnswerChosen(answerChosen);
-						
+						System.out.println("q"+questionNum +" "+ request.getParameterValues("q"+questionNum));
 						multi.setQuestionInQuestionsArray(j, fib);
+
 					}else if(questionComponent instanceof FillInMultipleBlankQuestion){
 						FillInMultipleBlankQuestion fimb = (FillInMultipleBlankQuestion) questionComponent;
 						ArrayList<String> blanks = fimb.getBlank();
 						String answerChosen = "";
 						//System.out.println("ID:"+fimb.getQuestionid());
-						System.out.println("blanks: "+blanks);
+						//System.out.println("blanks: "+blanks);
 						for(int k = 0; k<blanks.size(); k++) {
 							String inputname = questionNum+blanks.get(k);
-							System.out.println(inputname);
-							answerChosen += request.getParameter("q"+inputname); //getting the answer user gave in each blank
+							//System.out.println(inputname);
+							answerChosen += request.getParameter("q"+inputname)+"~"; //getting the answer user gave in each blank
 						}
 						fimb.setAnswerChosen(answerChosen);
 						multi.setQuestionInQuestionsArray(j, fimb);
+						
 					}
+					test.setQuestionInQuestionsArray(i, multi);
 				}
-				multi.calculatePtsReceived();
-			}
+			}	
 		}
+		System.out.println(test.scoreTest());
+		Connection connection = DBConnection.getDBConnection();
+		try {
+			System.out.println("putting test on DB.......");
+			Statement st = connection.createStatement();
+			String createAttemptQuery = "INSERT INTO testersitedatabase.attemptbook (attemptNumber,idstudentprofiles,idtest,grade, gradeOutOf) VALUES ('"+attemptnum+"','"+studentid+"','"+test.getTestId()+"','"+test.getTotalPtsReceived()+"','"+test.getTotalPts()+"');";
+			System.out.println(createAttemptQuery);
+			st.execute(createAttemptQuery);
+			ResultSet rSet = st.executeQuery("SELECT LAST_INSERT_ID();");
+			rSet.next();
+			String idattempt = rSet.getString("LAST_INSERT_ID()");
+			for(Question question : test.getQuestionArray()) {
+				if(question instanceof MultipartQuestion) {
+					MultipartQuestion mpq = (MultipartQuestion) question;
+					for(Question questionComponent : mpq.getQuestions()) {
+						String insertAnswerChoiceQuery = "INSERT INTO testersitedatabase.attempt_answer_choice (idattempt,idquestion,answerGiven,ptsGiven) VALUES ('"+idattempt+"','"+questionComponent.getQuestionid()+"','"+questionComponent.getAnswerChosen()+"','"+questionComponent.getPointsReceived()+"');";
+						System.out.println(insertAnswerChoiceQuery);
+						st.execute(insertAnswerChoiceQuery);
+					}
+				}else {
+					String insertAnswerChoiceQuery = "INSERT INTO testersitedatabase.attempt_answer_choice (idattempt,idquestion,answerGiven,ptsGiven) VALUES ('"+idattempt+"','"+question.getQuestionid()+"','"+question.getAnswerChosen()+"','"+question.getPointsReceived()+"');";
+					System.out.println(insertAnswerChoiceQuery);
+					st.execute(insertAnswerChoiceQuery);
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println(e.getLocalizedMessage());
+		}
+		session.setAttribute("thistest", test);
+		
+		RequestDispatcher rd = request.getRequestDispatcher("AfterTestPage.jsp");
+		rd.forward(request, response);
+		//here all answers given by student should be entered into test object. All we have to do now is to tally everything up and submit to the database
+		
+		
 	}
 }
