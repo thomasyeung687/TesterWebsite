@@ -1,3 +1,5 @@
+<%@page import="javax.websocket.Decoder.Text"%>
+<%@page import="com.testersite.model.*"%>
 <%@page import="com.testersite.model.Student"%>
 <%@page import="Random.RandomString"%>
 <%@page import="com.testersite.dao.DBConnection"%>
@@ -21,14 +23,17 @@
     <link href="assets/css/custom.css" rel="stylesheet" />
      <!-- GOOGLE FONTS-->
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <!-- GRADING STYLING -->
+   <link href="assets/css/grades.css" rel="stylesheet" />
 </head>
 <body>
 	<%
-		//response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");//this prevents backbutton hack
-		//System.out.println(session.getAttribute("username"));
-		//if(session.getAttribute("username")==null || session.getAttribute("professor")==null){
-		//	response.sendRedirect("LoginProf.jsp");
-		//}
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");//this prevents backbutton hack
+		System.out.println(session.getAttribute("username"));
+		if(session.getAttribute("username")==null || session.getAttribute("professor")==null){
+			response.sendRedirect("LoginProf.jsp");
+			return;
+		}
 	%>
 	<%
 	System.out.println("ClassManageStudents.jsp");
@@ -44,6 +49,7 @@
 	String classcode="";
 	ArrayList<String> idStudentProfiles = new ArrayList<String>();
 	ArrayList<Student> students = new ArrayList<Student>();//arraylist of students
+	ArrayList<Test> tests = new ArrayList<Test>();
 	try {
 		Statement st = con.createStatement();
 		rset = st.executeQuery("SELECT * FROM testersitedatabase.allclasses WHERE idclass = '"+session.getAttribute("classid")+"';");
@@ -60,7 +66,7 @@
 		rset = st.executeQuery("SELECT * FROM testersitedatabase.testdns WHERE idclass = "+idclass+";");
 		ArrayList<Integer> testids = new ArrayList<Integer>();
 		while(rset.next()){
-			testids.add(rset.getInt("idtest")); //getting testids arraylist
+			testids.add(rset.getInt("idtest")); //building testids arraylist
 		}
 		
 		rset = st.executeQuery("SELECT * FROM testersitedatabase.studenttoclass WHERE classid = '"+idclass+"';"); //gets the idstudentprofile of students in this class
@@ -68,14 +74,22 @@
 			idStudentProfiles.add(rset.getString("idstudentprofiles"));
 		}
 		System.out.println(idStudentProfiles);
+		
 		for(String id:idStudentProfiles){	
 			ResultSet studentinfo = st.executeQuery("SELECT * FROM testersitedatabase.studentprofiles WHERE idstudentprofiles = '"+id+"';");//looking for that particular student and getting their info 
 			if(studentinfo.next()){//if found we do
 				Student stud = new Student(studentinfo.getString("name"), studentinfo.getString("idstudentprofiles"), testids);
 				students.add(stud);
+				stud.getAttemptsFromDB();
 			}else{//student with id = idStudentprofile not found????
 				System.out.println(id+" This student not found!");
 			}
+		}
+		
+		for(int id : testids){	
+			ResultSet testinfo = st.executeQuery("SELECT * FROM testersitedatabase.testprofiles WHERE idtest = '"+id+"';");//looking for that particular test and getting its info 
+			//System.out.println("2");
+			tests.add(Test.getTestWithOnlyPreferences(id+""));
 		}
 		
 	}catch(Exception e){
@@ -147,8 +161,7 @@
                         <a href="#"><i class="fa fa-edit "></i>My Link Five </a>
                     </li>
                 </ul>
-                            </div>
-
+            </div>
         </nav>
         <!-- /. NAV SIDE  -->
         <div id="page-wrapper" >
@@ -165,26 +178,45 @@
 				  	<button name="action" value="back">Back</button> 
 				  </form>
                   <hr /> <!-- adds line -->
-              	 <h3>Students: </h3>
-              	 <form action="ShowStudentServlet" method="post">
-              	 <div class="flexbox">
-              	 
-					<%
-						%> <span> Student Name:</span>
-						<span> Student Name:</span>
-						<span> Student Name:</span>
-						<span> Student Name:</span> <br>
-						
+              	 <form action="ShowCompletedTestPageServlet" method="get">
+					<table>
+						<tr>
+							<th>Student</th>
+							<%
+							for(int j = 0; j< tests.size(); j++){
+							%> 
+								<th><button type="submit" name="testid" value="<%out.println(tests.get(j).getTestId()); %>"><%out.println(tests.get(j).getTestName()); %></button></th>
+							<%
+							}
+							%>
+						</tr>
 						<%
 						for(int i = 0; i<students.size(); i++){
 							Student stud = students.get(i);
-					%>
-						 <button type="submit" name="studprofid" value="<%out.println(stud.getprofid());%>"><%out.println(stud.getname()); %></button> <br> 
-						
-					<%
-						}
-					%>
-				</div>
+						%>
+						<tr>
+							<td>
+							 <button type="submit" name="studprofid" value="<%out.println(stud.getprofid());%>"><%out.println(stud.getname()); %></button> <br> 
+							</td>
+							<%
+							for(int j = 0; j< tests.size(); j++){
+								TestAttemptObject tao = TestAttemptObject.getAttemptFromDB(stud.getprofid(), tests.get(j).getTestId());
+								if(tao != null){
+							%> 
+								<td><button type="submit" name=idattempt value="<%out.println(tao.getIdAttempt()); %>"><%out.println(tao.getgrade()+"/"+tao.getgradeOutOf()); %></button></td>
+							<%
+								}else{
+							%> 
+								<td><%out.println("incomplete"); %></td>
+							<%
+								}
+							}
+							%>
+						</tr>							
+						<%
+							}
+						%>
+					</table>
 				</form>
                  <!-- /. ROW  -->           
     </div>

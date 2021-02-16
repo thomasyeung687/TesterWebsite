@@ -1,0 +1,8 @@
+@charset "ISO-8859-1";
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.ptsInput{
+	width: 55px;
+}

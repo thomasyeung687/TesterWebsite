@@ -53,27 +53,8 @@
 		
 		
 		while(rSet.next()){
-			
-			String idtest = rSet.getString("idtest");
-			
-			//System.out.println("tests?id = "+idtest);
-			
-			rSet1 = st1.executeQuery("SELECT * FROM testersitedatabase.testprofiles where idtest = '"+idtest+"'");
-			rSet1.next();
-			Test test = new Test();
-			test.setTestId(rSet1.getString("idtest"));
-			test.setDisplaystart(rSet1.getString("displaystart")); //display start and end can be used later on with conjunction with a function in test that determins whether test should be displayed or not.
-			test.setDisplaystart(rSet1.getString("displayend"));
-			test.setTestName(rSet1.getString("testname"));
-			test.setTestDescription(rSet1.getString("testdescription"));
-			test.settestDateEnd(rSet1.getString("testdateend"));
-			System.out.println("SELECT * FROM testersitedatabase.attemptbook WHERE idtest = "+test.getTestId()+" AND idstudentprofiles= "+studentid+";");
-			rSet1 = st1.executeQuery("SELECT * FROM testersitedatabase.attemptbook WHERE idtest = "+test.getTestId()+" AND idstudentprofiles= "+studentid+";");
-			if(rSet1.next()){
-				TestAttemptObject tao = new TestAttemptObject(rSet1.getInt("idattempt"), rSet1.getInt("attemptNumber"), rSet1.getInt("idstudentprofiles"), rSet1.getInt("idtest") ,rSet1.getInt("grade"), rSet1.getInt("gradeOutOf"));
-				System.out.println(tao.getPercentageScore());
-				test.addAttemptObject(tao);
-			}
+			Test test = Test.getTestWithOnlyPreferences(rSet.getString("idtest"));
+			test.addAttemptObject(TestAttemptObject.getAttemptFromDB(studentid, test.getTestId()));
 			availibleTests.add(test);
 		}
 		//all availible tests have been added to availibleTests
@@ -148,26 +129,28 @@
                     </div>
                 </div>
                		<div>
-                    <% for(Test test: availibleTests){ 
-                    	if(test.getAttempts().size()==0){
-                    %>
-		                     <div class="flexbox">
-		                    	<span><% out.println(test.getTestName()); %></span>
-		                    	<span> Grade: incomplete</span>
-		                     </div>
-                    <%
-                    	}else{ 
-                    		TestAttemptObject tao = test.getAttempts().get(0);
-                    	%>
-	                    	<div class="flexbox">
-		                    	<span><% out.println(test.getTestName()); %></span>
-		                    	<div>
-		                    		Raw Grade: <%out.println(tao.getgrade()+"/"+tao.getgradeOutOf()); %><br>
-		                    		Calculated: <%out.println(tao.getPercentageScore()+"%"); %>
-		                    	</div>
-		                    </div>
-                    	<%}
-                    } %>
+               		<form action="SShowCompletedTestServlet" method="get">
+		                    <% for(Test test: availibleTests){ 
+		                    	if(test.getAttempts().size()==0){
+		                    %>
+			                     <div class="flexbox">
+			                    	<span><% out.println(test.getTestName()); %></span>
+			                    	<span> Grade: incomplete</span>
+			                     </div>
+	                    		<%
+	                    		}else{ 
+		                    		TestAttemptObject tao = test.getAttempts().get(0);
+		                    	%>
+			                    	<div class="flexbox">
+				                    	<span><% out.println(test.getTestName()); %></span>
+				                    	<div>
+				                    		Raw Grade: <button type="submit" value="<%=tao.getIdAttempt()%>" name="idattempt"><%out.println(tao.getgrade()+"/"+tao.getgradeOutOf()); %></button><br>
+				                    		Calculated: <%out.println(tao.getPercentageScore()+"%"); %>
+				                    	</div>
+				                    </div>
+	                    	<%}
+	                    } %>
+                    </form>
                    	</div>
                
             </div>    

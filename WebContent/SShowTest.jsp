@@ -317,9 +317,9 @@
 								out.println("You have unlimited time to complete this exam.");
 							}%> <br>
 						<% if(thisTest.getAllowBackButton()){
-								out.println("Going back to previous questions will not be permitted in this exam.");
-							}else{
 								out.println("You may traverse to previous questions in this exam.");
+							}else{
+								out.println("Going back to previous questions will not be permitted in this exam.");
 							}%> <br>
 							
 						<!-- implement amt of attempts checker -->

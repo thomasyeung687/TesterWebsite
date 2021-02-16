@@ -5,6 +5,7 @@ public abstract class Question {
 	private String questionType;
 	private String question;
 	private String questiontitle;
+	private String notes;
 	
 	private int pointsWorth;
 	private double pointsReceived; //amount of points received for this question
@@ -85,6 +86,12 @@ public abstract class Question {
 	}
 	
 	public abstract double calculatePtsReceived() ;
+	public String getNotes() {
+		return notes;
+	}
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
 	
 	/*
 	 * public void setQuestionid(int questionid) { this.questionid = questionid; }

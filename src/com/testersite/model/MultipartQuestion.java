@@ -19,6 +19,11 @@ public class MultipartQuestion extends Question {
 		this.questioncomponentids = questioncomponentids;
 		GetQuestions();
 	}
+	public MultipartQuestion(int questionid,  int pointsWorth,String questiontitle, String question, String questioncomponentids, String idAttempt) {
+		super(questionid, questiontitle,"MultipartQuestion", pointsWorth , question);
+		this.questioncomponentids = questioncomponentids;
+		GetQuestions(idAttempt);
+	}
 	
 	/**
 	 * This method is used to add the question instances that make up this multipartquestion.
@@ -102,6 +107,95 @@ public class MultipartQuestion extends Question {
 					//here you can add it for others.
 				}else{
 					System.out.println("Couldn't get question "+idquestion);
+				}
+			}
+			//rset for other questiontypes V
+		}catch(Exception exception){
+			System.out.println("MultipartQuestion Exception trying to fetch question components");
+			System.out.println(exception.getLocalizedMessage());
+		}
+	}
+	
+	private void GetQuestions(String idAttempt) {
+		String questioncomponents = getQuestionCompoentids();
+		String[] questionids = questioncomponents.split(",");
+		
+//		System.out.println("MPQ ids = ");
+//		for(int i = 0; i < questionids.length; i++) {
+//			System.out.print(questionids[i]+" "); //check to see if we get the question ids properly
+//		}
+		
+		Connection con = DBConnection.getDBConnection();
+		try{
+			Statement st = con.createStatement();
+			String query = "SELECT * FROM questionsdatabase.allquestiontable WHERE idquestion in ("+questioncomponentids.substring(0,questioncomponentids.length()-1)+");";
+			ResultSet rset = st.executeQuery(query); //substring gets rid of last comma which causes sql error ^^^^^
+			System.out.println("MPQ query "+ query);
+			while(rset.next()){ //while there are questions from allquestionstable with that idtest. we go into each row and get the table and questionid and find that question
+				//System.out.println("in");
+				
+				
+				String idquestion = rset.getString("idquestion");
+				String tablename = rset.getString("tablename");
+				String query2 = "Select * FROM "+tablename+" INNER JOIN testersitedatabase.attempt_answer_choice "
+						+ "on "+tablename+".idquestion = testersitedatabase.attempt_answer_choice.idquestion WHERE idattempt = "+idAttempt+";";
+				System.out.println("MPQ query2 "+ query2);
+				Statement st2 = con.createStatement();
+				ResultSet rset2 = st2.executeQuery(query2);
+				if(rset2.next()){
+					if(tablename.equals("questionsdatabase.multiplechoice")){
+						System.out.println("Adding new mc question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
+						MultipleChoiceQuestion newq = new MultipleChoiceQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"),rset2.getString("answerstring"), rset2.getString("correctanswer"));
+						newq.setAnswerChosen(rset2.getString("answerGiven"));
+						newq.setPointsReceived(rset2.getDouble("ptsGiven"));
+						newq.setNotes(rset2.getString("notes"));
+						System.out.println("MPQ"+newq.toString());
+						questions.add(newq);
+					}else if(tablename.equals("questionsdatabase.truefalse")){
+						System.out.println("Adding new TF question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
+						TFQuestion newq = new TFQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"));
+						newq.setAnswerChosen(rset2.getString("answerGiven"));
+						newq.setPointsReceived(rset2.getDouble("ptsGiven"));
+						newq.setNotes(rset2.getString("notes"));
+						System.out.println("MPQ"+newq.toString());
+						questions.add(newq);
+					}else if(tablename.equals("questionsdatabase.shortanswer")){
+						System.out.println("Adding new SR question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
+						ShortResponseQuestion newq = new ShortResponseQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"));
+						newq.setAnswerChosen(rset2.getString("answerGiven"));
+						newq.setPointsReceived(rset2.getDouble("ptsGiven"));
+						newq.setNotes(rset2.getString("notes"));
+						System.out.println("MPQ"+newq.toString());
+						questions.add(newq);
+					}else if(tablename.equals("questionsdatabase.checkall")){
+						System.out.println("Adding new CheckAll question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
+						CheckAllQuestion newq = new CheckAllQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("answerstring"), rset2.getString("correctstring"));
+						newq.setAnswerChosen(rset2.getString("answerGiven"));
+						newq.setPointsReceived(rset2.getDouble("ptsGiven"));
+						newq.setNotes(rset2.getString("notes"));
+						System.out.println("MPQ"+newq.toString());
+						questions.add(newq);
+					}else if(tablename.equals("questionsdatabase.fillintheblank")){
+						System.out.println("Adding new fillintheblank question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
+						FillInTheBlankQuestion newq = new FillInTheBlankQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"), rset2.getBoolean("casesensitive"));
+						newq.setAnswerChosen(rset2.getString("answerGiven"));
+						newq.setPointsReceived(rset2.getDouble("ptsGiven"));
+						newq.setNotes(rset2.getString("notes"));
+						System.out.println("MPQ"+newq.toString());
+						questions.add(newq);
+					}else if(tablename.equals("questionsdatabase.fillinmultipleblank")){
+						System.out.println("Adding new fillinmultipleblank question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
+						System.out.println("Question:"+rset2.getString("question"));
+						FillInMultipleBlankQuestion newq = new FillInMultipleBlankQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"), rset2.getBoolean("casesensitive"),rset2.getBoolean("partialcredit"));
+						newq.setAnswerChosen(rset2.getString("answerGiven"));
+						newq.setPointsReceived(rset2.getDouble("ptsGiven"));
+						newq.setNotes(rset2.getString("notes"));
+						System.out.println("MPQ"+newq.toString());
+						questions.add(newq);
+					}
+					//here you can add it for others.
+				}else{
+					System.out.println("MPQ Couldn't get question "+idquestion);
 				}
 			}
 			//rset for other questiontypes V

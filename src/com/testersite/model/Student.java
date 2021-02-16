@@ -28,7 +28,7 @@ public class Student {
 	public String getname(){return name;}
 	public String getprofid(){return profileid;}
 	
-	public HashMap<Integer, TestAttemptObject> getAttempts() throws Exception{
+	public HashMap<Integer, TestAttemptObject> getAttemptsFromDB() throws Exception{
 		if(testids == null) {
 			throw new Exception("Student object was not provided with ArrayList<Integer> testids!");
 		}
@@ -40,7 +40,7 @@ public class Student {
 				for(int testid : testids) {
 					idtestString += testid + ",";
 				}
-				idtestString.substring(0, idtestString.length()-1);//removeing last comma;
+				idtestString = idtestString.substring(0, idtestString.length()-1);//removeing last comma;
 				
 				String query = "SELECT * FROM testersitedatabase.attemptbook WHERE idstudentprofiles = "+this.profileid+" AND idtest in ("+idtestString+");";
 				System.out.println(query);
@@ -57,5 +57,19 @@ public class Student {
 			}
 		}
 		return attempts;
+	}
+	public HashMap<Integer, TestAttemptObject> getAttempts(){
+		return attempts;
+	}
+	public TestAttemptObject getAttemptFromAttemptsHashMap(int testid) {
+		
+		TestAttemptObject tao = attempts.get(testid);
+		if(tao == null) {
+			System.out.println("Failed to get attempt with testid = "+testid);
+			return null;
+		}else {
+			System.out.println("returning tao: "+tao.toString());
+			return tao;
+		}
 	}
 }

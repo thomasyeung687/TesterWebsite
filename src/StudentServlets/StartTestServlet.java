@@ -88,7 +88,14 @@ public class StartTestServlet extends HttpServlet {
 			System.out.println("StartTestServlet Exception");
 			System.out.println(exception.getLocalizedMessage());
 		}
+		if(thisTest.isShowQuestionOnebyOne()) {
+			session.setAttribute("currentQuestion", 0);
+			response.sendRedirect("TestPage1By1.jsp"); 
+			return;
+		}else {
+			response.sendRedirect("TestPage.jsp"); 
+			return;
+		}
 		
-		response.sendRedirect("TestPage.jsp"); 
 	}
 }
