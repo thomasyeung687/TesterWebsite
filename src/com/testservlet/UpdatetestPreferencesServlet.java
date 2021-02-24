@@ -41,14 +41,36 @@ public class UpdatetestPreferencesServlet extends HttpServlet {
 		String showQuestionOnebyOne = request.getParameter("updatedshowquestions1b1");//default is false so it will show the whole test as default.
 		String timelimit = request.getParameter("updatedtimelimit"); 
 		String amtOfAttempts = request.getParameter("updatedamountofattempts");
+		String releaseGrade = request.getParameter("updatedreleasegrade");
+		String allowSeeAttempt = request.getParameter("updatedallowseeattempt");
+		String showcorrectans = request.getParameter("updatedshowcorrectans");
 		//System.out.println("Testname: "+testName+"\n testDescription: "+testDescription+"\n testInstructions: "+testInstructions+"\n testDateStart: "+testDateStart+"\n displaystart: "+displaystart+"\n displayend: "+displayend+"\n testDateEnd: "+testDateEnd+"\n availibility: "+availibility+"\n forcedCompletion: "+forcedCompletion+"\n allowBackButton: "+allowBackButton+"\n scrambleTest: "+scrambleTest+"\n showQuestionOnebyOne: "+showQuestionOnebyOne+"\n timelimit: "+timelimit+"\n amtOfAttempts: "+amtOfAttempts);
 		Connection connection = DBConnection.getDBConnection();
 		try {
 			Statement st = connection.createStatement();
-			String sql = "UPDATE testersitedatabase.testprofiles SET testname = '"+testName+"',testdescription = '"+testDescription+"',testinstructions = '"+testInstructions+"',testdatestart = '"+testDateStart+"',displaystart = '"+displaystart+"',displayend = '"+displayend+"',testdateend = '"+testDateEnd+"',"
-					+ "availibility = b'"+availibility+"',forcedCompletion = b'"+forcedCompletion+"',allowbackbutton = b'"+allowBackButton+"',scrambletest = b'"+scrambleTest+"',showquestiononebyone = b'"+showQuestionOnebyOne+"',timelimit = '"+timelimit+"',amtofattempts = '"+amtOfAttempts+"' WHERE idtest = "+testid+";";
+			String sql = "UPDATE testersitedatabase.testprofiles SET testname = '"+testName+"',"
+					+ "testdescription = '"+testDescription+"',"
+					+ "testinstructions = '"+testInstructions+"',"
+					+ "testdatestart = '"+testDateStart+"',"
+					+ "displaystart = '"+displaystart+"',"
+					+ "displayend = '"+displayend+"',"
+					+ "testdateend = '"+testDateEnd+"',"
+					+ "availibility = b'"+availibility+"',"
+					+ "forcedCompletion = b'"+forcedCompletion+"',"
+					+ "allowbackbutton = b'"+allowBackButton+"',"
+					+ "scrambletest = b'"+scrambleTest+"',"
+					+ "showquestiononebyone = b'"+showQuestionOnebyOne+"',"
+					+ "timelimit = '"+timelimit+"',"
+					+ "amtofattempts = '"+amtOfAttempts+"', "
+					+ "releasegrade = b'"+releaseGrade+"', "
+					+ "allowseeattempt = b'"+allowSeeAttempt+"', "
+					+ "showcorrectans = b'"+showcorrectans+"' "
+					//make sure last item ^ has a space instead of a  comma when adding new columns
+					
+					+ "WHERE idtest = "+testid+";";
 			System.out.println(sql);
 			st.executeUpdate(sql);
+			request.setAttribute("success", "Successfully updated test preferences!");
 			RequestDispatcher rd = request.getRequestDispatcher("TestPreferences.jsp");
 			rd.forward(request, response);
 		} catch (Exception e) {

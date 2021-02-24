@@ -54,6 +54,13 @@ public class TestAttemptObject {
 	public String toString() {
 		return "idattempt: "+idattempt+", attemptNumber: "+attemptNumber+", idstudentprofiles: "+idstudentprofiles+", idtest: "+idtest+", grade: "+grade+", gradeOutOf: "+gradeOutOf;
 	}
+	
+	/**
+	 * 
+	 * @param idstudentprofiles Student profile id in DB
+	 * @param idtest test id in DB
+	 * @return TestAttemptObject if TAO is found in DB. Else returns a null;
+	 */
 	public static TestAttemptObject getAttemptFromDB(String idstudentprofiles, String idtest) {
 		Connection connection = DBConnection.getDBConnection();
 		TestAttemptObject tao = null;
@@ -64,7 +71,7 @@ public class TestAttemptObject {
 				tao = new TestAttemptObject(rSet1.getInt("idattempt"), rSet1.getInt("attemptNumber"), rSet1.getInt("idstudentprofiles"), rSet1.getInt("idtest") ,rSet1.getInt("grade"), rSet1.getInt("gradeOutOf"));
 				System.out.println("TAO method % score:"+tao.getPercentageScore());
 			}else {
-				throw new SQLException("Couldnt find attempt from attemptbook");
+				System.out.println("TAO not found!");
 			}
 		} catch (Exception e) {
 			System.out.print("TAO method "+ e.getLocalizedMessage());
@@ -72,6 +79,11 @@ public class TestAttemptObject {
 		return tao;
 	}
 	
+	/**
+	 * 
+	 * @param idattempt primary key for an attempt stored in DB
+	 * @return TestAttemptObject if TAO is found in DB. Else returns a null;
+	 */
 	public static TestAttemptObject getAttemptFromDB(String idattempt) {
 		Connection connection = DBConnection.getDBConnection();
 		TestAttemptObject tao = null;
@@ -82,7 +94,7 @@ public class TestAttemptObject {
 				tao = new TestAttemptObject(rSet1.getInt("idattempt"), rSet1.getInt("attemptNumber"), rSet1.getInt("idstudentprofiles"), rSet1.getInt("idtest") ,rSet1.getInt("grade"), rSet1.getInt("gradeOutOf"));
 				System.out.println("TAO method % score:"+tao.getPercentageScore());
 			}else {
-				throw new SQLException("Couldnt find attempt from attemptbook");
+				System.out.println("TAO not found!");
 			}
 		} catch (Exception e) {
 			System.out.print("TAO method "+ e.getLocalizedMessage());

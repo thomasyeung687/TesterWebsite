@@ -254,6 +254,13 @@
                     </div>
                 </div>              
                  <!-- /. ROW  -->
+                 <hr /> <!-- adds line -->
+                  Description: <%out.println(test.getTestDescription()); %> </br>
+                  Instructions: <%out.println(test.getTestInstructions()); %> </br>
+                  Amount of Questions: <%out.println(test.getQuestionArray().size()); %>
+                  <form action="UpdateTestPreferencesLinker" method="get">
+                  	<button type="submit" name="idtest" value="<%out.println(test.getTestId());%>">Edit Test Preferences</button> 
+                  </form>
                   <hr /> <!-- adds line -->
                   <form action = "AddQuestionLinker" method="get">
 				  	<button type="submit" name="idtest" value="<%out.println(test.getTestId());%>">Add Question</button> 
@@ -271,14 +278,6 @@
 				  	<span id="numbertext">Enter Amount of Answer Choices</span>
 				  	<input type="number" id="amtofquestions" name="amtofquestions" min="2" max="10" value="3" style="width: 7em" > 
 				  </form>
-                  <hr /> <!-- adds line -->
-                  Description: <%out.println(test.getTestDescription()); %> </br>
-                  Instructions: <%out.println(test.getTestInstructions()); %> </br>
-                  Amount of Questions: <%out.println(test.getQuestionArray().size()); %>
-                  <form action="UpdateTestPreferencesLinker" method="get">
-                  	<button type="submit" name="idtest" value="<%out.println(test.getTestId());%>">Edit Test Preferences</button> 
-                  </form>
-                  <hr />
                   <hr />
 				  <form action="DeleteOrEditQuestionServlet" method="post">
 				  <% for(int n = 0; n<questions.size(); n++){ 

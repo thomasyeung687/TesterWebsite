@@ -151,7 +151,8 @@
 	                  	<hr/>
 	                  	Amount of Questions: <%out.println(thisTest.getQuestionArray().size()); %>
 	                  	<hr/>
-	                  	Grade Received: <%out.println(thisTest.getTotalPtsReceived()); %>
+	                  	Grade Received: <%out.println(thisTest.getTotalPtsReceived()); %> / <%out.println(thisTest.getTotalPts()); %> <br>
+	                  	Calculated: <%out.println(thisTest.getAttempts().get(0).getPercentageScore()+"%"); %>
                   	</div>
                   	<hr/>
 					<div class="TestPageTestQuestionsDiv">

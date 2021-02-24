@@ -34,7 +34,13 @@ public class SShowCompletedTestServlet extends HttpServlet {
 		Test test = Test.getCompletedTestFromDB(idStudent, tao.getidtest()+"");
 		
 		session.setAttribute("thistest", test);
-		
+		if(!test.isReleaseGrade()) {
+			RequestDispatcher rd = request.getRequestDispatcher("SGradeUnreleasedPage.jsp");
+			rd.forward(request, response);
+		}else if(!test.isAllowSeeAttempt()) {
+			RequestDispatcher rd = request.getRequestDispatcher("SGradeUnreleasedPage.jsp");
+			rd.forward(request, response);
+		}
 		RequestDispatcher rd = request.getRequestDispatcher("SShowCompletedTestPage.jsp");
 		rd.forward(request, response);
 	}

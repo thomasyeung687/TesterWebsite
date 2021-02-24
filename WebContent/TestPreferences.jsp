@@ -48,37 +48,8 @@
 	<%Connection con = DBConnection.getDBConnection();
 	String idtest = (String)session.getAttribute("idtest");
 	System.out.println("idtest in testpreferences: "+idtest);
-	Test test = null;
-	try {
-		Statement st = con.createStatement();
-		String query = "SELECT * FROM testersitedatabase.testprofiles WHERE idtest = '"+idtest+"';";
-		ResultSet rset = st.executeQuery(query); //getting the test profile of the test that was clicked on ClassTests.jsp
-		if(rset.next()) {
-			String testid = rset.getString("idtest");
-			String testName = rset.getString("testname");
-			String testDescription = rset.getString("testdescription");
-			String testInstructions = rset.getString("testinstructions");
-			String testDateStart = rset.getString("testdatestart");
-			String displaystart = rset.getString("displaystart");
-			String displayend = rset.getString("displayend");
-			String testDateEnd = rset.getString("testdateend");
-			boolean availibility = rset.getBoolean("availibility");
-			boolean forcedComplete = rset.getBoolean("forcedCompletion");
-			boolean allowBackButton =rset.getBoolean("allowbackbutton");
-			boolean scrambleTest = rset.getBoolean("scrambletest");
-			boolean showQuestionOnebyOne = rset.getBoolean("showquestiononebyone");
-			int timelimit = rset.getInt("timelimit");
-			int amtOfAttempts = rset.getInt("amtofattempts");
-			test = new Test(testName, testDateStart,displaystart, displayend,  testDateEnd, testid, testDescription, testInstructions,  availibility,  forcedComplete,allowBackButton,scrambleTest,showQuestionOnebyOne,  timelimit,  amtOfAttempts);
-			System.out.println(test.toString());
-			//request.setAttribute("testobject", test);
-		}else {
-			System.out.println("ShowExistingTestServlet: TEST NOT FOUND");
-		}
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}%>
+	Test test = Test.getTestWithOnlyPreferences(idtest);
+	%>
     <div id="wrapper">
          <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="adjust-nav">
@@ -162,8 +133,9 @@
 				  		<button name="action" value="back">Back</button> 						
 					</form>
                   <hr /> <!-- adds line -->
-				  <form action = "UpdatetestPreferencesServlet" method="post">
+				  <form action = "UpdatetestPreferencesServlet" method="post"> <!-- Folder: testservlets -->
                   <span style =  "color: red;"> ${error} </span><br>
+                  <span style =  "color: green;"> ${success} </span><br>
 				  	Test Name: <input type="text" value="<%out.println(test.getTestName()); %>" name="updatedtestname"> <br>
 				  	<hr /> <!-- adds line -->
 				  	Test Description: <textarea rows="2" cols="75" name="updatedtestdescription"><%out.println(test.getTestDescription()); %></textarea> <br>
@@ -200,18 +172,6 @@
 				  	</select>
 				  	<%}%> 
 				  	<br>
-				  	Allow Back Button: <% if(test.getAllowBackButton()){%>
-				  	<select name="updatedallowbackbutton">
-				  		<option value="1">True</option>
-				  		<option value="0">False</option>
-				  	</select>
-				  	<%}else{%>
-				  	<select name="updatedallowbackbutton">
-				  		<option value="0">False</option>
-				  		<option value="1">True</option>
-				  	</select>
-				  	<%}%> 
-				  	<br>
 				  	Scramble Questions: <% if(test.isScrambleTest()){%>
 				  	<select name="updatedscrambletest">
 				  		<option value="1">True</option>
@@ -235,12 +195,64 @@
 				  		<option value="1">True</option>
 				  	</select>
 				  	<%}%> 
+				  	Allow Back Button: <% if(test.getAllowBackButton()){%>
+				  	<select name="updatedallowbackbutton">
+				  		<option value="1">True</option>
+				  		<option value="0">False</option>
+				  	</select>
+				  	<%}else{%>
+				  	<select name="updatedallowbackbutton">
+				  		<option value="0">False</option>
+				  		<option value="1">True</option>
+				  	</select>
+				  	<%}%> 
 				  	<br>
-				  	
 				  	
 				  	<hr /> <!-- adds line -->
 				  	Time Limit (minutes): <input type="text" value="<%out.println(test.getTimelimit()); %>" name="updatedtimelimit"> <br>
 				  	Amount of Attempts: <input type="text" value="<%out.println(test.getAmtOfAttempts()); %>" name="updatedamountofattempts"> <br>
+				  	
+				  	<hr /> <!-- adds line -->
+				  	<span>After Test is Over</span><br>
+				  	
+				  	Release grade: <% if(test.isReleaseGrade()){%>
+				  	<select name="updatedreleasegrade">
+				  		<option value="1">True</option>
+				  		<option value="0">False</option>
+				  	</select>
+				  	<%}else{%>
+				  	<select name="updatedreleasegrade">
+				  		<option value="0">False</option>
+				  		<option value="1">True</option>
+				  	</select>
+				  	<%}%> 
+				  	<br>
+				  	Allow Student to see attempt: 
+				  	<% if(test.isAllowSeeAttempt()){%>
+				  	<select name="updatedallowseeattempt">
+				  		<option value="1">True</option>
+				  		<option value="0">False</option>
+				  	</select>
+				  	<%}else{%>
+				  	<select name="updatedallowseeattempt">
+				  		<option value="0">False</option>
+				  		<option value="1">True</option>
+				  	</select>
+				  	<%}%> 
+				  	<br>
+				  	Show Correct Answers: <% if(test.isShowcorrectans()){%>
+				  	<select name="updatedshowcorrectans">
+				  		<option value="1">True</option>
+				  		<option value="0">False</option>
+				  	</select>
+				  	<%}else{%>
+				  	<select name="updatedshowcorrectans">
+				  		<option value="0">False</option>
+				  		<option value="1">True</option>
+				  	</select>
+				  	<%}%> 
+				  	<br>
+				  	
 				  	<input type="submit" value="Save Preferences">
 				  </form>
 				  

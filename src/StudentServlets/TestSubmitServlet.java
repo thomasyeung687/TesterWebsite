@@ -40,9 +40,12 @@ public class TestSubmitServlet extends HttpServlet {
 		Test test = (Test) session.getAttribute("thistest");
 		String studentid = ((String) session.getAttribute("studentid")).trim();
 		String idtest = test.getTestId();
-		
-		int attemptnum = 1; // when implemented. change to request.parameter object
-		
+		int attemptnum = 0;
+		if(test.getAttempts().size()==0) {
+			attemptnum = 1; // when implemented. change to request.parameter object
+		}else {
+			attemptnum = test.getAttempts().get(0).getAttemptNumber()+1; //attemptnum = prevAttemptNum+1
+		}
 		System.out.println(studentid);
 		for(int i = 0; i < test.getQuestionArray().size(); i++) {
 			Question question = test.getQuestionArray().get(i);
@@ -209,6 +212,10 @@ public class TestSubmitServlet extends HttpServlet {
 		}
 		session.setAttribute("thistest", test);
 		
+		if(!test.isAllowSeeAttempt()) {
+			RequestDispatcher rd = request.getRequestDispatcher("SGradeUnreleasedPage.jsp");
+			rd.forward(request, response);
+		}
 		RequestDispatcher rd = request.getRequestDispatcher("AfterTestPage.jsp");
 		rd.forward(request, response);
 		//here all answers given by student should be entered into test object. All we have to do now is to tally everything up and submit to the database

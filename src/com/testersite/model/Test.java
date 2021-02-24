@@ -29,6 +29,11 @@ public class Test{
 	private ArrayList<Question> questions = new ArrayList<Question>();
 	private int totalPtsReceived = 0;
 	private ArrayList<TestAttemptObject> attempts = new ArrayList<TestAttemptObject>();
+	//properties for after test taken by student
+	private boolean releaseGrade = false;
+	private boolean allowSeeAttempt = false;
+	private boolean showcorrectans = false;
+	
 	
 	public Test() {}
 	public Test(String testid) {
@@ -278,7 +283,15 @@ public class Test{
 				boolean showQuestionOnebyOne = rset.getBoolean("showquestiononebyone");
 				int timelimit = rset.getInt("timelimit");
 				int amtOfAttempts = rset.getInt("amtofattempts");
+				boolean releaseGrade = rset.getBoolean("releasegrade");
+				boolean allowSeeAttempt = rset.getBoolean("allowseeattempt");
+				boolean showcorrectans = rset.getBoolean("showcorrectans");
 				test = new Test(testName, testDateStart,displaystart, displayend,  testDateEnd, testid, testDescription, testInstructions,  availibility,  forcedComplete,allowBackButton,scrambleTest,showQuestionOnebyOne,  timelimit,  amtOfAttempts);
+				
+				test.setReleaseGrade(releaseGrade);
+				test.setAllowSeeAttempt(allowSeeAttempt);
+				test.setShowcorrectans(showcorrectans);
+				
 				//System.out.println(test.toString());
 				//request.setAttribute("testobject", test);
 			}else {
@@ -455,5 +468,23 @@ public class Test{
 			System.out.println(exception.getLocalizedMessage());
 		}
 		return test;
+	}
+	public boolean isReleaseGrade() {
+		return releaseGrade;
+	}
+	public void setReleaseGrade(boolean releaseGrade) {
+		this.releaseGrade = releaseGrade;
+	}
+	public boolean isAllowSeeAttempt() {
+		return allowSeeAttempt;
+	}
+	public void setAllowSeeAttempt(boolean allowSeeAttempt) {
+		this.allowSeeAttempt = allowSeeAttempt;
+	}
+	public boolean isShowcorrectans() {
+		return showcorrectans;
+	}
+	public void setShowcorrectans(boolean showcorrectans) {
+		this.showcorrectans = showcorrectans;
 	}
 }

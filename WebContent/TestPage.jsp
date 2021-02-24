@@ -152,7 +152,7 @@
                   	</div>
                   	<hr/>
 					
-					<form action="TestSubmitServlet" method="post">
+					<form action="TestSubmitServlet" method="post"> <!-- Folder: StudentServlets -->
 					<div class="TestPageTestQuestionsDiv">
 				  <% for(int n = 1; n<thisTest.getQuestionArray().size()+1; n++){
 					  Question question = thisTest.getQuestionArray().get(n-1); //no idea why this works

@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.mysql.cj.Session;
 import com.testersite.dao.DBConnection;
 import com.testersite.model.Test;
+import com.testersite.model.TestAttemptObject;
 
 /**
  * Servlet implementation class TakeTestServlet
@@ -23,41 +25,20 @@ public class TakeTestServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
 		String idTest = request.getParameter("testid");
-		System.out.println(idTest);
+		String studentid = ((String) session.getAttribute("studentid")).trim();
+		System.out.println(idTest+" "+studentid);
 		try {
-			Connection connection = DBConnection.getDBConnection();
-			Statement st = connection.createStatement();
-			ResultSet resultSet = st.executeQuery("SELECT * FROM testersitedatabase.testprofiles WHERE idtest = '"+idTest+"';");
-			HttpSession session = request.getSession();
-			if(resultSet.next()) {
-				Test thistest = new Test();
-				thistest.setTestId(resultSet.getString("idtest"));
-				thistest.setTestName(resultSet.getString("testname"));
-				thistest.setTestDescription(resultSet.getString("testdescription"));
-				thistest.setTestInstructions(resultSet.getString("testinstructions"));
-				thistest.setTestDateStart("testdatestart");
-				thistest.settestDateEnd(resultSet.getString("testdateend"));
-				thistest.setDisplaystart(resultSet.getString("displaystart")); //display start and end can be used later on with conjunction with a function in test that determins whether test should be displayed or not.
-				thistest.setDisplaystart(resultSet.getString("displayend"));
-				
-				thistest.setForcedCompletion(resultSet.getBoolean("forcedCompletion"));
-				thistest.setAllowBackButton(resultSet.getBoolean("allowbackbutton"));
-				thistest.setScrambleTest(resultSet.getBoolean("scrambletest"));
-				thistest.setShowQuestionOnebyOne(resultSet.getBoolean("showquestiononebyone"));
-				
-				thistest.setTimelimit(resultSet.getInt("timelimit"));
-				thistest.setAmtOfAttempts(resultSet.getInt("amtofattempts"));
-				
-				session.setAttribute("thistest", thistest);//session attribute that contains all this tests information
-			}else {
-				System.out.print("Test Unavailable");
+			Test thistest = Test.getTestFromDB(idTest);
+			TestAttemptObject tao = TestAttemptObject.getAttemptFromDB(studentid, idTest);
+			if(tao != null) {
+				thistest.addAttemptObject(tao);
 			}
-			
+			session.setAttribute("thistest", thistest);//session attribute that contains all this tests information
 		} catch (Exception e) {
-			// TODO: handle exception
+			System.out.println("StudentServlets/TakeTestServlet.java "+e.getLocalizedMessage());
 		}
-		
 		response.sendRedirect("SShowTest.jsp");
 	}
 

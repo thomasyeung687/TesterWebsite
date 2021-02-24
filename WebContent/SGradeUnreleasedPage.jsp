@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<%@page import="com.testersite.model.TestAttemptObject"%>
+<%@page import="com.testersite.model.Question"%>
 <%@page import="com.testersite.model.Test"%>
 <%@page import="java.util.Date"%>
 <%@page import="com.testersite.model.ClassObject"%>
@@ -19,7 +19,6 @@
     <link href="assets/css/font-awesome.css" rel="stylesheet" />
         <!-- CUSTOM STYLES-->
     <link href="assets/css/custom.css" rel="stylesheet" />
-    <link href="assets/css/grades.css" rel="stylesheet" />
      <!-- GOOGLE FONTS-->
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
@@ -33,39 +32,9 @@
 		}
 	%>
     <%
-	Connection connection = DBConnection.getDBConnection();
-	String classid = ((String) session.getAttribute("classid")).trim();
-	String studentid = (String) session.getAttribute("studentid");
-	ClassObject thisclass = (ClassObject) session.getAttribute("thisclass"); //the class object created in ShowClassServlet
-	ArrayList<Test> availibleTests = new ArrayList<>(); //arraylist of test objects of available tests.
-	if(thisclass == null){
-		response.sendRedirect("SClasses.jsp");
-		return;
-	}
-	try {
-		Statement st = connection.createStatement();
-		ResultSet rSet;
-		rSet = st.executeQuery("SELECT * FROM testersitedatabase.testdns WHERE idclass = '"+classid+"'"); //getting all tests in testdns 
-
-		Statement st1 = connection.createStatement(); //used to get the actual test information using testid from rSet
-		ResultSet rSet1;
-		
-		
-		
-		while(rSet.next()){
-			Test test = Test.getTestWithOnlyPreferences(rSet.getString("idtest"));
-			test.addAttemptObject(TestAttemptObject.getAttemptFromDB(studentid, test.getTestId()));
-			availibleTests.add(test);
-		}
-		//all availible tests have been added to availibleTests
-		
-		
-	}catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		System.out.println("SShowClass.jsp SQL ERROR");
-		out.print("SShowClass.jsp SQL ERROR");
-	}
+    	Connection connection = DBConnection.getDBConnection(); 
+   	 	ClassObject thisclass = (ClassObject) session.getAttribute("thisclass"); //the class object created in ShowClassServlet
+    	Test thisTest = (Test) session.getAttribute("thistest"); //the test object created in TakeTestServlet
     %>        
           
     <div id="wrapper">
@@ -107,11 +76,11 @@
                         <a href="SShowClass.jsp" ><i class="fa fa-desktop "></i><%out.println(thisclass.getCoursename());%> <!-- <span class="badge">Included</span> --></a>
                     </li>
                     
-                    <li class="link-of-linkcenter">
+                    <li class="link-of-link">
                         <a href="STests.jsp" ><i class="fa fa-desktop "></i>Tests <!-- <span class="badge">Included</span> --></a>
                     </li>
                     
-                    <li class="link-of-link">
+                    <li class="link-of-linkcenter">
                         <a href="SGrades.jsp" ><i class="fa fa-desktop "></i>Grades <!-- <span class="badge">Included</span> --></a>
                     </li>
                 </ul>
@@ -122,46 +91,26 @@
         	<div id="page-inner">
                 <div class="row">
                     <div class="col-md-12">
-                     <h2><%out.println(thisclass.getCoursename()); %></h2>
+                    <h2><%out.println(thisclass.getCoursename()); %></h2>
 					<hr>
-					<h3>Grades</h3>
-					<hr>
+						<h3>Test name: <%out.println(thisTest.getTestName()); %></h3>
+						<h4>Test description: <%out.println(thisTest.getTestDescription()); %></h4>
+						<h4>Test instructions: <%out.println(thisTest.getTestInstructions()); %></h4>
+						<hr>
+						<%if(!thisTest.isAllowSeeAttempt()){ %>
+							<span>You are now yet allowed to review previous attempts.</span> <br>
+						<%} %>
+						<%if(!thisTest.isReleaseGrade()){ %>
+							<span>Test grades for this test has not been released yet.</span> <br>
+						<%}else{ %>
+							Grade Received: <%out.println(thisTest.getTotalPtsReceived()); %> <br>
+						<%} %>
+						<br>
+						<form action="StartTestServlet" method="get"> <!-- Folder: StudentServlets -->
+							<button class="SShowTestbutton" name="action" value="back">Back</button>
+						</form>
                     </div>
-                </div>
-               		<div>
-               		<form action="SShowCompletedTestServlet" method="get">
-		                <% for(Test test: availibleTests){ 
-		                    	if(test.getAttempts().get(0) == null){
-		                    %>
-			                     <div class="flexbox">
-			                    	<span><% out.println(test.getTestName()); %></span>
-			                    	<span> Grade: incomplete</span>
-			                     </div>
-	                    		<%
-	                    		}else if(test.isReleaseGrade()){ 
-		                    		TestAttemptObject tao = test.getAttempts().get(0);
-		                    	%>
-			                    	<div class="flexbox">
-				                    	<span><% out.println(test.getTestName()); %></span>
-				                    	<div>
-				                    		Raw Grade: <button type="submit" value="<%=tao.getIdAttempt()%>" name="idattempt"><%out.println(tao.getgrade()+"/"+tao.getgradeOutOf()); %></button><br>
-				                    		Calculated: <%out.println(tao.getPercentageScore()+"%"); %>
-				                    	</div>
-				                    </div>
-	                    	<%}else if(!test.isReleaseGrade()){ 
-	                    		TestAttemptObject tao = test.getAttempts().get(0);
-	                    	%>
-		                    	<div class="flexbox">
-			                    	<span><% out.println(test.getTestName()); %></span>
-			                    	<div>
-			                    		<span>Being Graded</span>
-			                    	</div>
-			                    </div>
-                    		<%}
-	                    } %>
-                    </form>
-                   	</div>
-               
+                </div>          
             </div>    
         </div>
         
@@ -179,3 +128,4 @@
    
 </body>
 </html>
+ 
