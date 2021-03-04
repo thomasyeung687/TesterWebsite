@@ -26,7 +26,7 @@
 	<%
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");//this prevents backbutton hack
 		//System.out.println(session.getAttribute("username"));
-		if(session.getAttribute("username")==null || session.getAttribute("professor")==null){
+		if(session.getAttribute("idprofessorprofiles")==null ){
 			response.sendRedirect("LoginProf.jsp");
 		}
 	%>

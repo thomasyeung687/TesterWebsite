@@ -27,7 +27,7 @@
     <%
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");//this prevents backbutton hack
 		//System.out.println(session.getAttribute("username"));
-		if(session.getAttribute("username")==null || session.getAttribute("student")==null){
+		if(session.getAttribute("idstudentprofiles")==null){
 			response.sendRedirect("LoginStudent.jsp");
 			return;
 		}
@@ -35,7 +35,7 @@
     <%
 	Connection connection = DBConnection.getDBConnection();
 	String classid = ((String) session.getAttribute("classid")).trim();
-	String studentid = (String) session.getAttribute("studentid");
+	String studentid = (String) session.getAttribute("idstudentprofiles");
 	ClassObject thisclass = (ClassObject) session.getAttribute("thisclass"); //the class object created in ShowClassServlet
 	ArrayList<Test> availibleTests = new ArrayList<>(); //arraylist of test objects of available tests.
 	if(thisclass == null){
@@ -138,8 +138,9 @@
 			                    	<span> Grade: incomplete</span>
 			                     </div>
 	                    		<%
-	                    		}else if(test.isReleaseGrade()){ 
-		                    		TestAttemptObject tao = test.getAttempts().get(0);
+	                    		}else if(test.isReleaseGrade()){
+	                    			TestAttemptObject tao = test.getAttempts().get(0);
+	                    			if(test.isAllowSeeAttempt()){
 		                    	%>
 			                    	<div class="flexbox">
 				                    	<span><% out.println(test.getTestName()); %></span>
@@ -148,7 +149,16 @@
 				                    		Calculated: <%out.println(tao.getPercentageScore()+"%"); %>
 				                    	</div>
 				                    </div>
-	                    	<%}else if(!test.isReleaseGrade()){ 
+	                    	<%		}else{%>
+	                    				<div class="flexbox">
+				                    	<span><% out.println(test.getTestName()); %></span>
+				                    	<div>
+				                    		Raw Grade: <%out.println(tao.getgrade()+"/"+tao.getgradeOutOf()); %><br>
+				                    		Calculated: <%out.println(tao.getPercentageScore()+"%"); %>
+				                    	</div>
+				                    	</div>
+	                    		  <%}
+	                    	}else if(!test.isReleaseGrade()){ 
 	                    		TestAttemptObject tao = test.getAttempts().get(0);
 	                    	%>
 		                    	<div class="flexbox">

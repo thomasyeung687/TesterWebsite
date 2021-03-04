@@ -24,8 +24,8 @@
 <body>
 	<%
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");//this prevents backbutton hack
-		System.out.println(session.getAttribute("username"));
-		if(session.getAttribute("username")==null || session.getAttribute("professor")==null){
+		System.out.println(session.getAttribute("idprofessorprofiles"));
+		if(session.getAttribute("idprofessorprofiles")==null){
 			response.sendRedirect("LoginProf.jsp");
 		}
 	%>
@@ -37,9 +37,7 @@
 	ArrayList<Integer> classids = new ArrayList<>(); //stores the id of the class
 	try {
 		Statement st = con.createStatement();
-		rset = st.executeQuery("SELECT idprofessorprofiles from testersitedatabase.professorprofiles where username = '"+session.getAttribute("username")+"';"); //gets the id for the your account which we use as a foreign key in the allclasses table
-		rset.next(); 
-		int idprofessorprofiles = rset.getInt("idprofessorprofiles"); //this is the foreign key which we can use to get the classes from this account
+		int idprofessorprofiles = Integer.parseInt((String) session.getAttribute("idprofessorprofiles")); //this is the foreign key which we can use to get the classes from this account
 		
 		rset = st.executeQuery("SELECT * FROM testersitedatabase.allclasses WHERE idprofessorprofiles = '"+idprofessorprofiles+"';"); //gets all the classes who's idprofessorprofiles is the one of this account
 		
@@ -51,7 +49,8 @@
 		//System.out.println(students);
 		
 	}catch(Exception e){
-		System.out.println("Exception in Class.jsp!");
+		System.out.println("Exception in YourClasses.jsp!");
+		System.out.println(e.getLocalizedMessage());
 	}
 	%>	
 

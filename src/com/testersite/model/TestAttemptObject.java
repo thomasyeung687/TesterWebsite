@@ -15,14 +15,16 @@ public class TestAttemptObject {
 	int grade = 0;
 	int gradeOutOf = 0;
 	double percentageScore = 0;
+	String notes;
 	
-	public TestAttemptObject(int idattempt, int attemptNumber,int idstudentprofiles, int idtest,int grade, int gradeOutOf) {
+	public TestAttemptObject(int idattempt, int attemptNumber,int idstudentprofiles, int idtest,int grade, int gradeOutOf,String notes) {
 		this.idattempt = idattempt;
 		this.attemptNumber = attemptNumber;
 		this.idstudentprofiles = idstudentprofiles;
 		this.idtest = idtest;
 		this.grade = grade;
 		this.gradeOutOf = gradeOutOf;
+		this.notes = notes;
 		
 		percentageScore = (double)grade / (double) gradeOutOf;
 		percentageScore = percentageScore * 100*100; //first 100 is to make the percentage score out of 100 percent. the second 100 is process of getting decimal to 2 places
@@ -51,8 +53,14 @@ public class TestAttemptObject {
 	public double getPercentageScore() {
 		return percentageScore;
 	}
+	public String getNotes() {
+		return this.notes;
+	}
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
 	public String toString() {
-		return "idattempt: "+idattempt+", attemptNumber: "+attemptNumber+", idstudentprofiles: "+idstudentprofiles+", idtest: "+idtest+", grade: "+grade+", gradeOutOf: "+gradeOutOf;
+		return "idattempt: "+idattempt+", attemptNumber: "+attemptNumber+", idstudentprofiles: "+idstudentprofiles+", idtest: "+idtest+", grade: "+grade+", gradeOutOf: "+gradeOutOf+", notes: "+notes;
 	}
 	
 	/**
@@ -66,9 +74,12 @@ public class TestAttemptObject {
 		TestAttemptObject tao = null;
 		try {
 			Statement st1 = connection.createStatement();
-			ResultSet rSet1 = st1.executeQuery("SELECT * FROM testersitedatabase.attemptbook WHERE idtest = "+idtest+" AND idstudentprofiles= "+idstudentprofiles+";");
+			String querString = "SELECT * FROM testersitedatabase.attemptbook WHERE idtest = "+idtest+" AND idstudentprofiles= "+idstudentprofiles+";";
+			System.out.println("tao78 "+querString);
+			ResultSet rSet1 = st1.executeQuery(querString);
+			
 			if(rSet1.next()){
-				tao = new TestAttemptObject(rSet1.getInt("idattempt"), rSet1.getInt("attemptNumber"), rSet1.getInt("idstudentprofiles"), rSet1.getInt("idtest") ,rSet1.getInt("grade"), rSet1.getInt("gradeOutOf"));
+				tao = new TestAttemptObject(rSet1.getInt("idattempt"), rSet1.getInt("attemptNumber"), rSet1.getInt("idstudentprofiles"), rSet1.getInt("idtest") ,rSet1.getInt("grade"), rSet1.getInt("gradeOutOf"), rSet1.getString("notes"));
 				System.out.println("TAO method % score:"+tao.getPercentageScore());
 			}else {
 				System.out.println("TAO not found!");
@@ -91,7 +102,7 @@ public class TestAttemptObject {
 			Statement st1 = connection.createStatement();
 			ResultSet rSet1 = st1.executeQuery("SELECT * FROM testersitedatabase.attemptbook WHERE idattempt = "+idattempt+";");
 			if(rSet1.next()){
-				tao = new TestAttemptObject(rSet1.getInt("idattempt"), rSet1.getInt("attemptNumber"), rSet1.getInt("idstudentprofiles"), rSet1.getInt("idtest") ,rSet1.getInt("grade"), rSet1.getInt("gradeOutOf"));
+				tao = new TestAttemptObject(rSet1.getInt("idattempt"), rSet1.getInt("attemptNumber"), rSet1.getInt("idstudentprofiles"), rSet1.getInt("idtest") ,rSet1.getInt("grade"), rSet1.getInt("gradeOutOf"), rSet1.getString("notes"));
 				System.out.println("TAO method % score:"+tao.getPercentageScore());
 			}else {
 				System.out.println("TAO not found!");

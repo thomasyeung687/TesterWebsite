@@ -27,8 +27,8 @@ public class SShowCompletedTestServlet extends HttpServlet {
 		String idattempt = request.getParameter("idattempt");
 		out.println(idattempt);
 		
-		String idStudent = (String) session.getAttribute("studentid");
-		out.println((String) session.getAttribute("studentid"));
+		String idStudent = (String) session.getAttribute("idstudentprofiles");
+		out.println((String) session.getAttribute("idstudentprofiles"));
 		
 		TestAttemptObject tao = TestAttemptObject.getAttemptFromDB(idattempt);
 		Test test = Test.getCompletedTestFromDB(idStudent, tao.getidtest()+"");

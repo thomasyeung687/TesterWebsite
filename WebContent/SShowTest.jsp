@@ -26,7 +26,7 @@
     <%
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");//this prevents backbutton hack
 		//System.out.println(session.getAttribute("username"));
-		if(session.getAttribute("username")==null || session.getAttribute("student")==null){
+		if(session.getAttribute("idstudentprofiles")==null){
 			response.sendRedirect("LoginStudent.jsp");
 			return;
 		}
@@ -145,7 +145,9 @@
 							<hr>
 							
 							<button class="SShowTestbutton" name="action" value="start">Start attempt <%out.println(thisTest.getAttempts().get(0).getAttemptNumber()+1); %></button>
+							<% if(thisTest.isAllowSeeAttempt()){ %>
 							<button class="SShowTestbutton" name="action" value="seeAttempt">Review Previous Attempt</button>
+							<%} %>
 						</form>
 					<%}else{ %>
 						<h3>Test name: <%out.println(thisTest.getTestName()); %></h3>
@@ -156,7 +158,9 @@
 						<br>
 						<form action="StartTestServlet" method="get"> <!-- Folder: StudentServlets -->
 							<span>You have attempted this test <%out.println(thisTest.getAttempts().get(0).getAttemptNumber()); %> time(s)</span> <br>
+							<% if(thisTest.isAllowSeeAttempt()){ %>
 							<button class="SShowTestbutton" name="action" value="seeAttempt">Review Previous Attempt</button>
+							<%} %>
 							<button class="SShowTestbutton" name="action" value="back">Back</button>
 						</form>
 					<%} %>

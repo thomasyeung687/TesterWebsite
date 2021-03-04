@@ -27,7 +27,7 @@ public class StartTestServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		Test thisTest = (Test)session.getAttribute("thistest");
 		String idTest = thisTest.getTestId();
-		String studentid = ((String) session.getAttribute("studentid")).trim();
+		String studentid = ((String) session.getAttribute("idstudentprofiles")).trim();
 		System.out.println("testid = "+thisTest.getTestId());
 		System.out.println(idTest+" "+studentid);
 		

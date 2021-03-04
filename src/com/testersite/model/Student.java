@@ -41,16 +41,9 @@ public class Student {
 					idtestString += testid + ",";
 				}
 				idtestString = idtestString.substring(0, idtestString.length()-1);//removeing last comma;
-				
-				String query = "SELECT * FROM testersitedatabase.attemptbook WHERE idstudentprofiles = "+this.profileid+" AND idtest in ("+idtestString+");";
-				System.out.println(query);
-				ResultSet rSet = st.executeQuery(query);
-				
-				if(rSet.next()){
-					TestAttemptObject tao = new TestAttemptObject(rSet.getInt("idattempt"), rSet.getInt("attemptNumber"), rSet.getInt("idstudentprofiles"), rSet.getInt("idtest") ,rSet.getInt("grade"), rSet.getInt("gradeOutOf"));
-					System.out.println(tao.getPercentageScore());
-					this.attempts.put(rSet.getInt("idtest"),tao);
-				}
+				TestAttemptObject tao = TestAttemptObject.getAttemptFromDB(this.profileid, idtestString);
+				System.out.println(tao.getPercentageScore());
+				this.attempts.put(tao.idtest,tao);
 				
 			}catch (Exception e) {
 				throw new Exception(e.getMessage());

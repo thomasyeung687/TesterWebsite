@@ -24,14 +24,14 @@
     <%
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");//this prevents backbutton hack
 		//System.out.println(session.getAttribute("username"));
-		if(session.getAttribute("username")==null || session.getAttribute("student")==null){
+		if(session.getAttribute("idstudentprofiles")==null){
 			response.sendRedirect("LoginStudent.jsp");
 			return;
 		}
 	%>
     <%
     	Connection connection = DBConnection.getDBConnection();
-    	String studentid = ((String) session.getAttribute("studentid")).trim();
+    	String studentid = ((String) session.getAttribute("idstudentprofiles")).trim();
     	Set<String> classnames = null;
     	TreeMap<String, ClassObject> classtoprof = null;
     	try {

@@ -29,8 +29,8 @@
 <body>
 	<%
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");//this prevents backbutton hack
-		System.out.println(session.getAttribute("username"));
-		if(session.getAttribute("username")==null || session.getAttribute("professor")==null){
+		System.out.println(session.getAttribute("idprofessorprofiles"));
+		if(session.getAttribute("idprofessorprofiles")==null){
 			response.sendRedirect("LoginProf.jsp");
 			return;
 		}
@@ -80,7 +80,7 @@
 			if(studentinfo.next()){//if found we do
 				Student stud = new Student(studentinfo.getString("name"), studentinfo.getString("idstudentprofiles"), testids);
 				students.add(stud);
-				stud.getAttemptsFromDB();
+				/* stud.getAttemptsFromDB(); */
 			}else{//student with id = idStudentprofile not found????
 				System.out.println(id+" This student not found!");
 			}

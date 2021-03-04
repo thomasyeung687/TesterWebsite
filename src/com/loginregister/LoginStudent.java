@@ -35,8 +35,7 @@ public class LoginStudent extends HttpServlet {
 			ResultSet rset = ps.executeQuery();
 			if(rset.next()) {
 				session.setAttribute("username", username);
-				session.setAttribute("student", "yes");
-				session.setAttribute("studentid", rset.getString("idstudentprofiles"));
+				session.setAttribute("idstudentprofiles", rset.getString("idstudentprofiles"));
 				session.setAttribute("studentname", rset.getString("name"));
 				response.sendRedirect("HomeStudent.jsp");
 			}else {

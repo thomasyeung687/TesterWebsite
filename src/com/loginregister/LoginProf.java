@@ -38,7 +38,7 @@ public class LoginProf extends HttpServlet {
 			ResultSet rset = ps.executeQuery();
 			if(rset.next()) {
 				session.setAttribute("username", username);
-				session.setAttribute("professor", "yes");
+				session.setAttribute("idprofessorprofiles", rset.getString("idprofessorprofiles"));
 				session.setAttribute("classcode", rset.getObject("classcode")); //getting classcode from db and putting it as attribute for tests creation etc
 				response.sendRedirect("CreatorOptions.jsp");
 			}else {

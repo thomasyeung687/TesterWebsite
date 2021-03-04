@@ -6,3 +6,11 @@ input::-webkit-inner-spin-button {
 .ptsInput{
 	width: 55px;
 }
+.notesTextArea{
+	width:300px;
+	height:150px;
+}
+.notesWrapper{
+	float:right;
+	display: inline-block;
+}

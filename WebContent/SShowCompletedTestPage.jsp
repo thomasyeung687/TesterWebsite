@@ -29,7 +29,7 @@
     <%
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");//this prevents backbutton hack
 		//System.out.println(session.getAttribute("username"));
-		if(session.getAttribute("username")==null || session.getAttribute("student")==null){
+		if(session.getAttribute("idstudentprofiles")==null){
 			response.sendRedirect("LoginStudent.jsp");
 			return;
 		}
@@ -39,6 +39,8 @@
     	Connection connection = DBConnection.getDBConnection(); 
    	 	ClassObject thisclass = (ClassObject) session.getAttribute("thisclass"); //the class object created in ShowClassServlet
     	Test thisTest = (Test) session.getAttribute("thistest"); //the test object created in TakeTestServlet
+    	
+    	boolean showAnswers = thisTest.isShowcorrectans();
     	
     	ArrayList<Question> testQuestions = new ArrayList<>(); //arraylist of test objects of available tests.
     	
@@ -151,7 +153,7 @@
 	                  	<hr/>
 	                  	Amount of Questions: <%out.println(thisTest.getQuestionArray().size()); %>
 	                  	<hr/>
-	                  	Grade Received: <%out.println(thisTest.getTotalPtsReceived()); %> / <%out.println(thisTest.getTotalPts()); %> <br>
+	                  	Grade Received: <%out.println(thisTest.getTotalPtsReceived()); %> / <%out.println(thisTest.getTotalPts());%> <br>
 	                  	Calculated: <%out.println(thisTest.getAttempts().get(0).getPercentageScore()+"%"); %>
                   	</div>
                   	<hr/>
@@ -175,7 +177,8 @@
 								</div>
 							</div>
 						
-						<%if(question instanceof MultipleChoiceQuestion){ 
+						<%if(showAnswers){
+						if(question instanceof MultipleChoiceQuestion){ 
 							MultipleChoiceQuestion mc = (MultipleChoiceQuestion) question;
 							//System.out.println(mc.getAnswers().toString());
 							List<String> anschoices = mc.getAnswers();
@@ -186,6 +189,9 @@
 								}else{
 								%> <input type="radio" name="q<%=n %>" value="<%out.println(s); %>" required disabled> <%out.println(s); %><br> <%
 								}
+							}
+							if(thisTest.isShowcorrectans()){
+								%><br><span>&#10004; <%out.println(question.getCorrectAnswerString()); %></span></br><%
 							}
 						}else if(question instanceof TFQuestion){
 							TFQuestion tf = (TFQuestion) question;
@@ -199,7 +205,9 @@
 									<input type="radio" name="q<%=n %>" value="False" required disabled checked> False<br> 
 								<%
 							}
-							
+							if(thisTest.isShowcorrectans()){
+								%><br><span>&#10004; <%out.println(question.getCorrectAnswerString()); %></span></br><%
+							}
 						}else if(question instanceof ShortResponseQuestion){
 							ShortResponseQuestion sr = (ShortResponseQuestion) question;
 							//do stuff if its a shortresponse.
@@ -216,6 +224,9 @@
 									%> <input type="checkbox" name="q<%=n %>" value="<%out.println(s); %>" required disabled> <%out.println(s); %><br> <%
 								}
 							}
+							if(thisTest.isShowcorrectans()){
+								%><br><span>&#10004; <%out.println(question.getCorrectAnswerString()); %></span></br><%
+							}
 						}else if(question instanceof FillInTheBlankQuestion){
 							FillInTheBlankQuestion fib = (FillInTheBlankQuestion) question;
 							List<String> correctans = fib.getCorrectans();
@@ -229,6 +240,9 @@
 								</br>
 								<span>Case Sensitive: </span>
 							<%}
+							if(thisTest.isShowcorrectans()){
+								%><br><span>&#10004; <%out.println(question.getCorrectAnswerString()); %></span></br><%
+							}
 						}else if(question instanceof FillInMultipleBlankQuestion){
 							FillInMultipleBlankQuestion fimb = (FillInMultipleBlankQuestion) question;
 							List<List<String>> correctans = fimb.getCorrectans();
@@ -253,6 +267,10 @@
 								</br>
 								<span>Partial Credit: </span>
 							<%}
+							if(thisTest.isShowcorrectans()){
+								%><br><span>&#10004; <%out.println(question.getCorrectAnswerString()); %></span></br><%
+							}
+						}//end of if(showAnswers){
 						}else if(question instanceof MultipartQuestion){
 							MultipartQuestion multi = (MultipartQuestion) question;
 							/* String questionids = multi.getQuestions().toString(); */
@@ -276,7 +294,7 @@
 									</div>
 								
 								
-								<%
+								<%if(showAnswers){
 								if(questionComponent instanceof MultipleChoiceQuestion){ 
 									MultipleChoiceQuestion mc = (MultipleChoiceQuestion) questionComponent;
 									//System.out.println(mc.getAnswers().toString());
@@ -288,6 +306,9 @@
 										}else{
 										%> <input type="radio" name="q<%=questionNum %>" value="<%out.println(s); %>" required disabled> <%out.println(s); %><br> <%
 										}
+									}
+									if(thisTest.isShowcorrectans()){
+										%><br><span>&#10004; <%out.println(questionComponent.getCorrectAnswerString()); %></span></br><%
 									}
 								}else if(questionComponent instanceof TFQuestion){
 									TFQuestion tf = (TFQuestion) questionComponent;
@@ -301,7 +322,9 @@
 											<input type="radio" name="q<%=questionNum %>" value="False" required disabled checked> False<br> 
 										<%
 									}
-									
+									if(thisTest.isShowcorrectans()){
+										%><br><span>&#10004; <%out.println(questionComponent.getCorrectAnswerString()); %></span></br><%
+									}
 								}else if(questionComponent instanceof ShortResponseQuestion){
 									ShortResponseQuestion sr = (ShortResponseQuestion) question;
 									//do stuff if its a shortresponse.
@@ -317,6 +340,9 @@
 										}else{
 											%> <input type="checkbox" name="q<%=questionNum %>" value="<%out.println(s); %>" required disabled> <%out.println(s); %><br> <%
 										}
+									}
+									if(thisTest.isShowcorrectans()){
+										%><br><span>&#10004; <%out.println(questionComponent.getCorrectAnswerString()); %></span></br><%
 									}
 								}else if(questionComponent instanceof FillInTheBlankQuestion){
 									FillInTheBlankQuestion fib = (FillInTheBlankQuestion) questionComponent;
@@ -336,6 +362,9 @@
 										</br>
 										<span>Case Sensitive: </span>
 									<%}
+									if(thisTest.isShowcorrectans()){
+										%><br><span>&#10004; <%out.println(questionComponent.getCorrectAnswerString()); %></span></br><%
+									}
 								}else if(questionComponent instanceof FillInMultipleBlankQuestion){
 									FillInMultipleBlankQuestion fimb = (FillInMultipleBlankQuestion) questionComponent;
 									List<List<String>> correctans = fimb.getCorrectans();
@@ -346,21 +375,25 @@
 										String inputname = questionNum+blank.get(i);
 										%><input type="text" class="fiblank" name="q<%=inputname%>" placeholder="<%out.println(fimb.getAnswersGiven().get(i));%>" readonly> <%
 									}
-									if(fimb.isCasesensitive()){%>
-									</br>
-									<span>Case Sensitive: &#10004;</span>	
-								<%}else{%>
-									</br>
-									<span>Case Sensitive: </span>
-								<%}
-									if(fimb.isPartialcredit()){%>
-									</br>
-									<span>Partial Credit: &#10004;</span>	
-								<%}else{%>
-									</br>
-									<span>Partial Credit: </span>
-								<%}
-								}
+										if(fimb.isCasesensitive()){%>
+										</br>
+										<span>Case Sensitive: &#10004;</span>	
+										<%}else{%>
+										</br>
+										<span>Case Sensitive: </span>
+										<%}
+										if(fimb.isPartialcredit()){%>
+										</br>
+										<span>Partial Credit: &#10004;</span>	
+										<%}else{%>
+										</br>
+										<span>Partial Credit: </span>
+										<%}
+									if(thisTest.isShowcorrectans()){
+										%><br><span>&#10004; <%out.println(questionComponent.getCorrectAnswerString()); %></span></br><%
+									}
+								 }
+								}//end of <%if(showAnswers){ for multipart
 								%>
 								</div> <!-- ending div for multipartQuestionComponentWrapper -->
 								<%
@@ -368,8 +401,8 @@
 							
 						}
 						//here check for other types of questions %>
-				  		</div>
-				  <%} %>
+				  </div>
+				  <%}%>
 				  </div>
 				  <form action="AfterTestPageLinker" method="get">
 						<input type="submit" class="SShowTestbutton" name="action" value="back">
