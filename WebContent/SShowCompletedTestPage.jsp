@@ -24,6 +24,7 @@
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
    
   	<link rel="stylesheet" href="assets/css/questions.css">
+  	<link href="assets/css/ShowCompletedTestPage.css" rel="stylesheet" />
 </head>
 <body>
     <%
@@ -171,10 +172,25 @@
 					  			<div class="questionTextWrapper">
 									<span style="white-space: pre-wrap; "><%out.print(n); %>) <%out.print(question.getQuestion().trim()); %> </span> <!-- allows for space to be preserved for say if the question is a clump of code -->
 								</div>
-								<div class="ptsWorthWrapper">
-									<span style="">Points: <%out.print(question.getPointsWorth()); %></span>
-									<span style="">Points: <%out.print(question.calculatePtsReceived()); %></span>
-								</div>
+								<%if(thisTest.getAttempts().size() == 0){//this means user is coming directly after taking the test. %>
+									<div class="ptsWorthWrapper">
+										<% if(question instanceof MultipartQuestion){ %>
+											Points:  <input class="ptsInput" type="number" value="<%=question.calculatePtsReceived()%>" name="<%=question.getQuestionid()%>" disabled step="any" step="any" min="0" max="<%=question.getPointsWorth()%>">
+										<%}else{ %>
+											Points:  <input class="ptsInput" type="number" value="<%=question.calculatePtsReceived()%>" name="<%=question.getQuestionid()%>" disabled step="any" min="0" max="<%=question.getPointsWorth()%>">
+										<%} %>
+										<span style="">/<%out.print(question.getPointsWorth()); %></span>
+									</div>
+								<%}else{//user came from SGrades so there is an attempt object within test and questions should have pts assigned from db so we dont calculate %>
+									<div class="ptsWorthWrapper">
+										<% if(question instanceof MultipartQuestion){ %>
+											Points:  <input class="ptsInput" type="number" value="<%=question.getPointsReceived()%>" name="<%=question.getQuestionid()%>" disabled step="any" step="any" min="0" max="<%=question.getPointsWorth()%>">
+										<%}else{ %>
+											Points:  <input class="ptsInput" type="number" value="<%=question.getPointsReceived()%>" name="<%=question.getQuestionid()%>" disabled step="any" min="0" max="<%=question.getPointsWorth()%>">
+										<%} %>
+										<span style="">/<%out.print(question.getPointsWorth()); %></span>
+									</div>
+								<%} %>
 							</div>
 						
 						<%if(showAnswers){
@@ -211,7 +227,7 @@
 						}else if(question instanceof ShortResponseQuestion){
 							ShortResponseQuestion sr = (ShortResponseQuestion) question;
 							//do stuff if its a shortresponse.
-							%> <textarea class="shortresponsequestion" name="q<%=n %>"><%out.println(question.getAnswerChosen()); %></textarea> <br> <%
+							%> <textarea class="shortresponsequestion" name="q<%=n %>" disabled><%out.println(question.getAnswerChosen()); %></textarea> <br> <%
 						}else if(question instanceof CheckAllQuestion){
 							CheckAllQuestion ca = (CheckAllQuestion) question;
 							List<String> anschoices = ca.getAnswers();
@@ -287,10 +303,17 @@
 							  			<div class="questionTextWrapper">
 											<span style=" "><%out.print(questionNum); %>) <%out.print(questionComponent.getQuestion().trim()); %> </span> <!-- allows for space to be preserved for say if the question is a clump of code -->
 										</div>
-										<div class="ptsWorthWrapper">
-											<span style="">Points: <%out.print(questionComponent.getPointsWorth()); %></span>
-											<span style="">Points Received: <%out.print(questionComponent.calculatePtsReceived()); %></span>
-										</div>
+										<%if(thisTest.getAttempts().size() == 0){//this means user is coming directly after taking the test. %>
+											<div class="ptsWorthWrapper">
+												Points:  <input class="ptsInput" type="number" value="<%=questionComponent.calculatePtsReceived()%>" name="<%=questionComponent.getQuestionid()%>" disabled step="any" min="0" max="<%=question.getPointsWorth()%>">
+												<span style="">/<%out.print(questionComponent.getPointsWorth()); %></span>
+											</div>
+										<%}else{ //user came from SGrades so there is an attempt object within test and questions should have pts assigned from db so we dont calculate%>
+											<div class="ptsWorthWrapper">
+												Points:  <input class="ptsInput" type="number" value="<%=questionComponent.getPointsReceived()%>" name="<%=questionComponent.getQuestionid()%>" disabled step="any" min="0" max="<%=question.getPointsWorth()%>">
+												<span style="">/<%out.print(questionComponent.getPointsWorth()); %></span>
+											</div>
+										<%} %>
 									</div>
 								
 								
@@ -328,7 +351,7 @@
 								}else if(questionComponent instanceof ShortResponseQuestion){
 									ShortResponseQuestion sr = (ShortResponseQuestion) question;
 									//do stuff if its a shortresponse.
-									%> <textarea class="shortresponsequestion" name="q<%=n %>"><%out.println(sr.getAnswerChosen()); %></textarea> <br> <%
+									%> <textarea class="shortresponsequestion" disabled name="q<%=n %>"><%out.println(sr.getAnswerChosen()); %></textarea> <br> <%
 								}else if(questionComponent instanceof CheckAllQuestion){
 									CheckAllQuestion ca = (CheckAllQuestion) questionComponent;
 									List<String> anschoices = ca.getAnswers();
@@ -404,6 +427,13 @@
 				  </div>
 				  <%}%>
 				  </div>
+				  	
+					<%if(!(thisTest.getAttempts().size()==0)){ //only if there is an attempt object do we have a note box%>
+				  	<div class="questionWrapper">
+				  		<span>Notes</span><br>
+						<textarea class="notesTextArea" name="notes"><%out.println(thisTest.getAttempts().get(0).getNotes().trim());%></textarea>
+				  	</div>
+				  	<%} %>
 				  <form action="AfterTestPageLinker" method="get">
 						<input type="submit" class="SShowTestbutton" name="action" value="back">
 				</form>
