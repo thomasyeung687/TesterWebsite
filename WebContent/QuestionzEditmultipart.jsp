@@ -68,57 +68,10 @@
 		Statement st2 = con.createStatement();
 		rset = st.executeQuery("SELECT * FROM questionsdatabase.multipartquestion WHERE idquestion = '"+idquestion+"';");
 		if(rset.next()){
-			multi = new MultipartQuestion(rset.getInt("idquestion"), rset.getInt("pointsworth"),rset.getString("questiontitle"), rset.getString("question"), rset.getString("questioncomponentids"));
-			String questioncompoentids = multi.getQuestionCompoentids(); //the ids of the question objects in database separated by commas.
-			List<String> questionids = Arrays.asList(questioncompoentids.split(","));
-			System.out.print("questionids:"+questionids);
-			for(String id : questionids){ //here we are fetching all the different questions that make up this multipart from the database
-				int integerid = Integer.parseInt(id);
-				rset = st.executeQuery("SELECT * FROM questionsdatabase.allquestiontable WHERE idquestion = '"+integerid+"';"); //first fetching the question from allquestions table in sql to get what type of question it is.
-				String tablename;
-				if(rset.next()){
-					tablename = rset.getString("tablename");
-/**/				ResultSet rset2 = st2.executeQuery("SELECT * FROM "+tablename+" WHERE idquestion='"+integerid+"';"); //integerid maybe should be gotten from rset. here we fetch the actual question data from its respective table
-					System.out.print("tablename:"+tablename);
-					if(rset2.next()){
-						if(tablename.equals("questionsdatabase.multiplechoice")){
-							System.out.println("Adding new mc question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
-							MultipleChoiceQuestion newmcq = new MultipleChoiceQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"),rset2.getString("answerstring"), rset2.getString("correctanswer"));
-							//System.out.println(newmcq.getAnswers().toString());
-							multi.addQuestion(newmcq);
-						}else if(tablename.equals("questionsdatabase.truefalse")){
-							System.out.println("Adding new TF question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
-							TFQuestion newmcq = new TFQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"));
-							multi.addQuestion(newmcq);
-						}else if(tablename.equals("questionsdatabase.checkall")){
-							System.out.println("Adding new CheckAll question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
-							CheckAllQuestion newmcq = new CheckAllQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("answerstring"), rset2.getString("correctstring"));
-							System.out.println(newmcq.toString());
-							multi.addQuestion(newmcq);
-						}else if(tablename.equals("questionsdatabase.fillintheblank")){
-							System.out.println("Adding new fillintheblank question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
-							FillInTheBlankQuestion newfib = new FillInTheBlankQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"), rset2.getBoolean("casesensitive"));
-							System.out.println(newfib.toString());
-							multi.addQuestion(newfib);
-						}else if(tablename.equals("questionsdatabase.fillinmultipleblank")){
-							System.out.println("Adding new fillinmultipleblank question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
-							System.out.println("Question:"+rset2.getString("question"));
-							FillInMultipleBlankQuestion newfib = new FillInMultipleBlankQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"), rset2.getBoolean("casesensitive"),rset2.getBoolean("partialcredit"));
-							//System.out.println(newfib.toString());
-							multi.addQuestion(newfib);
-						}
-					}else{
-						System.out.println("QuestionzEditmultipart. Couldn't get component question "+idquestion);
-					}
-				}else{
-					System.out.println("QuestionzEditmultipart. Couldn't get question "+idquestion);
-				}
-			}
-		
+			multi = new MultipartQuestion(rset.getInt("idquestion"),rset.getString("questiontitle"), rset.getString("question"), rset.getString("questioncomponentids"));
 		}else{
 			System.out.println("QuestionzEditmultipart. Failed to get multipart question!");
 		}
-		//rset for other questiontypes V
 	}catch(Exception exception){
 		System.out.println("QuestionzEditmultiparterror: ");
 		exception.printStackTrace();

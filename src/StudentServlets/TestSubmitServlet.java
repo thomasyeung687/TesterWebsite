@@ -38,7 +38,7 @@ public class TestSubmitServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		Test test = (Test) session.getAttribute("thistest");
-		String studentid = ((String) session.getAttribute("studentid")).trim();
+		String studentid = ((String) session.getAttribute("idstudentprofiles")).trim();
 		String idtest = test.getTestId();
 		int attemptnum = 0;
 		if(test.getAttempts().size()==0) {

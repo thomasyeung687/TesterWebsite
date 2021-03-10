@@ -26,7 +26,7 @@ public class joinClassServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		Connection connection = DBConnection.getDBConnection();
-		String studentid = ((String) session.getAttribute("studentid")).trim();
+		String studentid = ((String) session.getAttribute("idstudentprofiles")).trim();
 		session.removeAttribute("joinclassSuccess");
 		session.removeAttribute("joinclasserror");
 		try {

@@ -148,9 +148,9 @@
 									</div>
 									<div class="ptsWorthWrapper">
 										<% if(question instanceof MultipartQuestion){ %>
-											Points:  <input class="ptsInput" type="number" value="<%=question.calculatePtsReceived()%>" name="<%=question.getQuestionid()%>" disabled>
+											Points:  <input class="ptsInput" type="number" value="<%=question.getPointsReceived()%>" name="<%=question.getQuestionid()%>" disabled step="any" step="any" min="0" max="<%=question.getPointsWorth()%>">
 										<%}else{ %>
-											Points:  <input class="ptsInput" type="number" value="<%=question.calculatePtsReceived()%>" name="<%=question.getQuestionid()%>">
+											Points:  <input class="ptsInput" type="number" value="<%=question.getPointsReceived()%>" name="<%=question.getQuestionid()%>" step="any" min="0" max="<%=question.getPointsWorth()%>">
 										<%} %>
 										<span style="">/<%out.print(question.getPointsWorth()); %></span>
 									</div>
@@ -255,8 +255,8 @@
 								  			<div class="questionTextWrapper">
 												<span style=" "><%out.print(questionNum); %>) <%out.print(questionComponent.getQuestion().trim()); %> </span> <!-- allows for space to be preserved for say if the question is a clump of code -->
 											</div>
-											<div class="ptsWorthWrapper">
-												Points:  <input class="ptsInput" type="number" step="0.01" value="<%=questionComponent.calculatePtsReceived()%>" name="<%=questionComponent.getQuestionid()%>">
+											<div class="ptsWorthWrapper">s
+												Points:  <input class="ptsInput" type="number" value="<%=questionComponent.getPointsReceived()%>" name="<%=questionComponent.getQuestionid()%>" step="any" min="0" max="<%=question.getPointsWorth()%>">
 												<span style="">/<%out.print(questionComponent.getPointsWorth()); %></span>
 											</div>
 										</div>
@@ -362,7 +362,7 @@
 					  <%} %>
 					  	<div class="questionWrapper">
 					  		<span>Notes</span><br>
-					  		<textarea class="notesTextArea" name="notes" value="<%out.println(thisTest.getAttempts().get(0).getNotes());%>"></textarea>
+							<textarea class="notesTextArea" name="notes"><%out.println(thisTest.getAttempts().get(0).getNotes());%></textarea>
 					  	</div>
 					  	<input type="submit" class="SShowTestbutton" name="action" value="Prev Student">
 					  	<input type="submit" class="SShowTestbutton" name="action" value="Back">

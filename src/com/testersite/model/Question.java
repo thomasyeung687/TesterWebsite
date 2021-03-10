@@ -13,6 +13,13 @@ public abstract class Question {
 	private String correctAnswerString; //taken from DB
 	private String answerChosen; //answer given by student
 	
+	public Question(int questionid, String questiontitle, String questionType, String question) {
+		this.questionid = questionid;
+		this.questiontitle = questiontitle;
+		this.questionType = questionType;
+		this.pointsWorth = pointsWorth;
+		this.question = question;
+	}
 	public Question(String questionType, int pointsWorth, String question) {
 		this.questionType = questionType;
 		this.pointsWorth = pointsWorth;
@@ -47,6 +54,9 @@ public abstract class Question {
 	}
 	public int getPointsWorth() {
 		return pointsWorth;
+	}
+	public void setPointsWorth(int ptsworth) {
+		this.pointsWorth = ptsworth;
 	}
 	
 	public double setPointsReceived(double ptsreceived) {

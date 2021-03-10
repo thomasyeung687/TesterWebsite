@@ -43,5 +43,4 @@ public class DeleteTestServlet extends HttpServlet {
 		RequestDispatcher rd = request.getRequestDispatcher("ClassOptions.jsp");
 		rd.forward(request, response);
 	}
-
 }

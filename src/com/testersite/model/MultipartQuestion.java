@@ -14,15 +14,17 @@ import com.testersite.dao.DBConnection;
 public class MultipartQuestion extends Question {
 	private ArrayList<Question> questions = new ArrayList<Question>();
 	String questioncomponentids; // this will contain a string with the idquestion of the Question instances that make up this question
-	public MultipartQuestion(int questionid,  int pointsWorth,String questiontitle, String question, String questioncomponentids) {
-		super(questionid, questiontitle,"MultipartQuestion", pointsWorth , question);
+	public MultipartQuestion(int questionid,String questiontitle, String question, String questioncomponentids) {
+		super(questionid, questiontitle,"MultipartQuestion" , question);
 		this.questioncomponentids = questioncomponentids;
 		GetQuestions();
+		this.getPointsWorth();
 	}
-	public MultipartQuestion(int questionid,  int pointsWorth,String questiontitle, String question, String questioncomponentids, String idAttempt) {
-		super(questionid, questiontitle,"MultipartQuestion", pointsWorth , question);
+	public MultipartQuestion(int questionid,String questiontitle, String question, String questioncomponentids, String idAttempt) {//gets questions with the answers given by student that created attempt with idAttempt
+		super(questionid, questiontitle,"MultipartQuestion", question);
 		this.questioncomponentids = questioncomponentids;
-		GetQuestions(idAttempt);
+		GetQuestions(idAttempt); //gets questions with the answers given by student that created attempt with idAttempt
+		this.getPointsWorth();
 	}
 	
 	/**
@@ -50,7 +52,7 @@ public class MultipartQuestion extends Question {
 		tostring += "Points Worth ="+getPointsWorth();
 		return tostring;
 	}
-	private void GetQuestions() {
+	private void GetQuestions() { //gets the questions from the DB using the questioncompoentids string.
 		String questioncomponents = getQuestionCompoentids();
 		String[] questionids = questioncomponents.split(",");
 		
@@ -116,7 +118,7 @@ public class MultipartQuestion extends Question {
 		}
 	}
 	
-	private void GetQuestions(String idAttempt) {
+	private void GetQuestions(String idAttempt) {//used in Test.getCompletedTestFromDB() when we encounter a multipart question 
 		String questioncomponents = getQuestionCompoentids();
 		String[] questionids = questioncomponents.split(",");
 		
@@ -138,13 +140,13 @@ public class MultipartQuestion extends Question {
 				String idquestion = rset.getString("idquestion");
 				String tablename = rset.getString("tablename");
 				String query2 = "Select * FROM "+tablename+" INNER JOIN testersitedatabase.attempt_answer_choice "
-						+ "on "+tablename+".idquestion = testersitedatabase.attempt_answer_choice.idquestion WHERE idattempt = "+idAttempt+";";
+						+ "on "+tablename+".idquestion = testersitedatabase.attempt_answer_choice.idquestion WHERE idattempt = "+idAttempt+" AND testersitedatabase.attempt_answer_choice.idquestion = "+idquestion+";";
 				System.out.println("MPQ query2 "+ query2);
 				Statement st2 = con.createStatement();
 				ResultSet rset2 = st2.executeQuery(query2);
 				if(rset2.next()){
 					if(tablename.equals("questionsdatabase.multiplechoice")){
-						System.out.println("Adding new mc question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
+						System.out.println("Adding new mc question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth")+" pts received "+rset2.getDouble("ptsGiven"));
 						MultipleChoiceQuestion newq = new MultipleChoiceQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"),rset2.getString("answerstring"), rset2.getString("correctanswer"));
 						newq.setAnswerChosen(rset2.getString("answerGiven"));
 						newq.setPointsReceived(rset2.getDouble("ptsGiven"));
@@ -152,7 +154,7 @@ public class MultipartQuestion extends Question {
 						System.out.println("MPQ"+newq.toString());
 						questions.add(newq);
 					}else if(tablename.equals("questionsdatabase.truefalse")){
-						System.out.println("Adding new TF question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
+						System.out.println("Adding new TF question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth")+" pts received "+rset2.getDouble("ptsGiven"));
 						TFQuestion newq = new TFQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"));
 						newq.setAnswerChosen(rset2.getString("answerGiven"));
 						newq.setPointsReceived(rset2.getDouble("ptsGiven"));
@@ -160,7 +162,7 @@ public class MultipartQuestion extends Question {
 						System.out.println("MPQ"+newq.toString());
 						questions.add(newq);
 					}else if(tablename.equals("questionsdatabase.shortanswer")){
-						System.out.println("Adding new SR question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
+						System.out.println("Adding new SR question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth")+" pts received "+rset2.getDouble("ptsGiven"));
 						ShortResponseQuestion newq = new ShortResponseQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"));
 						newq.setAnswerChosen(rset2.getString("answerGiven"));
 						newq.setPointsReceived(rset2.getDouble("ptsGiven"));
@@ -168,7 +170,7 @@ public class MultipartQuestion extends Question {
 						System.out.println("MPQ"+newq.toString());
 						questions.add(newq);
 					}else if(tablename.equals("questionsdatabase.checkall")){
-						System.out.println("Adding new CheckAll question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
+						System.out.println("Adding new CheckAll question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth")+" pts received "+rset2.getDouble("ptsGiven"));
 						CheckAllQuestion newq = new CheckAllQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("answerstring"), rset2.getString("correctstring"));
 						newq.setAnswerChosen(rset2.getString("answerGiven"));
 						newq.setPointsReceived(rset2.getDouble("ptsGiven"));
@@ -176,7 +178,7 @@ public class MultipartQuestion extends Question {
 						System.out.println("MPQ"+newq.toString());
 						questions.add(newq);
 					}else if(tablename.equals("questionsdatabase.fillintheblank")){
-						System.out.println("Adding new fillintheblank question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
+						System.out.println("Adding new fillintheblank question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth")+" pts received "+rset2.getDouble("ptsGiven"));
 						FillInTheBlankQuestion newq = new FillInTheBlankQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"), rset2.getBoolean("casesensitive"));
 						newq.setAnswerChosen(rset2.getString("answerGiven"));
 						newq.setPointsReceived(rset2.getDouble("ptsGiven"));
@@ -184,7 +186,7 @@ public class MultipartQuestion extends Question {
 						System.out.println("MPQ"+newq.toString());
 						questions.add(newq);
 					}else if(tablename.equals("questionsdatabase.fillinmultipleblank")){
-						System.out.println("Adding new fillinmultipleblank question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
+						System.out.println("Adding new fillinmultipleblank question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth")+" pts received "+rset2.getDouble("ptsGiven"));
 						System.out.println("Question:"+rset2.getString("question"));
 						FillInMultipleBlankQuestion newq = new FillInMultipleBlankQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"), rset2.getBoolean("casesensitive"),rset2.getBoolean("partialcredit"));
 						newq.setAnswerChosen(rset2.getString("answerGiven"));
@@ -198,6 +200,7 @@ public class MultipartQuestion extends Question {
 					System.out.println("MPQ Couldn't get question "+idquestion);
 				}
 			}
+			this.calculatePtsReceived();//calculates the pts received for this multipart.
 			//rset for other questiontypes V
 		}catch(Exception exception){
 			System.out.println("MultipartQuestion Exception trying to fetch question components");
@@ -209,8 +212,21 @@ public class MultipartQuestion extends Question {
 	public double calculatePtsReceived() {
 		int totalPtsReceived = 0;
 		for(Question question: questions) { //for each question in this multipart question, calculate pts received.
-			totalPtsReceived += question.calculatePtsReceived(); //accumulating the ptsreceived of each question.
+			totalPtsReceived += question.getPointsReceived(); //accumulating the ptsreceived of each question.
 		}
+		super.setPointsReceived(totalPtsReceived); //setting pts received in the parent class
 		return totalPtsReceived;
+	}
+	/**
+	 * This method goes through each question in the questions array and returns the total number of pts this mpq is worth.
+	 * It also sets this ptsworth to the total.
+	 */
+	public int getPointsWorth() {
+		int sum = 0;
+		for(Question q : questions) {
+			sum += q.getPointsWorth();
+		}
+		super.setPointsWorth(sum);
+		return sum;
 	}
 }

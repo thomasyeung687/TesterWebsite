@@ -292,11 +292,6 @@
 									out.println(fib.getStr1());%>
 									<input type="text" class="fiblank" name="q<%=questionNum %>">
 									<% out.println(fib.getStr2() +"<br>");
-									for(String s: correctans){
-										//System.out.println(tf.getCorrectAns());%>
-											<span>&#10004; <%out.println(s); %></span>
-									<%
-									}
 									if(fib.isCasesensitive()){%>
 										</br>
 										<span>Case Sensitive: &#10004;</span>	

@@ -247,6 +247,9 @@ public class Test{
 		}
 		return totalPtsReceived;
 	}
+	public void setTotalPtsReceived(int totalPtsReceived) {
+		this.totalPtsReceived = totalPtsReceived;
+	}
 	public int getTotalPts() {//total pts of this test by adding all the ptsworth of each question in questions list
 		int sumOfPts = 0;
 		for(Question question : questions) {
@@ -309,6 +312,7 @@ public class Test{
 		TestAttemptObject tao = TestAttemptObject.getAttemptFromDB(idstudentprofiles, idtest); //getting TestAttemptObject
 		Test test = getTestWithOnlyPreferences(idtest); //getting Test object with only preferences.
 		test.addAttemptObject(tao); //adding TAO object to test.
+		test.setTotalPtsReceived(tao.getgrade());
 		
 		Connection con = DBConnection.getDBConnection();
 		ResultSet rset;//gets test and its questions
@@ -326,7 +330,7 @@ public class Test{
 					rset2.next();
 					System.out.println("Adding new multipartquestion question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
 					System.out.println("Question:"+rset2.getString("question"));
-					MultipartQuestion newq = new MultipartQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("questioncomponentids"), tao.getIdAttempt()+"");
+					MultipartQuestion newq = new MultipartQuestion(rset2.getInt("idquestion"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("questioncomponentids"), tao.getIdAttempt()+"");
 					//System.out.println(newfib.toString());
 					test.addQuestionToQuestions(newq);
 				}else { //if not a multipart question
@@ -453,7 +457,7 @@ public class Test{
 					}else if(tablename.equals("questionsdatabase.multipartquestion")){
 						System.out.println("Adding new multipartquestion question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
 						System.out.println("Question:"+rset2.getString("question"));
-						MultipartQuestion multi = new MultipartQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("questioncomponentids"));
+						MultipartQuestion multi = new MultipartQuestion(rset2.getInt("idquestion"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("questioncomponentids"));
 						//System.out.println(newfib.toString());
 						test.addQuestionToQuestions(multi);
 					}

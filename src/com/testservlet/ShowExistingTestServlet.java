@@ -32,5 +32,4 @@ public class ShowExistingTestServlet extends HttpServlet {
 		session.setAttribute("idtest", idtest);
 		request.getRequestDispatcher("TestLayout.jsp").forward(request, response);
 	}
-
 }

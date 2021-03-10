@@ -156,7 +156,7 @@
 				}else if(tablename.equals("questionsdatabase.multipartquestion")){
 					System.out.println("Adding new multipartquestion question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
 					System.out.println("Question:"+rset2.getString("question"));
-					MultipartQuestion multi = new MultipartQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("questioncomponentids"));
+					MultipartQuestion multi = new MultipartQuestion(rset2.getInt("idquestion"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("questioncomponentids"));
 					//System.out.println(newfib.toString());
 					test.addQuestionToQuestions(multi);
 				}

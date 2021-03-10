@@ -80,7 +80,7 @@ public class TestAttemptObject {
 			
 			if(rSet1.next()){
 				tao = new TestAttemptObject(rSet1.getInt("idattempt"), rSet1.getInt("attemptNumber"), rSet1.getInt("idstudentprofiles"), rSet1.getInt("idtest") ,rSet1.getInt("grade"), rSet1.getInt("gradeOutOf"), rSet1.getString("notes"));
-				System.out.println("TAO method % score:"+tao.getPercentageScore());
+				System.out.println("TAO method % score:"+tao.getPercentageScore()+"TAO:"+tao.toString());
 			}else {
 				System.out.println("TAO not found!");
 			}
@@ -103,7 +103,7 @@ public class TestAttemptObject {
 			ResultSet rSet1 = st1.executeQuery("SELECT * FROM testersitedatabase.attemptbook WHERE idattempt = "+idattempt+";");
 			if(rSet1.next()){
 				tao = new TestAttemptObject(rSet1.getInt("idattempt"), rSet1.getInt("attemptNumber"), rSet1.getInt("idstudentprofiles"), rSet1.getInt("idtest") ,rSet1.getInt("grade"), rSet1.getInt("gradeOutOf"), rSet1.getString("notes"));
-				System.out.println("TAO method % score:"+tao.getPercentageScore());
+				System.out.println("TAO method % score:"+tao.getPercentageScore()+"TAO:"+tao.toString());
 			}else {
 				System.out.println("TAO not found!");
 			}

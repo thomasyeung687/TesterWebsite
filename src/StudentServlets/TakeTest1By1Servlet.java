@@ -37,7 +37,7 @@ public class TakeTest1By1Servlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		Test test = (Test) session.getAttribute("thistest");
-		String studentid = ((String) session.getAttribute("studentid")).trim();
+		String studentid = ((String) session.getAttribute("idstudentprofiles")).trim();
 		String idtest = test.getTestId();
 		int currentQuestion = (int) session.getAttribute("currentQuestion");
 		
