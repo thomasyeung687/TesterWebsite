@@ -364,10 +364,10 @@
 					  		<span>Notes</span><br>
 							<textarea class="notesTextArea" name="notes"><%out.println(thisTest.getAttempts().get(0).getNotes());%></textarea>
 					  	</div>
-					  	<input type="submit" class="SShowTestbutton" name="action" value="Prev Student">
-					  	<input type="submit" class="SShowTestbutton" name="action" value="Back">
-					  	<input type="submit" class="SShowTestbutton" name="action" value="Submit Grade">
-					  	<input type="submit" class="SShowTestbutton" name="action" value="Next Student">
+					  	<div>
+					  		<input type="submit" class="SShowTestbutton" name="action" value="Submit Grade">
+						  	<input type="submit" class="SShowTestbutton" name="action" value="Back">
+					  	</div>
 					  </form>
 					  
 					  

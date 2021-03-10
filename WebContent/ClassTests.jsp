@@ -124,7 +124,7 @@
                     <li class="active-link">
                         <a href="YourClasses.jsp"><i class="fa fa-edit "></i>Class  <span class="badge"></span></a>
                     </li>
-					<li >
+<!-- 					<li >
                         <a href="Testsnew.jsp" ><i class="fa fa-edit "></i>Tests <span class="badge"></span></a>
                     </li>
                     <li>
@@ -151,7 +151,7 @@
                     </li>
                      <li>
                         <a href="#"><i class="fa fa-edit "></i>My Link Five </a>
-                    </li>
+                    </li> -->
                 </ul>
                             </div>
 

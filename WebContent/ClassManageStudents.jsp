@@ -132,7 +132,7 @@
                     <li class="active-link">
                         <a href="YourClasses.jsp"><i class="fa fa-edit "></i>Class  <span class="badge"></span></a>
                     </li>
-					<li >
+<!-- 					<li >
                         <a href="Testsnew.jsp" ><i class="fa fa-edit "></i>Tests <span class="badge"></span></a>
                     </li>
                     <li>
@@ -159,7 +159,7 @@
                     </li>
                      <li>
                         <a href="#"><i class="fa fa-edit "></i>My Link Five </a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </nav>
@@ -196,7 +196,8 @@
 						%>
 						<tr>
 							<td>
-							 <button type="submit" name="studprofid" value="<%out.println(stud.getprofid());%>"><%out.println(stud.getname()); %></button> <br> 
+							 <%-- <button type="submit" name="studprofid" value="<%out.println(stud.getprofid());%>"><%out.println(stud.getname()); %></button> <br>  --%>
+								<span><%out.println(stud.getname()); %></span> <br> 
 							</td>
 							<%
 							for(int j = 0; j< tests.size(); j++){

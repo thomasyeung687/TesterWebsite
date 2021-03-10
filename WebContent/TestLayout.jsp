@@ -80,96 +80,7 @@
 	Connection con = DBConnection.getDBConnection();
 	String idtest = (String)session.getAttribute("idtest");
 	System.out.println(idtest);
-	Test test = null;
-	try {
-		Statement st = con.createStatement();
-		String query = "SELECT * FROM testersitedatabase.testprofiles WHERE idtest = '"+idtest+"';";
-		ResultSet rset = st.executeQuery(query); //getting the test profile of the test that was clicked on ClassTests.jsp
-		if(rset.next()) {
-			String testid = rset.getString("idtest");
-			String testName = rset.getString("testname");
-			String testDescription = rset.getString("testdescription");
-			String testInstructions = rset.getString("testinstructions");
-			String testDateStart = rset.getString("testdatestart");
-			String displaystart=request.getParameter("updateddisplaystart");;
-			String displayend=request.getParameter("updateddisplayend");;
-			String testDateEnd = rset.getString("testdateend");
-			boolean availibility = rset.getBoolean("availibility");
-			boolean forcedComplete = rset.getBoolean("forcedCompletion");
-			boolean allowBackButton =rset.getBoolean("allowbackbutton");
-			boolean scrambleTest = rset.getBoolean("scrambletest");
-			boolean showQuestionOnebyOne = rset.getBoolean("showquestiononebyone");
-			int timelimit = rset.getInt("timelimit");
-			int amtOfAttempts = rset.getInt("amtofattempts");
-			test = new Test(testName, testDateStart,displaystart, displayend,  testDateEnd, testid, testDescription, testInstructions,  availibility,  forcedComplete,allowBackButton,scrambleTest,showQuestionOnebyOne,  timelimit,  amtOfAttempts);
-			//System.out.println(test.toString());
-			//request.setAttribute("testobject", test);
-		}else {
-			System.out.println("ShowExistingTestServlet: TEST NOT FOUND");
-		}
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	//System.out.println(test.toString());
-	ResultSet rset;
-	try{
-		System.out.println("Testlayout starts here!");
-		Statement st = con.createStatement();
-		rset = st.executeQuery("SELECT * FROM questionsdatabase.allquestiontable WHERE idtest = '"+test.getTestId()+"';");
-		while(rset.next()){ //while there are questions from allquestionstable with that idtest. we go into each row and get the table and questionid and find that question
-			//System.out.println(rset.getString("answerstring"));
-			String idquestion = rset.getString("idquestion");
-			String tablename = rset.getString("tablename");
-			Statement st2 = con.createStatement();
-			ResultSet rset2 = st2.executeQuery("SELECT * FROM "+tablename+" WHERE idquestion='"+idquestion+"';");
-			if(rset2.next()){
-				if(tablename.equals("questionsdatabase.multiplechoice")){
-					System.out.println("Adding new mc question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
-					MultipleChoiceQuestion newmcq = new MultipleChoiceQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"),rset2.getString("answerstring"), rset2.getString("correctanswer"));
-					//System.out.println(newmcq.getAnswers().toString());
-					test.addQuestionToQuestions(newmcq);
-				}else if(tablename.equals("questionsdatabase.truefalse")){
-					System.out.println("Adding new TF question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
-					TFQuestion newmcq = new TFQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"));
-					test.addQuestionToQuestions(newmcq);
-				}else if(tablename.equals("questionsdatabase.shortanswer")){
-					System.out.println("Adding new SR question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
-					ShortResponseQuestion newmcq = new ShortResponseQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"));
-					test.addQuestionToQuestions(newmcq);
-				}else if(tablename.equals("questionsdatabase.checkall")){
-					System.out.println("Adding new CheckAll question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
-					CheckAllQuestion newmcq = new CheckAllQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("answerstring"), rset2.getString("correctstring"));
-					System.out.println(newmcq.toString());
-					test.addQuestionToQuestions(newmcq);
-				}else if(tablename.equals("questionsdatabase.fillintheblank")){
-					System.out.println("Adding new fillintheblank question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
-					FillInTheBlankQuestion newfib = new FillInTheBlankQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"), rset2.getBoolean("casesensitive"));
-					System.out.println(newfib.toString());
-					test.addQuestionToQuestions(newfib);
-				}else if(tablename.equals("questionsdatabase.fillinmultipleblank")){
-					System.out.println("Adding new fillinmultipleblank question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
-					System.out.println("Question:"+rset2.getString("question"));
-					FillInMultipleBlankQuestion newfib = new FillInMultipleBlankQuestion(rset2.getInt("idquestion"), rset2.getInt("pointsworth"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("correctanswer"), rset2.getBoolean("casesensitive"),rset2.getBoolean("partialcredit"));
-					//System.out.println(newfib.toString());
-					test.addQuestionToQuestions(newfib);
-				}else if(tablename.equals("questionsdatabase.multipartquestion")){
-					System.out.println("Adding new multipartquestion question "+rset.getInt("idquestion")+" points worth "+rset2.getInt("pointsworth"));
-					System.out.println("Question:"+rset2.getString("question"));
-					MultipartQuestion multi = new MultipartQuestion(rset2.getInt("idquestion"),rset2.getString("questiontitle"), rset2.getString("question"), rset2.getString("questioncomponentids"));
-					//System.out.println(newfib.toString());
-					test.addQuestionToQuestions(multi);
-				}
-				//here you can add it for others.
-			}else{
-				System.out.println("Couldn't get question "+idquestion);
-			}
-		}
-		//rset for other questiontypes V
-	}catch(Exception exception){
-		System.out.println("helloworld");
-		System.out.println(exception.getLocalizedMessage());
-	}
+	Test test = Test.getTestFromDB(idtest);
 	ArrayList<Question> questions = test.getQuestionArray();
 	%>
     <div id="wrapper">
@@ -207,7 +118,7 @@
                     <li class="active-link">
                         <a href="YourClasses.jsp"><i class="fa fa-edit "></i>Class  <span class="badge"></span></a>
                     </li>
-					<li >
+					<!-- <li >
                         <a href="Testsnew.jsp" ><i class="fa fa-edit "></i>Tests <span class="badge"></span></a>
                     </li>
                     <li>
@@ -234,7 +145,7 @@
                     </li>
                      <li>
                         <a href="#"><i class="fa fa-edit "></i>My Link Five </a>
-                    </li>
+                    </li>-->
                 </ul>
                             </div>
 
@@ -384,7 +295,7 @@
 							MultipartQuestion multi = (MultipartQuestion) question;
 							String questionids = multi.getQuestions().toString();
 							%>
-							<span><%out.print(questionids); %> </span>
+							<%-- <span><%out.print(questionids); %> </span> --%>
 						<%}
 						//here check for other types of questions %>
 				  		<hr />

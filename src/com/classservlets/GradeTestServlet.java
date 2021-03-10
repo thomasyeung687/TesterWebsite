@@ -73,10 +73,6 @@ public class GradeTestServlet extends HttpServlet {
 			RequestDispatcher rd = request.getRequestDispatcher("ClassManageStudents.jsp");
 			rd.forward(request, response);
 			return;
-		}else if(request.getParameter("action").equals("Next Student")){
-			
-		}else if(request.getParameter("action").equals("Prev Student")){
-			
 		}
 	}
 }
