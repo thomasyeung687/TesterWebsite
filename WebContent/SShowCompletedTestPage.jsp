@@ -44,7 +44,7 @@
     	boolean showAnswers = thisTest.isShowcorrectans();
     	
     	ArrayList<Question> testQuestions = new ArrayList<>(); //arraylist of test objects of available tests.
-    	
+    	System.out.println("SHOWCOMPLETEDTESTPAGE HEREEEE: ShowAnswers: "+thisTest.isShowcorrectans()+" Size of attempts List: "+thisTest.getAttempts().size());
     	if(thisclass==null || thisTest==null){
 			response.sendRedirect("SClasses.jsp");
 			return;
@@ -174,20 +174,12 @@
 								</div>
 								<%if(thisTest.getAttempts().size() == 0){//this means user is coming directly after taking the test. %>
 									<div class="ptsWorthWrapper">
-										<% if(question instanceof MultipartQuestion){ %>
-											Points:  <input class="ptsInput" type="number" value="<%=question.calculatePtsReceived()%>" name="<%=question.getQuestionid()%>" disabled step="any" step="any" min="0" max="<%=question.getPointsWorth()%>">
-										<%}else{ %>
-											Points:  <input class="ptsInput" type="number" value="<%=question.calculatePtsReceived()%>" name="<%=question.getQuestionid()%>" disabled step="any" min="0" max="<%=question.getPointsWorth()%>">
-										<%} %>
+										Points:  <input class="ptsInput" type="number" value="<%=question.calculatePtsReceived()%>" name="<%=question.getQuestionid()%>" disabled step="any" step="any" min="0" max="<%=question.getPointsWorth()%>">
 										<span style="">/<%out.print(question.getPointsWorth()); %></span>
 									</div>
 								<%}else{//user came from SGrades so there is an attempt object within test and questions should have pts assigned from db so we dont calculate %>
 									<div class="ptsWorthWrapper">
-										<% if(question instanceof MultipartQuestion){ %>
-											Points:  <input class="ptsInput" type="number" value="<%=question.getPointsReceived()%>" name="<%=question.getQuestionid()%>" disabled step="any" step="any" min="0" max="<%=question.getPointsWorth()%>">
-										<%}else{ %>
-											Points:  <input class="ptsInput" type="number" value="<%=question.getPointsReceived()%>" name="<%=question.getQuestionid()%>" disabled step="any" min="0" max="<%=question.getPointsWorth()%>">
-										<%} %>
+										Points:  <input class="ptsInput" type="number" value="<%=question.getPointsReceived()%>" name="<%=question.getQuestionid()%>" disabled step="any" step="any" min="0" max="<%=question.getPointsWorth()%>">
 										<span style="">/<%out.print(question.getPointsWorth()); %></span>
 									</div>
 								<%} %>
@@ -286,17 +278,18 @@
 							if(thisTest.isShowcorrectans()){
 								%><br><span>&#10004; <%out.println(question.getCorrectAnswerString()); %></span></br><%
 							}
-						}//end of if(showAnswers){
 						}else if(question instanceof MultipartQuestion){
 							MultipartQuestion multi = (MultipartQuestion) question;
 							/* String questionids = multi.getQuestions().toString(); */
 							String questionids = multi.getQuestionCompoentids();
 							
 							ArrayList<Question> questions = multi.getQuestions();
+							System.out.println("Questions:"+questions);
 							int questionComponentNumber = 1; //questionComponent number. 
 							
 							for(Question questionComponent : questions){ //for each question in the multipart question, display it properly. questionComponent is basiscally a question in the multipart question
 								String questionNum = n+"."+questionComponentNumber++; //will be used as the name of the form input of the question in the request to retreive the ans choices to the question components in the multi question
+								System.out.println("QuestionComponent adding to page: "+questionComponent.toString());
 								%>
 								<div class="multipartQuestionComponentWrapper">
 									<div>
@@ -423,15 +416,16 @@
 							}
 							
 						}
+						}//end of if(showAnswers)
 						//here check for other types of questions %>
 				  </div>
 				  <%}%>
 				  </div>
 				  	
-					<%if(!(thisTest.getAttempts().size()==0)){ //only if there is an attempt object do we have a note box%>
+					<%if(!(thisTest.getAttempts().get(0).getNotes() == null)){ //only if there is an attempt object do we have a note box%>
 				  	<div class="questionWrapper">
 				  		<span>Notes</span><br>
-						<textarea class="notesTextArea" name="notes"><%out.println(thisTest.getAttempts().get(0).getNotes().trim());%></textarea>
+						<textarea class="notesTextArea" name="notes"><%out.println(thisTest.getAttempts().get(0).getNotes());%></textarea>
 				  	</div>
 				  	<%} %>
 				  <form action="AfterTestPageLinker" method="get">

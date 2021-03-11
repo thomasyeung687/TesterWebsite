@@ -335,7 +335,7 @@ public class Test{
 					test.addQuestionToQuestions(newq);
 				}else { //if not a multipart question
 					String query = "Select * FROM "+tablename+" INNER JOIN testersitedatabase.attempt_answer_choice "
-							+ "on "+tablename+".idquestion = testersitedatabase.attempt_answer_choice.idquestion WHERE "+tablename+".idquestion = "+idquestion+";";
+							+ "on "+tablename+".idquestion = testersitedatabase.attempt_answer_choice.idquestion WHERE "+tablename+".idquestion = "+idquestion+" AND idattempt = "+tao.getIdAttempt()+";";
 					System.out.println(query);
 					Statement st2 = con.createStatement();
 					ResultSet rset2 = st2.executeQuery(query);

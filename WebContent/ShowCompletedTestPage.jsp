@@ -256,7 +256,7 @@
 												<span style=" "><%out.print(questionNum); %>) <%out.print(questionComponent.getQuestion().trim()); %> </span> <!-- allows for space to be preserved for say if the question is a clump of code -->
 											</div>
 											<div class="ptsWorthWrapper">
-												Points:  <input class="ptsInput" type="number" value="<%=questionComponent.getPointsReceived()%>" name="<%=questionComponent.getQuestionid()%>" step="any" min="0" max="<%=question.getPointsWorth()%>">
+												Points:  <input class="ptsInput" type="number" value="<%=questionComponent.getPointsReceived()%>" name="<%=questionComponent.getQuestionid()%>" step="any" min="0" max="<%=questionComponent.getPointsWorth()%>">
 												<span style="">/<%out.print(questionComponent.getPointsWorth()); %></span>
 											</div>
 										</div>

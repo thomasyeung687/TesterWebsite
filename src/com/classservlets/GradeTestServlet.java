@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -61,12 +62,19 @@ public class GradeTestServlet extends HttpServlet {
 				}
 			}
 			System.out.println("Total Pts :"+sum);
-			query += "UPDATE testersitedatabase.attemptbook SET grade = "+sum+", notes = '"+notes+"' WHERE idattempt = "+idAttempt+";\n"; //query to update the raw grade in attemptbook
-			System.out.println("QUERYYY:\n"+query);
+//			System.out.println("QUERYYY:\n"+query);
 			try {
 				Connection con = DBConnection.getDBConnection();
 				Statement st = con.createStatement();
-				st.executeUpdate(query);
+				String[] querys = query.split("\n");
+				for(String querystr : querys) {
+//					System.out.println(querystr);
+					st.addBatch(querystr);
+				}
+				st.addBatch("UPDATE testersitedatabase.attemptbook SET grade = "+sum+", notes = '"+notes+"' WHERE idattempt = "+idAttempt+";\n"); //query to update the raw grade in attemptbook
+
+				int[] updateCounts = st.executeBatch();
+				System.out.println(updateCounts);
 			}catch (Exception e) {
 				System.out.println("EXCEPPTIOOOON: "+e.getMessage());
 			}
