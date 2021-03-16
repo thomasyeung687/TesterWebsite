@@ -7,12 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h2>Welcome to TesterSite!</h2>
-	<br>
-	Professor click <a href ="LoginProf.jsp">here</a><br>
-	<br>
-	Student click <a href ="LoginStudent.jsp">here</a><br>
-	<br>
-	Admin click <a href ="LoginAdmin.jsp">here</a>
+
 </body>
 </html>

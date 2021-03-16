@@ -24,6 +24,8 @@ public class LogoutServlet extends HttpServlet {
 			response.sendRedirect("LoginProf.jsp");
 		}else if(request.getParameter("logoutfrom").equals("student")){
 			response.sendRedirect("LoginStudent.jsp");
+		}else if(request.getParameter("logoutfrom").equals("admin")){
+			response.sendRedirect("LoginAdmin.jsp");
 		}else {
 			response.sendRedirect("index.jsp");
 		}
