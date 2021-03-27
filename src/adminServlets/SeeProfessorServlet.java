@@ -1,6 +1,11 @@
 package adminServlets;
 
 import java.io.IOException;
+import java.util.HashMap;
+
+import com.testersite.model.Professor;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,9 +23,19 @@ public class SeeProfessorServlet extends HttpServlet {
 		String profid = request.getParameter("profid");
 		String profidradio = request.getParameter("profidradio");
 		String action = request.getParameter("action");
-		if(profid != null) {
-			HttpSession session = request.getSession();
-					
+		HttpSession session = request.getSession();
+		HashMap<String, Professor> professorsMap = (HashMap<String, Professor>) session.getAttribute("professorsMap");
+		System.out.println(action);
+		if(action==null) {
+			session.setAttribute("professorObj", professorsMap.get(profid));
+			RequestDispatcher rd = request.getRequestDispatcher("AdminSeeProfessorPage.jsp");
+			rd.forward(request, response);
+			return;
+		}
+		if(action.equals("Add New Professor")) {
+			RequestDispatcher rd = request.getRequestDispatcher("AdminAddProfessorPage.jsp");
+			rd.forward(request, response);
+			return;
 		}
 	}
 }

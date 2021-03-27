@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<%@page import="com.testersite.model.Professor"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.ArrayList"%>
@@ -30,19 +29,17 @@
 		}
 		
 		Connection con = DBConnection.getDBConnection();
-		HashMap<String, Professor> professorsMap = new HashMap<>();
+		HashMap<Integer, String> idToNameOfProfessor = new HashMap<>();
 		try{
 			Statement st = con.createStatement();
 			ResultSet rset = st.executeQuery("SELECT * FROM testersitedatabase.professorprofiles WHERE idadminprofiles = "+session.getAttribute("idadminprofiles")+";");
 			while(rset.next()){
-				Professor newprof = new Professor(rset);
-				professorsMap.put(newprof.getIdprofessorprofiles() , newprof);
+				idToNameOfProfessor.put(rset.getInt("idprofessorprofiles"), rset.getString("name"));
 			}
 		}catch(Exception e){
 			System.out.println("Error Message:"+e.getMessage());
 		}
-		session.setAttribute("professorsMap", professorsMap);
-		System.out.println("keys: "+professorsMap.keySet());
+		System.out.println("keys: "+idToNameOfProfessor.keySet());
 	%>
            
           
@@ -100,33 +97,19 @@
                     </div>
                     <hr/>
                 </div>
-                <hr/>
-                <div>
-                	<form action="">
-                	</form>
-	                <form action="SeeProfessorServlet" method="get">
-	                <table>
-							<tr>
-								<th>Professor</th>
-							</tr>	
-							<%
-	                    	for(String key : professorsMap.keySet()){%>
-								<tr><td><input type="radio" name= "profidradio" value="<%=key%>"><%out.println("   ");%><button type="submit" name="profid" value="<%=key%>"><%out.println(professorsMap.get(key).getName());%></button></td></tr>
-							<%
-							}
-							%>					
-					</table>
-					<input type="submit" name="action" value="Add New Professor"> <br>
-                    </form>
-               </div>          
-	               <form>
-		             	<br>
-		              </hr>
-	                <input type="submit" name="action" value="Add New Professor"> <br>
-	               </form>
-	               <form method="get" action="AdminBackButtons">
-					<button name="pageName" value="AManageProfessors">Back</button> 
-					</form>
+
+				<form action="AdminAddProfessorServlet" method="post">
+					<span style =  "color: red;"> ${error} </span><br>
+					<input type="text" placeholder="name" name ="name" required><br>
+					<input type="text" placeholder="username" name ="username" required><br>
+					<input type="password" placeholder="password" name ="password1" required><br>
+					<input type="password" placeholder="re-enter password" name ="password2" required><br>
+					<input type="text" placeholder="email" name ="email" required><br>
+					<input type="submit">
+				</form>
+				<form method="get" action="AdminBackButtons">
+					<button name="pageName" value="AdminAddProfessorPage">Back</button> 
+				</form>
             </div>    
         </div>
         

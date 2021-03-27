@@ -111,10 +111,8 @@
 	                    <%}%>
 	                    
 	                   </hr><br>
-	                   
-	                   <tr><td><input type="submit" name="action" value="back"></td></tr>
-	                
 	                </table>
+	                <input type="submit" name="add" value="Add New Student(s)">
                     </form>
                </div>          
             </div>    

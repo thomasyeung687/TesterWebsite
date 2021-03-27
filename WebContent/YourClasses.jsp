@@ -112,8 +112,7 @@
 					for(int i = classes.size()-1; i>-1; i--){
 				%>
 					<button name="classid" value="<% out.println(classids.get(i)); %>" > <%out.println(classes.get(i)); %></button> <br> <%//creates buttons with the class name on them and classid as the value passed through request %>
-				<%	
-					System.out.println(classids.get(i));
+				<%
 					}
 				%>
 				</form>

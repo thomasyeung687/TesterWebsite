@@ -11,6 +11,8 @@ import com.testersite.dao.DBConnection;
 public class Student {
 	String name;
 	String profileid;
+	String username;
+	String email;
 	ArrayList<Integer> testids;
 	HashMap<Integer, TestAttemptObject>  attempts = new HashMap<Integer, TestAttemptObject>();
 	
@@ -24,6 +26,18 @@ public class Student {
 		this.profileid = profid;
 		this.testids = testids;
 		
+	}
+	public Student(ResultSet rSet) throws Exception {
+		Connection con = DBConnection.getDBConnection();
+		try {
+			this.name = rSet.getString("name");
+			this.profileid = rSet.getString("idstudentprofiles");
+			this.username = rSet.getString("username");
+			this.email = rSet.getString("email");
+		} catch (Exception e) {
+			System.out.print("Student.java error: "+e.getMessage());
+			throw e;
+		}
 	}
 	public String getname(){return name;}
 	public String getprofid(){return profileid;}
@@ -64,5 +78,9 @@ public class Student {
 			System.out.println("returning tao: "+tao.toString());
 			return tao;
 		}
+	}
+	public String toString() {
+		String str = "profileid: "+ profileid + " name: "+ name + " username: "+ username + " email: "+ email + " testids: "+ testids +"\n";
+		return str;
 	}
 }

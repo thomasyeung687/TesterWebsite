@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@page import="com.testersite.model.TesterClass"%>
 <%@page import="com.testersite.model.Professor"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
@@ -25,24 +26,23 @@
 <body>
     <%
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");//this prevents backbutton hack
+		System.out.println(session.getAttribute("idprofessorprofiles"));
 		if(session.getAttribute("idadminprofiles")==null){
 			response.sendRedirect("LoginAdmin.jsp");
 		}
-		
-		Connection con = DBConnection.getDBConnection();
-		HashMap<String, Professor> professorsMap = new HashMap<>();
-		try{
-			Statement st = con.createStatement();
-			ResultSet rset = st.executeQuery("SELECT * FROM testersitedatabase.professorprofiles WHERE idadminprofiles = "+session.getAttribute("idadminprofiles")+";");
-			while(rset.next()){
-				Professor newprof = new Professor(rset);
-				professorsMap.put(newprof.getIdprofessorprofiles() , newprof);
-			}
-		}catch(Exception e){
-			System.out.println("Error Message:"+e.getMessage());
+		if(session.getAttribute("professorObj")==null){
+			System.out.println("AdminSeeClass session attribute professorObj is null");
+			response.sendRedirect("AManageProfessors.jsp");
 		}
-		session.setAttribute("professorsMap", professorsMap);
-		System.out.println("keys: "+professorsMap.keySet());
+		if(session.getAttribute("classObj")==null){
+			System.out.println("AdminSeeClass session attribute classObj is null");
+			response.sendRedirect("AManageProfessors.jsp");
+		}
+		
+		Professor prof = (Professor)session.getAttribute("professorObj");
+		TesterClass classObj = (TesterClass)session.getAttribute("classObj");
+		System.out.println("professor aspp.jsp: "+prof.toString());
+		System.out.println("Classobj aspp.jsp: "+classObj.toString());
 	%>
            
           
@@ -99,34 +99,26 @@
                      <h2>Manage Professors</h2>
                     </div>
                     <hr/>
-                </div>
-                <hr/>
-                <div>
-                	<form action="">
-                	</form>
-	                <form action="SeeProfessorServlet" method="get">
-	                <table>
-							<tr>
-								<th>Professor</th>
-							</tr>	
-							<%
-	                    	for(String key : professorsMap.keySet()){%>
-								<tr><td><input type="radio" name= "profidradio" value="<%=key%>"><%out.println("   ");%><button type="submit" name="profid" value="<%=key%>"><%out.println(professorsMap.get(key).getName());%></button></td></tr>
-							<%
-							}
-							%>					
-					</table>
-					<input type="submit" name="action" value="Add New Professor"> <br>
-                    </form>
-               </div>          
-	               <form>
-		             	<br>
-		              </hr>
-	                <input type="submit" name="action" value="Add New Professor"> <br>
-	               </form>
-	               <form method="get" action="AdminBackButtons">
-					<button name="pageName" value="AManageProfessors">Back</button> 
-					</form>
+                    <div class="row">
+	                    <div class="col-md-12">
+	                     <h2><%out.print(classObj.getCourseprefix() + classObj.getCoursenumber() +" | "); out.println(classObj.getCoursename()+" | "+classObj.getSemester()); %>  </h2>   
+	                     <h3>Class Code: <%out.println(classObj.getClasscode());%></h3> <h4 >Course start: <%out.println(classObj.getDatestart()); %></h4> <h4>Course end: <%out.println(classObj.getDateend()); %></h4> 
+	                    </div>
+                	</div>          
+                  	<hr /> <!-- adds line -->
+		            	<form action="AdminClassOptionsServlet" method="post">
+		              	 	<%-- <input type="hidden" name="classid" value="<%out.print(session.getAttribute("classid"));%>"> --%>
+							<input type="submit" name="action" value="Edit Class">
+							<input type="submit" name="action" value="Manage Students">
+							<input type="submit" name="action" value="Manage Tests">
+						</form>
+						<form action="DeleteClassServlet" method="post" name="deletetest">
+		                     	<input type="hidden" name="classid" value="<%out.print(classObj.getIdclass());%>">
+		                     	<button type="button"  onclick="confirmButton()">Delete This Class</button>
+		                </form>
+						<form method="get" action="AdminBackButtons">
+							<button name="pageName" value="AdminSeeClass">Back</button> 
+						</form>
             </div>    
         </div>
         
