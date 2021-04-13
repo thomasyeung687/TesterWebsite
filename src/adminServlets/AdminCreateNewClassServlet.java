@@ -28,6 +28,10 @@ public class AdminCreateNewClassServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		if(session.getAttribute("professorObj")==null){
+			System.out.println("AdminCreateNewClassServlet session attribute professorObj is null");
+			response.sendRedirect("AManageProfessors.jsp");
+		}
 		Professor prof = (Professor) session.getAttribute("professorObj");
 		String coursecode = request.getParameter("coursecode");
 		String courseprefix = request.getParameter("courseprefix");
@@ -46,9 +50,13 @@ public class AdminCreateNewClassServlet extends HttpServlet {
 				session.setAttribute("createclasserror", "Couldnt get newClassId from TesterClass.createNewClass. received 'null'");
 				rd.forward(request, response);
 			}else {
-				session.setAttribute("classObj", new TesterClass(newClassId));
-				RequestDispatcher rd = request.getRequestDispatcher("AdminSeeClass.jsp");
-				rd.forward(request, response);
+				TesterClass tclass = new TesterClass(newClassId);
+				session.setAttribute("classObj", tclass);
+				prof.addClass(tclass);
+				session.setAttribute("professorObj", prof); //storing updated professor object.
+				response.sendRedirect("AdminSeeClass.jsp");
+//				RequestDispatcher rd = request.getRequestDispatcher("AdminSeeClass.jsp");
+//				rd.forward(request, response);
 			}
 		}catch (Exception e) {
 			System.out.println(e.getMessage());

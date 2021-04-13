@@ -1,13 +1,7 @@
+<%//only show messages that are needed. %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
-<%@page import="com.testersite.model.TesterClass"%>
-<%@page import="com.testersite.model.Professor"%>
-<%@page import="java.util.HashMap"%>
-<%@page import="java.util.Map"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="java.sql.Statement"%>
-<%@page import="java.sql.ResultSet"%>
-<%@page import="com.testersite.dao.DBConnection"%>
-<%@page import="java.sql.Connection"%>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
       <meta charset="utf-8" />
@@ -21,7 +15,6 @@
     <link href="assets/css/custom.css" rel="stylesheet" />
      <!-- GOOGLE FONTS-->
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
-   <link href="assets/css/tables.css" rel="stylesheet" /> <!-- styling for table element -->
 </head>
 <body>
     <%
@@ -32,31 +25,16 @@
 			return;
 		}
 		if(session.getAttribute("professorObj")==null){
-			System.out.println("AdminSeeClass session attribute professorObj is null");
+			System.out.println("AdminClassEdit session attribute professorObj is null");
 			response.sendRedirect("AManageProfessors.jsp");
 			return;
 		}
 		if(session.getAttribute("classObj")==null){
-			System.out.println("AdminSeeClass session attribute classObj is null");
+			System.out.println("AdminClassEdit session attribute classObj is null");
 			response.sendRedirect("AManageProfessors.jsp");
 			return;
 		}
-		
-		Professor prof = (Professor)session.getAttribute("professorObj");
-		TesterClass classObj = (TesterClass)session.getAttribute("classObj");
-		System.out.println("professor aspp.jsp: "+prof.toString());
-		System.out.println("Classobj aspp.jsp: "+classObj.toString());
-	%>
-    <script type="text/javascript">
-	function confirmButton(){
-		var r = prompt("Type 'DELETE THIS CLASS' to delete this class and all tests. (All caps and leave out '')")
-		if(r != "DELETE THIS CLASS"){
-			alert("Incorrect String.");
-		}else{
-			deletetest.submit();
-		}
-	}
-	</script>
+	%>    
           
     <div id="wrapper">
          <div class="navbar navbar-inverse navbar-fixed-top">
@@ -69,15 +47,11 @@
                     </button>
                     <a class="navbar-brand" href="#">
                         <img src="assets/img/logo.png" />
-
                     </a>
-                    
                 </div>
               
-                <span class="logout-spn" >
-                  <form action="LogoutServlet">
-						<button type="submit" name="logoutfrom" value="admin">Log Out</button>
-				  </form>
+                 <span class="logout-spn" >
+                  <a href="#" style="color:#fff;">LOGOUT</a>  
 
                 </span>
             </div>
@@ -104,37 +78,53 @@
                             </div>
 
         </nav>
+        <!-- /. NAV SIDE  -->
         <div id="page-wrapper" >
-        	<div id="page-inner">
+            <div id="page-inner">
                 <div class="row">
                     <div class="col-md-12">
-                     <h2>Manage Professors</h2>
+                     <h2><span style =  "color: red;"> ${error} </span><br> </h2>   
+                     <h2><span style =  "color: green;"> ${msg} </span><br> </h2>   
                     </div>
-                 </div>
-                    <hr/>
-                    <div class="row">
-	                    <div class="col-md-12">
-	                     <h2><%out.print(classObj.getCourseprefix() + classObj.getCoursenumber() +" | "); out.println(classObj.getCoursename()+" | "+classObj.getSemester()); %>  </h2>   
-	                     <h3>Class Code: <%out.println(classObj.getClasscode());%></h3> <h4 >Course start: <%out.println(classObj.getDatestart()); %></h4> <h4>Course end: <%out.println(classObj.getDateend()); %></h4> 
-	                    </div>
-                	</div>          
-                  	<hr /> <!-- adds line -->
-		            	<form action="AdminClassOptionsServlet" method="post" name="deletetest">
-		              	 	<%-- <input type="hidden" name="classid" value="<%out.print(session.getAttribute("classid"));%>"> --%>
-							<input type="submit" name="action" value="Edit Class">
-							<input type="submit" name="action" value="Manage Students">
-							<input type="submit" name="action" value="Manage Tests">
-		                    <button type="button"  name="action" value="Delete" onclick="confirmButton()">Delete This Class</button>
-		                </form>
-						<form method="get" action="AdminBackButtons">
-							<button name="pageName" value="AdminSeeClass">Back</button> 
-						</form>
-            </div>    
+                </div>              
+                 <!-- /. ROW  -->
+                  <hr />
+                <% if(request.getAttribute("accountcreatedNaddedTF").equals("true")){ %>
+                <h4>Student accounts that were created and added to your class:</h4>
+                <% } %>
+                <%
+                	String accountcreatedNadded = (String) request.getAttribute("accountcreatedNadded"); 
+                	accountcreatedNadded = accountcreatedNadded.replace("]", "]<br/>");//so the results print on a separate line
+                	out.println(accountcreatedNadded);
+                %>
+                <% if(request.getAttribute("accountaddedTF").equals("true")){ %>
+                <h4>Student accounts that already existed and were added to your class:</h4>
+                <% } %>
+                <%String accountadded = (String) request.getAttribute("accountadded"); 
+                accountadded = accountadded.replace("]", "]<br/>");//so the results print on a separate line
+                out.println(accountadded);
+                %>
+                <% if(request.getAttribute("studentalreadyclassTF").equals("true")){ %>
+                <h4>Student accounts that already are in your class:</h4>
+                <%} %>
+                <%String studentalreadyclass = (String) request.getAttribute("studentalreadyclass");
+                studentalreadyclass = studentalreadyclass.replace("]", "]<br/>"); //so the results print on a separate line
+                out.println(studentalreadyclass);
+                %>
+                <br>
+                <br>
+				<a href= "AdminClassSeeStudents.jsp">back</a>
+                 <!-- /. ROW  -->           
+    		</div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. PAGE WRAPPER  -->
         </div>
-      </div>
-        
     <div class="footer">
-      
+        </div>
+        </div>
+          
+
      <!-- /. WRAPPER  -->
     <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
     <!-- JQUERY SCRIPTS -->
@@ -144,6 +134,6 @@
       <!-- CUSTOM SCRIPTS -->
     <script src="assets/js/custom.js"></script>
     
-   </div>
+   
 </body>
 </html>

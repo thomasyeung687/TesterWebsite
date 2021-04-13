@@ -24,6 +24,12 @@ public class AdminBackButtons extends HttpServlet {
 			rd = request.getRequestDispatcher("AdminOptions.jsp");
 		}else if(pageName.equals("AdminSeeClass")) {
 			rd = request.getRequestDispatcher("AdminSeeProfessorPage.jsp");
+		}else if(pageName.equals("AdminClassEdit")) {
+			rd = request.getRequestDispatcher("AdminSeeClass.jsp");
+		}else if(pageName.equals("AdminClassSeeStudents.jsp")){
+			rd = request.getRequestDispatcher("AdminClassTests.jsp");
+		}else if(pageName.equals("AdminShowCompletedTestPage.jsp")){
+			rd = request.getRequestDispatcher("AdminClassTests.jsp");
 		}
 		rd.forward(request, response);
 	}

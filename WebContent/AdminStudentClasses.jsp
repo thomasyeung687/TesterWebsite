@@ -23,17 +23,18 @@
 <body>
     <%
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");//this prevents backbutton hack
-		//System.out.println(session.getAttribute("username"));
-		if(session.getAttribute("idstudentprofiles")==null){
-			response.sendRedirect("LoginStudent.jsp");
-			return;
+		System.out.println(session.getAttribute("idprofessorprofiles"));
+		if(session.getAttribute("idadminprofiles")==null){
+			response.sendRedirect("LoginAdmin.jsp");
 		}
 	%>
     <%
+    	
     	Connection connection = DBConnection.getDBConnection();
     	String studentid = ((String) session.getAttribute("idstudentprofiles")).trim();
     	Set<String> classnames = null;
     	TreeMap<String, ClassObject> classtoprof = null;
+    	System.out.println("studentid "+studentid);
     	try {
 			Statement st = connection.createStatement();
 			Statement st1 = connection.createStatement(); //will be used to fetch class data.
@@ -95,8 +96,9 @@
               
                 <span class="logout-spn" >
                   <form action="LogoutServlet">
-						<button type="submit" name="logoutfrom" value="student">Log Out</button>
+						<button type="submit" name="logoutfrom" value="admin">Log Out</button>
 				  </form>
+
                 </span>
             </div>
         </div>
@@ -108,14 +110,18 @@
 
 
                     <li >
-                        <a href="HomeStudent.jsp" ><i class="fa fa-desktop "></i>Home <!-- <span class="badge">Included</span> --></a>
+                        <a href="AdminOptions.jsp" ><i class="fa fa-desktop "></i>Dashboard <span class="badge"></span></a>
+                    </li>
+                    
+                    <li >
+                        <a href="AManageProfessors.jsp"><i class="fa fa-edit "></i>Manage Professors<span class="badge"></span></a>
                     </li>
                     
                     <li class="active-link">
-                        <a href="SClasses.jsp" ><i class="fa fa-desktop "></i>Classes <!-- <span class="badge">Included</span> --></a>
+                        <a href="AManageStudent.jsp"><i class="fa fa-edit "></i>Manage Students<span class="badge"></span></a>
                     </li>
                 </ul>
-            </div>
+                            </div>
 
         </nav>
         <div id="page-wrapper" >
@@ -131,7 +137,7 @@
 						<input type="submit" value="Join Class">
 					</form>
 					<hr>
-					<form action="ShowClassServletStudent" method="get">
+					<form action="AdminSGradesServlet" method="get">
 						<%for(String cname : classnames){
 							ClassObject thisclass = classtoprof.get(cname); //getting classobject from classtoprof tree using cname as the key
 						%>

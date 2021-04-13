@@ -160,6 +160,22 @@ public class TesterClass {
 		return "null";
 	}
 	
+	public static void editTesterClass(String idclass, String courseprefix, String coursenumber, String coursename, String datestart, String dateend, String semester) throws Exception {
+		String query;
+		query = "UPDATE testersitedatabase.allclasses SET courseprefix = '"+courseprefix+"', coursenumber = '"+coursenumber+"', coursename = '"+coursename+"', datestart = '"+datestart+"', dateend = '"+dateend+"' , semester = '"+semester+"' WHERE idclass = '"+idclass+"';"; 
+		
+		//inserting into db
+		Connection con = DBConnection.getDBConnection();
+		try {
+			Statement st = con.createStatement();
+			st.executeUpdate(query); //updating new class into db
+			System.out.println("Updated TesterClass");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+	}
 	
 	/**
 	 * 

@@ -100,14 +100,14 @@
                 </div>
                 <hr/>
                 <div>
-                    <form action="SeeStudentServlet" method="get">
+                    <form action="AdminSeeStudentServlet" method="get">
                     <table>
 						<tr>
 							<th>Student</th>
 						</tr>
                     	<%
 	                    for(int key : idToNameOfStudent.keySet()){%>
-	                    		<tr><td><input type="radio" name= "profidradio" value="<%=key%>"><%out.println("   ");%><button type="submit" name="profid" value="<%=key%>"><%out.println(idToNameOfStudent.get(key));%></button></td></tr>
+	                    		<tr><td><%-- <input type="radio" name= "profidradio" value="<%=key%>"><%out.println("   ");%> --%><button type="submit" name="studid" value="<%=key%>"><%out.println(idToNameOfStudent.get(key));%></button></td></tr>
 	                    <%}%>
 	                    
 	                   </hr><br>

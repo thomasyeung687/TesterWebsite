@@ -111,7 +111,7 @@
 							</tr>	
 							<%
 	                    	for(String key : professorsMap.keySet()){%>
-								<tr><td><input type="radio" name= "profidradio" value="<%=key%>"><%out.println("   ");%><button type="submit" name="profid" value="<%=key%>"><%out.println(professorsMap.get(key).getName());%></button></td></tr>
+								<tr><td><%-- <input type="radio" name= "profidradio" value="<%=key%>"><%out.println("   ");%> --%><button type="submit" name="profid" value="<%=key%>"><%out.println(professorsMap.get(key).getName());%></button></td></tr>
 							<%
 							}
 							%>					
@@ -119,11 +119,11 @@
 					<input type="submit" name="action" value="Add New Professor"> <br>
                     </form>
                </div>          
-	               <form>
+	               <!-- <form>
 		             	<br>
 		              </hr>
 	                <input type="submit" name="action" value="Add New Professor"> <br>
-	               </form>
+	               </form> -->
 	               <form method="get" action="AdminBackButtons">
 					<button name="pageName" value="AManageProfessors">Back</button> 
 					</form>

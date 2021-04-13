@@ -27,11 +27,13 @@
     <%
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");//this prevents backbutton hack
 		if(session.getAttribute("idadminprofiles")==null){
-			response.sendRedirect("LoginAdmin.jsp");
+			response.sendRedirect((String)session.getAttribute("loginPage"));
+			return;
 		}
 		if(session.getAttribute("professorObj")==null){
 			System.out.println("AdminSeeProfessorPage session attribute professorObj is null");
 			response.sendRedirect("AManageProfessors.jsp");
+			return;
 		}
 		Professor prof = (Professor)session.getAttribute("professorObj");
 		ArrayList<TesterClass> classes = prof.getTesterClasses();
@@ -87,54 +89,57 @@
         </nav>
         <div id="page-wrapper" >
         	<div id="page-inner">
-                <div class="row">
-                    <div class="col-md-12">
-                     <h2>Manage Professors</h2>
-                    </div>
-                    <span style = "color: red;" > ${error} </span>
-                    <span style = "color: red;" > ${message} </span>
-                    <form action="EditProfessorInfoServlet" method="post">
-                    	<div>Professor Information</div><br>
-                    	<input type="text" name="name" value="<%=prof.getName()%>" required><br>
-                    	<input type="text" name="email" value="<%=prof.getEmail()%>" required><br>
-                    	<input type="text" name="username" value="<%=prof.getUsername()%>" required><br>
-                    	<input type="submit" name="action" value="Edit Info"><br>
-                    </form>
-                    <form action="EditProfessorInfoServlet" method="post">
-                    	<div>Change Password</div>
-                    	New Password: <input type="text" name="password1" placeholder="Change password?" required><br>
-                    	Retype Password: <input type="text" name="password2" placeholder="Change password?" required><br>
-                    	<input type="submit" name="action" value="Change Password"><br>
-                    </form>
-                  <hr /> <!-- adds line -->
-              	 <form action="AdminCreateNewClassServlet" method="post">
-						<span style =  "color: red;"> ${createclasserror} </span><br>
-						<input type="text" name="coursecode" placeholder="Course Code"> optional (if none provided or if code in use, a new code will be auto generated)<br>
-						<input type="text" name="courseprefix" placeholder="Course prefix" required> 
-						<input type="text" name="coursenumber" placeholder="Course number" required><br>
-						<input type="text" name ="coursename" placeholder="Course name" required><br>
-						<input type="text" name ="semester" placeholder="Semester" required><br>
-						<input type="date" name="datestart" placeholder="Date Start"><input type="date" name="dateend" placeholder="Date End"> optional <br>
-						<input type="submit" value="create class">
-				 </form>
-				 <h3>Classes: </h3>
-             	<form action="ShowClassServlet" method="get">
-				<%
-					for(int i = classes.size()-1; i>-1; i--){
-						TesterClass tClass = classes.get(i);
-						System.out.println(tClass.getCoursename());
-				%>
-					<button name="classid" value="<%=tClass.getIdclass()%>" > <%out.println(tClass.getCoursePreNNum()); %></button> <br> <%//creates buttons with the class name on them and classid as the value passed through request %>
-				<%	
-					}
-				%>
-				</form>
-					
+	                <div class="row">
+	                    <div class="col-md-12">
+	                     <h2>Manage Professors</h2>
+	                    </div>
+	               	</div> 
+	                    <span style = "color: red;" > ${error} </span>
+	                    <span style = "color: red;" > ${message} </span>
+	                    <form action="EditProfessorInfoServlet" method="post">
+	                    	<div>Professor Information</div><br>
+	                    	<input type="text" name="name" value="<%=prof.getName()%>" required><br>
+	                    	<input type="text" name="email" value="<%=prof.getEmail()%>" required><br>
+	                    	<input type="text" name="username" value="<%=prof.getUsername()%>" required><br>
+	                    	<input type="submit" name="action" value="Edit Info"><br>
+	                    </form>
+	                    <form action="EditProfessorInfoServlet" method="post">
+	                    	<div>Change Password</div>
+	                    	New Password: <input type="text" name="password1" placeholder="Change password?" required><br>
+	                    	Retype Password: <input type="text" name="password2" placeholder="Change password?" required><br>
+	                    	<input type="submit" name="action" value="Change Password"><br>
+	                    </form>
+	                  <hr /> <!-- adds line -->
+	              	 <form action="AdminCreateNewClassServlet" method="post">
+							<span style =  "color: red;"> ${createclasserror} </span><br>
+							<input type="text" name="coursecode" placeholder="Course Code"> optional (if none provided or if code in use, a new code will be auto generated)<br>
+							<input type="text" name="courseprefix" placeholder="Course prefix" required> 
+							<input type="text" name="coursenumber" placeholder="Course number" required><br>
+							<input type="text" name ="coursename" placeholder="Course name" required><br>
+							<input type="text" name ="semester" placeholder="Semester" required><br>
+							<input type="date" name="datestart" placeholder="Date Start"><input type="date" name="dateend" placeholder="Date End"> optional <br>
+							<input type="submit" value="create class">
+					 </form>
+					 <h3>Classes: </h3>
+	             	<form action="AdminShowClassServlet" method="get">
+					<%
+						for(int i = classes.size()-1; i>-1; i--){
+							TesterClass tClass = classes.get(i);
+							System.out.println(tClass.getCoursename());
+					%>
+						<button name="classid" value="<%=tClass.getIdclass()%>" > <%out.println(tClass.getCoursePreNNum()); %></button> <br> <%//creates buttons with the class name on them and classid as the value passed through request %>
+					<%	
+						}
+					%>
+					</form>
+						
                     <hr/>
 					<form method="get" action="AdminBackButtons">
 						<button name="pageName" value="AdminSeeProfessorPage">Back</button> <br>
 					</form>
-            </div>    
+ 
+        	</div>
+        	</div>
         </div>
         
     <div class="footer">
@@ -147,6 +152,7 @@
     <script src="assets/js/bootstrap.min.js"></script>
       <!-- CUSTOM SCRIPTS -->
     <script src="assets/js/custom.js"></script>
+    </div>
     
    
 </body>

@@ -74,7 +74,9 @@ public class Professor {
 	public ArrayList<TesterClass> geTesterClassesStaticMethod(String idprofessorprofiles) throws Exception{
 		return TesterClass.geTesterClasses(idprofessorprofiles);
 	}
-	
+	public void addClass(TesterClass class1) {
+		this.testerClasses.add(class1);
+	}
 	public void updateInfoChangesToDB() throws Exception {
 		Connection con = DBConnection.getDBConnection();
 		try {

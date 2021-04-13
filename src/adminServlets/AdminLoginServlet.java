@@ -36,6 +36,8 @@ public class AdminLoginServlet extends HttpServlet {
 			if(rset.next()) {
 				session.setAttribute("username", username);
 				session.setAttribute("idadminprofiles", rset.getString("idadminprofiles"));
+				session.setAttribute("loginPage", "LoginAdmin.jsp");
+				session.setAttribute("from", "admin");
 				System.out.print(session.getAttribute("username")+" "+session.getAttribute("idadminprofiles"));
 				response.sendRedirect("AdminOptions.jsp");
 			}else {

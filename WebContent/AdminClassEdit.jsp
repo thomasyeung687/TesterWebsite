@@ -1,16 +1,18 @@
-<!DOCTYPE html>
-<%@page import="com.testersite.model.TesterClass"%>
 <%@page import="com.testersite.model.Professor"%>
-<%@page import="java.util.HashMap"%>
-<%@page import="java.util.Map"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="java.sql.Statement"%>
-<%@page import="java.sql.ResultSet"%>
+<%@page import="com.testersite.model.TesterClass"%>
+<%@page import="Random.RandomString"%>
 <%@page import="com.testersite.dao.DBConnection"%>
-<%@page import="java.sql.Connection"%>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<%@page import="com.testersite.model.Question"%>
+<%@page import="java.util.*"%>
+<%@page import="java.sql.*"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
 <head>
-      <meta charset="utf-8" />
+	<!-- ClassOptionServlet -->
+	<meta charset="ISO-8859-1">
+  	<meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Simple Responsive Admin</title>
 	<!-- BOOTSTRAP STYLES-->
@@ -21,7 +23,6 @@
     <link href="assets/css/custom.css" rel="stylesheet" />
      <!-- GOOGLE FONTS-->
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
-   <link href="assets/css/tables.css" rel="stylesheet" /> <!-- styling for table element -->
 </head>
 <body>
     <%
@@ -32,32 +33,22 @@
 			return;
 		}
 		if(session.getAttribute("professorObj")==null){
-			System.out.println("AdminSeeClass session attribute professorObj is null");
+			System.out.println("AdminClassEdit session attribute professorObj is null");
 			response.sendRedirect("AManageProfessors.jsp");
 			return;
 		}
 		if(session.getAttribute("classObj")==null){
-			System.out.println("AdminSeeClass session attribute classObj is null");
+			System.out.println("AdminClassEdit session attribute classObj is null");
 			response.sendRedirect("AManageProfessors.jsp");
 			return;
 		}
 		
-		Professor prof = (Professor)session.getAttribute("professorObj");
-		TesterClass classObj = (TesterClass)session.getAttribute("classObj");
-		System.out.println("professor aspp.jsp: "+prof.toString());
-		System.out.println("Classobj aspp.jsp: "+classObj.toString());
+		Professor prof = (Professor) session.getAttribute("professorObj");
+		TesterClass classObj = (TesterClass) session.getAttribute("classObj");
+		System.out.println("professor AdminClassEdit.jsp: "+prof.toString());
+		System.out.println("Classobj AdminClassEdit.jsp: "+classObj.toString());
 	%>
-    <script type="text/javascript">
-	function confirmButton(){
-		var r = prompt("Type 'DELETE THIS CLASS' to delete this class and all tests. (All caps and leave out '')")
-		if(r != "DELETE THIS CLASS"){
-			alert("Incorrect String.");
-		}else{
-			deletetest.submit();
-		}
-	}
-	</script>
-          
+
     <div id="wrapper">
          <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="adjust-nav">
@@ -104,37 +95,43 @@
                             </div>
 
         </nav>
+        <!-- /. NAV SIDE  -->
         <div id="page-wrapper" >
-        	<div id="page-inner">
+            <div id="page-inner">
                 <div class="row">
                     <div class="col-md-12">
-                     <h2>Manage Professors</h2>
+                     <h2>Manage Your Classes </h2>   
                     </div>
-                 </div>
-                    <hr/>
-                    <div class="row">
-	                    <div class="col-md-12">
-	                     <h2><%out.print(classObj.getCourseprefix() + classObj.getCoursenumber() +" | "); out.println(classObj.getCoursename()+" | "+classObj.getSemester()); %>  </h2>   
-	                     <h3>Class Code: <%out.println(classObj.getClasscode());%></h3> <h4 >Course start: <%out.println(classObj.getDatestart()); %></h4> <h4>Course end: <%out.println(classObj.getDateend()); %></h4> 
-	                    </div>
-                	</div>          
-                  	<hr /> <!-- adds line -->
-		            	<form action="AdminClassOptionsServlet" method="post" name="deletetest">
-		              	 	<%-- <input type="hidden" name="classid" value="<%out.print(session.getAttribute("classid"));%>"> --%>
-							<input type="submit" name="action" value="Edit Class">
-							<input type="submit" name="action" value="Manage Students">
-							<input type="submit" name="action" value="Manage Tests">
-		                    <button type="button"  name="action" value="Delete" onclick="confirmButton()">Delete This Class</button>
-		                </form>
-						<form method="get" action="AdminBackButtons">
-							<button name="pageName" value="AdminSeeClass">Back</button> 
-						</form>
-            </div>    
+                </div>              
+                 <!-- /. ROW  -->
+                 <h3>Edit Class </h3>            
+                  <hr /> <!-- adds line -->
+              	<form action="AdminEditClassServlet" method="post">
+              		<span style =  "color: red;"> ${EditClassError} </span><br>
+              		<%-- <input type="hidden" name="classid" value="<%out.print(request.getParameter("classid"));%>">--%> <%//this passes the classid to the servlet which will use to idenify the class to edit %>
+					Course Prefix: <input type="text" name="courseprefix" value="<%out.print(classObj.getCourseprefix()); %>" > 
+					Course Number: <input type="text" name="coursenumber" value="<%out.print(classObj.getCoursenumber()); %>"> <br>
+					Course Name: <input type="text" name="coursename" value ="<%out.print(classObj.getCoursename()); %>"> <br>
+					Term start: <input type="date" name="datestart" value="<%out.print(classObj.getDatestart()); %>"><br>
+					Term end: <input type= "date" name ="dateend" value="<%out.print(classObj.getDateend()); %>"><br>
+					Term end: <input type= "text" name ="semester" value="<%out.print(classObj.getSemester()); %>"><br>
+					<input type="submit" value="Edit Class">
+				</form>
+				<form method="get" action="AdminBackButtons">
+					<button name="pageName" value="AdminClassEdit">Back</button> 
+				</form>    
+                 <!-- /. ROW  -->           
+    </div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. PAGE WRAPPER  -->
         </div>
-      </div>
-        
     <div class="footer">
       
+        </div>
+        </div>
+          
+
      <!-- /. WRAPPER  -->
     <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
     <!-- JQUERY SCRIPTS -->
@@ -144,6 +141,6 @@
       <!-- CUSTOM SCRIPTS -->
     <script src="assets/js/custom.js"></script>
     
-   </div>
+   
 </body>
 </html>
