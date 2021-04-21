@@ -37,6 +37,7 @@ public class AdminStudentFromFile extends HttpServlet {
 			Statement st = connection.createStatement();
 			Scanner scanner = new Scanner(file);
 			String classid = cObject.getIdclass().trim();
+			
 			String accountcreatedNadded ="";
 			String accountadded="";
 			String studentalreadyclass="";
