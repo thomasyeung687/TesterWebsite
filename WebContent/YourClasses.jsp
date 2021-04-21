@@ -1,4 +1,4 @@
-<%@page import="Random.RandomString"%>
+
 <%@page import="com.testersite.dao.DBConnection"%>
 <%@page import="com.testersite.model.Question"%>
 <%@page import="java.util.*"%>
