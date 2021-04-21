@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.mysql.cj.Session;
 import com.testersite.dao.DBConnection;
 
 /**
@@ -39,7 +38,8 @@ public class LoginProf extends HttpServlet {
 			if(rset.next()) {
 				session.setAttribute("username", username);
 				session.setAttribute("idprofessorprofiles", rset.getString("idprofessorprofiles"));
-				session.setAttribute("classcode", rset.getObject("classcode")); //getting classcode from db and putting it as attribute for tests creation etc
+				session.setAttribute("from", "prof");//this will be used for routing in certain servlets.
+//				session.setAttribute("classcode", rset.getObject("classcode")); //getting classcode from db and putting it as attribute for tests creation etc
 				response.sendRedirect("CreatorOptions.jsp");
 			}else {
 				RequestDispatcher rd = request.getRequestDispatcher("LoginProf.jsp");
