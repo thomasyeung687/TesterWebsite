@@ -30,9 +30,10 @@
 	<%
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");//this prevents backbutton hack
 		/* System.out.println(session.getAttribute("username")); */
-		/* if(session.getAttribute("idprofessorprofiles")==null){
+		String from = (String) session.getAttribute("from");
+		if(from.equals("prof") && session.getAttribute("idprofessorprofiles")==null){
 			response.sendRedirect("LoginProf.jsp");
-		} */
+		}
 	%>
 	<%
 	System.out.println("CreateTest.jsp");
@@ -49,8 +50,7 @@
 	ArrayList<String> idtestprofiles = new ArrayList<String>();
 	ArrayList<Test> tests = new ArrayList<Test>();
 	
-	
-	String from = (String) session.getAttribute("from");
+
 	if(from.equals("admin")){
 		TesterClass tclass = (TesterClass) session.getAttribute("classObj");
 		idclass = tclass.getIdclass();
@@ -226,9 +226,16 @@
                   	Instructions<span style="padding-left:23px"><input type="text" name="instruction" > </span> </br>
                   	<input type="submit">
                   </form>
-                  <form method="get" action="AdminBackButtons">
+                  <% if(from.equals("prof")){ %>
+                 	 <form method="get" action="ProfessorBackButtons">
+						<button name="pageName" value="CreateTest">Back</button> 
+					</form>
+                  <%}else if(from.equals("admin")){ %>
+                  	<form method="get" action="AdminBackButtons">
 						<button name="pageName" value="AdminShowCompletedTestPage">Back</button> 
 					</form>
+                  <%} %>
+                   
 
                  <!-- /. ROW  -->           
     </div>

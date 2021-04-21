@@ -11,7 +11,7 @@ public class DBConnection {
 		try {
 			if(con == null) {
 				Class.forName("com.mysql.cj.jdbc.Driver"); // this might be error. delete cj
-				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/","root","1938Fall76!");
+				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/","root","pass");
 			}
 		}catch (Exception e) {
 			System.out.print("Exception occured");
