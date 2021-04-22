@@ -425,7 +425,7 @@
 					<%if(!(thisTest.getAttempts().get(0).getNotes() == null)){ //only if there is an attempt object do we have a note box%>
 				  	<div class="questionWrapper">
 				  		<span>Notes</span><br>
-						<textarea class="notesTextArea" name="notes"><%out.println(thisTest.getAttempts().get(0).getNotes());%></textarea>
+						<textarea class="notesTextArea" name="notes" disabled><%out.println(thisTest.getAttempts().get(0).getNotes());%></textarea>
 				  	</div>
 				  	<%} %>
 				  <form action="AfterTestPageLinker" method="get">

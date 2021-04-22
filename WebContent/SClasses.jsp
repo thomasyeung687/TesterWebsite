@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@page import="com.testersite.model.TesterClass"%>
 <%@page import="java.util.Date"%>
 <%@page import="com.testersite.model.ClassObject"%>
 <%@page import="java.util.*"%>
@@ -33,7 +34,7 @@
     	Connection connection = DBConnection.getDBConnection();
     	String studentid = ((String) session.getAttribute("idstudentprofiles")).trim();
     	Set<String> classnames = null;
-    	TreeMap<String, ClassObject> classtoprof = null;
+    	TreeMap<String, TesterClass> classtoprof = null;
     	try {
 			Statement st = connection.createStatement();
 			Statement st1 = connection.createStatement(); //will be used to fetch class data.
@@ -54,12 +55,14 @@
 				String coursename = rSet.getString("courseprefix")+rSet.getString("coursenumber");
 				String professorname = rSet1.getString("name");
 				
-				ClassObject newclass = new ClassObject();
+				/* ClassObject newclass = new ClassObject();
 				newclass.setClassid(classid);
 				newclass.setCoursename(coursename);
 				newclass.setInstructorName(professorname);
 				newclass.setdateStart(rSet.getString("datestart"));
-				newclass.setdateEnd(rSet.getString("dateend"));
+				newclass.setdateEnd(rSet.getString("dateend")); */
+				TesterClass newclass = new TesterClass(rSet);
+				newclass.setProfessorName(professorname);
 				
 				
 				classtoprof.put(coursename, newclass);
@@ -133,12 +136,13 @@
 					<hr>
 					<form action="ShowClassServletStudent" method="get">
 						<%for(String cname : classnames){
-							ClassObject thisclass = classtoprof.get(cname); //getting classobject from classtoprof tree using cname as the key
+							TesterClass thisclass = classtoprof.get(cname); //getting classobject from classtoprof tree using cname as the key
 						%>
-							<button class="SClassesbutton" name="classid" value = "<%out.println(thisclass.getClassid());%>"> 
-								<%out.println(thisclass.getCoursename());%><br>
-								Instructor: <%out.println(thisclass.getInstructorName());%><br>
-								DateStart-DateEnd: <%out.println(thisclass.getdateStart()+" to "+thisclass.getdateEnd());%><br>
+							<button class="SClassesbutton" name="classid" value = "<%out.println(thisclass.getIdclass());%>"> 
+								<%out.println(thisclass.getCoursePreNNum()+" | "+thisclass.getCoursename());%><br>
+								Instructor: <%out.println(thisclass.getProfessorName());%><br>
+								DateStart-DateEnd: <%out.println(thisclass.getDatestart()+" to "+thisclass.getDateend());%><br>
+								Semester: <%out.println(thisclass.getSemester());%><br>
 							</button> <br>
 						<%} %>
 					</form>

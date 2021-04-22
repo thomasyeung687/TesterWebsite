@@ -52,6 +52,7 @@ function confirmButton(){
 	String datestart="";
 	String dateend="";
 	String classcode="";
+	String semester = "";
 	try {
 		Statement st = con.createStatement();
 		rset = st.executeQuery("SELECT * FROM testersitedatabase.allclasses WHERE idclass = '"+session.getAttribute("classid")+"';");
@@ -64,6 +65,7 @@ function confirmButton(){
 		datestart = rset.getString("datestart");
 		dateend = rset.getString("dateend");
 		classcode = rset.getString("classcode");
+		semester =  rset.getString("semester");
 		
 		
 		System.out.println(idclass);
@@ -147,7 +149,8 @@ function confirmButton(){
                 <div class="row">
                     <div class="col-md-12">
                      <h2><%out.print(courseprefix + coursenumber +" | "); out.println(coursename); %>  </h2>   
-                     <h3>Class Code: <%out.println(classcode);%></h3> <h4 >Course start: <%out.println(datestart); %></h4> <h4>Course end: <%out.println(dateend); %></h4> 
+                     <h3>Class Code: <%out.println(classcode);%></h3> <h4 >Course start: <%out.println(datestart); %></h4> <h4>Course end: <%out.println(dateend); %></h4>
+                     <h4 >Semester: <%out.println(semester); %></h4>
                     </div>
                 </div>              
                  <!-- /. ROW  -->
@@ -159,10 +162,10 @@ function confirmButton(){
 					<input type="submit" name="COaction" value="Manage Tests">
 					<!-- <input type="submit" name="COaction" value="Manage Announcements"> -->
 				</form>
-				<form action="DeleteClassServlet" method="post" name="deletetest">
+				<%-- <form action="DeleteClassServlet" method="post" name="deletetest">
                      	<input type="hidden" name="classid" value="<%out.print(session.getAttribute("classid"));%>">
                      	<button type="button"  onclick="confirmButton()">Delete This Class</button>
-                </form>
+                </form> --%>
                   <form action="ClassOptionsBack" method="get">
 				  	<button name="action" value="back">Back</button> 
 				  </form>
