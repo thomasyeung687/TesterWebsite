@@ -1,3 +1,4 @@
+<%@page import="com.testersite.model.TesterClass"%>
 <%@page import="Random.RandomString"%>
 <%@page import="com.testersite.dao.DBConnection"%>
 <%@page import="com.testersite.model.Question"%>
@@ -28,6 +29,7 @@
 		//System.out.println(session.getAttribute("username"));
 		if(session.getAttribute("idprofessorprofiles")==null ){
 			response.sendRedirect("LoginProf.jsp");
+			return;
 		}
 	%>
 	<%
@@ -36,13 +38,14 @@
 	//System.out.println(session.getAttribute("username"));
 	ResultSet rset;
 	ArrayList<String> students = new ArrayList<>();
-	int idclass=0;
+	/* int idclass=0;
 	String courseprefix="";
 	String coursenumber="";
 	String coursename="";
 	String datestart="";
 	String dateend="";
-	String classcode="";
+	String classcode=""; */
+	TesterClass tClass = null;
 
 	System.out.println(session.getAttribute("classid"));
 	try {
@@ -50,16 +53,17 @@
 		rset = st.executeQuery("SELECT * FROM testersitedatabase.allclasses WHERE idclass = '"+session.getAttribute("classid")+"';");
 		rset.next(); 
 		
-		idclass = rset.getInt("idclass");
+		/* idclass = rset.getInt("idclass");
 		courseprefix = rset.getString("courseprefix");
 		coursenumber = rset.getString("coursenumber");
 		coursename = rset.getString("coursename");
 		datestart = rset.getString("datestart");
 		dateend = rset.getString("dateend");
-		classcode = rset.getString("classcode");
+		classcode = rset.getString("classcode"); */
+		tClass = new TesterClass(rset);
 		
-		System.out.println(idclass);
-		System.out.println(courseprefix + coursenumber + " " + coursename +" "+ datestart +" "+ dateend+" "+classcode);
+		/* System.out.println(idclass);
+		System.out.println(courseprefix + coursenumber + " " + coursename +" "+ datestart +" "+ dateend+" "+classcode); */
 		
 	}catch(Exception e){
 		System.out.println(e.getMessage());
@@ -150,11 +154,12 @@
               	<form action="EditClassServlet" method="post">
               		<span style =  "color: red;"> ${createclasserror} </span><br>
               		<%-- <input type="hidden" name="classid" value="<%out.print(request.getParameter("classid"));%>">--%> <%//this passes the classid to the servlet which will use to idenify the class to edit %>
-					Course Prefix: <input type="text" name="courseprefix" value="<%out.print(courseprefix); %>" > 
-					Course Number: <input type="text" name="coursenumber" value="<%out.print(coursenumber); %>"> <br>
-					Course Name: <input type="text" name="coursename" value ="<%out.print(coursename); %>"> <br>
-					Term start: <input type="date" name="datestart" value="<%out.print(datestart); %>"><br>
-					Term end: <input type= "date" name ="dateend" value="<%out.print(dateend); %>"><br>
+					Course Prefix: <input type="text" name="courseprefix" value="<%out.print(tClass.getCourseprefix()); %>" > 
+					Course Number: <input type="text" name="coursenumber" value="<%out.print(tClass.getCoursenumber()); %>"> <br>
+					Course Name: <input type="text" name="coursename" value ="<%out.print(tClass.getCoursename()); %>"> <br>
+					Term start: <input type="date" name="datestart" value="<%out.print(tClass.getDatestart()); %>"><br>
+					Term end: <input type= "date" name ="dateend" value="<%out.print(tClass.getDateend()); %>"><br>
+					Term end: <input type= "text" name ="semester" value="<%out.print(tClass.getSemester()); %>"><br>
 					<input type="submit" value="Edit Class">
 				</form>
                  <!-- /. ROW  -->           

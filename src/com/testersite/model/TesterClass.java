@@ -11,15 +11,16 @@ import com.testersite.dao.DBConnection;
 import Random.RandomString;
 
 public class TesterClass {
-	String idclass;
-	String idprofessorprofiles;
-	String courseprefix;
-	String coursenumber;
-	String coursename;
-	String datestart;
-	String dateend;
-	String classcode;
-	String semester;
+	String idclass = "not set";
+	String idprofessorprofiles = "not set";
+	String professorName = "not set";
+	String courseprefix = "not set";
+	String coursenumber = "not set";
+	String coursename = "not set";
+	String datestart = "not set";
+	String dateend = "not set";
+	String classcode = "not set";
+	String semester = "not set";
 	ArrayList<Student> students = new ArrayList<Student>();
 	
 	public TesterClass(String idclass) throws Exception {
@@ -60,6 +61,7 @@ public class TesterClass {
 		this.coursename = rSet.getString("coursename");
 		this.datestart = rSet.getString("datestart");
 		this.dateend = rSet.getString("dateend");
+		this.semester = rSet.getString("semester").equals("") ? "Not Set" : rSet.getString("semester"); // if not "" then sets semester as semester
 		this.classcode = rSet.getString("classcode");
 		this.students = geStudents(this.idclass); //gets students in the class
 	}
@@ -231,6 +233,12 @@ public class TesterClass {
 	}
 	public void setIdprofessorprofiles(String idprofessorprofiles) {
 		this.idprofessorprofiles = idprofessorprofiles;
+	}
+	public String getProfessorName() {
+		return professorName;
+	}
+	public void setProfessorName(String professorName) {
+		this.professorName = professorName;
 	}
 	public String getCourseprefix() {
 		return courseprefix;

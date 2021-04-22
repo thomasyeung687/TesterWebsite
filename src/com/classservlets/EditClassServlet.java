@@ -32,11 +32,12 @@ public class EditClassServlet extends HttpServlet {
 		String coursename = request.getParameter("coursename");
 		String datestart = request.getParameter("datestart");
 		String dateend = request.getParameter("dateend");
+		String semester = request.getParameter("semester");
 		
 		try {
 			Connection connection = DBConnection.getDBConnection();
 			Statement st = connection.createStatement();
-			String query = "UPDATE testersitedatabase.allclasses SET courseprefix = '"+courseprefix+"', coursenumber = '"+coursenumber+"', coursename = '"+coursename+"', datestart = '"+datestart+"', dateend = '"+dateend+"' WHERE idclass = '"+session.getAttribute("classid")+"';"; 
+			String query = "UPDATE testersitedatabase.allclasses SET courseprefix = '"+courseprefix+"', coursenumber = '"+coursenumber+"', coursename = '"+coursename+"', datestart = '"+datestart+"', dateend = '"+dateend+"', semester = '"+semester+"'WHERE idclass = '"+session.getAttribute("classid")+"';"; 
 			st.executeUpdate(query); //adds new class to the database.
 			System.out.println(query);
 			//System.out.println(request.getParameter("datestart"));
