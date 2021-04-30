@@ -143,8 +143,8 @@
 				  	Test Instructions: <textarea rows="2" cols="75"  name="updatedtestinstructions"><%out.println(test.getTestInstructions()); %> </textarea> <br>
 				  	<hr /> <!-- adds line -->
 				  	Date Start: <input type="date" value="<%out.print(test.getTestDateStart()); %>" name="updatedtestdatestart"> <br>
-				  	Display after : <input type="time" value="<%out.print(test.getDisplaystart()); %>" name="updateddisplaystart"> *12:00AM is the start of date start*<br>
-				  	Display until : <input type="time" value="<%out.print(test.getDisplayend()); %>" name="updateddisplayend"> *11:59PM is the end of date start*<br>
+				  	<%-- Display after : <input type="time" value="<%out.print(test.getDisplaystart()); %>" name="updateddisplaystart"> *12:00AM is the start of date start*<br>
+				  	Display until : <input type="time" value="<%out.print(test.getDisplayend()); %>" name="updateddisplayend"> *11:59PM is the end of date start*<br> --%>
 				  	Date End: <input type="date" value="<%out.print(test.gettestDateEnd()); %>" name="updatedtestdateend"> <br>
 				  	<hr /> <!-- adds line -->
 				  	Availability: <% if(test.isAvailibility()){%>
@@ -159,7 +159,7 @@
 				  	</select>
 				  	<%}%> 
 				  	
-				  	<br>
+				  	<%-- <br>
 				  	Forced Completion: <% if(test.isForcedCompletion()){%>
 				  	<select name="updatedforcecomplete">
 				  		<option value="1">True</option>
@@ -170,8 +170,8 @@
 				  		<option value="0">False</option>
 				  		<option value="1">True</option>
 				  	</select>
-				  	<%}%> 
-				  	<br>
+				  	<%}%>  --%>
+				  	<%-- <br>
 				  	Scramble Questions: <% if(test.isScrambleTest()){%>
 				  	<select name="updatedscrambletest">
 				  		<option value="1">True</option>
@@ -182,7 +182,7 @@
 				  		<option value="0">False</option>
 				  		<option value="1">True</option>
 				  	</select>
-				  	<%}%> 
+				  	<%}%>  --%>
 				  	<br>
 				  	Show Questions One by One: <% if(test.isShowQuestionOnebyOne()){%>
 				  	<select name="updatedshowquestions1b1">
@@ -209,7 +209,7 @@
 				  	<br>
 				  	
 				  	<hr /> <!-- adds line -->
-				  	Time Limit (minutes): <input type="text" value="<%out.println(test.getTimelimit()); %>" name="updatedtimelimit"> <br>
+				  	<%-- Time Limit (minutes): <input type="text" value="<%out.println(test.getTimelimit()); %>" name="updatedtimelimit"> <br> --%>
 				  	Amount of Attempts: <input type="text" value="<%out.println(test.getAmtOfAttempts()); %>" name="updatedamountofattempts"> <br>
 				  	
 				  	<hr /> <!-- adds line -->

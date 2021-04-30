@@ -30,12 +30,20 @@ public class AdminStudentFromFile extends HttpServlet {
 		HttpSession session = request.getSession();
 		String filepath = request.getParameter("file");
 		System.out.println(filepath);
+		System.out.println("here4!");
 		File file = new File(filepath);
+		System.out.println("is exist?: "+file.exists());
+		System.out.println("is readable?: "+file.canRead());
+		
+		System.out.println("The path is '" + file.getAbsolutePath() + "'");
+		System.out.println("here3!");
 		TesterClass cObject = (TesterClass) session.getAttribute("classObj");
 		try {
 			Connection connection = DBConnection.getDBConnection();
+			System.out.println("here2!");
 			Statement st = connection.createStatement();
 			Scanner scanner = new Scanner(file);
+//			System.out.println("here!");
 			String classid = cObject.getIdclass().trim();
 			
 			String accountcreatedNadded ="";
@@ -69,7 +77,7 @@ public class AdminStudentFromFile extends HttpServlet {
 				}else { //account is not found to exist in the database, then we create the student profile and add it to the studenttoclass db
 					
 					System.out.println("not found");
-					String insertquery ="INSERT INTO testersitedatabase.studentprofiles (name,username, password, email, classid) VALUES ('"+name+"','"+array[1]+"','"+array[0]+"','"+array[4]+"','"+classid+"')";
+					String insertquery ="INSERT INTO testersitedatabase.studentprofiles (name,username, password, email, idadminprofiles) VALUES ('"+name+"','"+array[1]+"','"+array[0]+"','"+array[4]+"','"+(String)session.getAttribute("idadminprofiles")+"')";
 					System.out.println(insertquery);
 					st.execute(insertquery); //creating new studentprofile
 					rset = st.executeQuery("SELECT idstudentprofiles from testersitedatabase.studentprofiles where username = '"+array[1]+"';"); //regets the student profile we just created so we can fetch the idstudentprofile

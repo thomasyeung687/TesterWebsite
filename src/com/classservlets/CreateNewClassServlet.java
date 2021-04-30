@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.testersite.dao.DBConnection;
+import com.testersite.model.Professor;
+import com.testersite.model.TesterClass;
 
 import Random.RandomString;
 
@@ -27,36 +29,32 @@ public class CreateNewClassServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session= request.getSession();
-		String username = (String) session.getAttribute("username"); //unique username which will be used to get idprofessorprofiles which is used as a foreign key in the classes table
-		int idprofessorprofiles = 0;
+		
 		String courseprefix = request.getParameter("courseprefix");
 		String coursenumber = request.getParameter("coursenumber");
 		String coursename = request.getParameter("coursename");
+		String semester = request.getParameter("semester");
 		String datestart = request.getParameter("datestart");
 		String dateend = request.getParameter("dateend");
-		
-		RandomString random = new RandomString(5,ThreadLocalRandom.current());
-		String newClasscode = random.randString();
+		String profid = (String) session.getAttribute("idprofessorprofiles");
+		String adminid = (String) session.getAttribute("idadminprofiles");
+		String newClasscode = request.getParameter("coursecode");
 		try {
-			Connection connection = DBConnection.getDBConnection();
-			Statement st = connection.createStatement();
-			ResultSet rset = st.executeQuery("SELECT idprofessorprofiles from testersitedatabase.professorprofiles where username = '"+username+"';"); //gets the id for the your account which we use as a foreign key in the allclasses table
-			rset.next(); //goes to the result
-			idprofessorprofiles = rset.getInt("idprofessorprofiles");
-			String query = "INSERT INTO `testersitedatabase`.`allclasses`" + 
-					"(`idprofessorprofiles`,`courseprefix`,`coursenumber`,`coursename`,`datestart`,`dateend`,`classcode`)" + 
-					"VALUES" + 
-					"('"+idprofessorprofiles+"','"+courseprefix+"','"+coursenumber+"','"+coursename+"','"+datestart+"','"+dateend+"','"+newClasscode+"');";
-			st.execute(query); //adds new class to the database.
-			System.out.println(query);
-			System.out.println(username);
-			//System.out.println(request.getParameter("datestart"));
-			response.sendRedirect("YourClasses.jsp");
+			String newClassId = TesterClass.createNewClass(profid, courseprefix, coursenumber, coursename, datestart, dateend, semester, newClasscode, "0");//0 is passed in for adminid becuase this class is created on professor side.
+			if(newClassId.equals("null")) {
+				RequestDispatcher rd = request.getRequestDispatcher("CreateClass.jsp");
+				session.setAttribute("createclasserror", "Couldnt get newClassId from TesterClass.createNewClass. received 'null'");
+				rd.forward(request, response);
+			}else {
+				response.sendRedirect("YourClasses.jsp");
+//				RequestDispatcher rd = request.getRequestDispatcher("AdminSeeClass.jsp");
+//				rd.forward(request, response);
+			}
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
 			// TODO: handle exception
 			RequestDispatcher rd = request.getRequestDispatcher("CreateClass.jsp");
-			request.setAttribute("createclasserror", "e.getMessage()");
+			session.setAttribute("createclasserror", "e.getMessage()");
 			rd.forward(request, response);
 		}
 	}

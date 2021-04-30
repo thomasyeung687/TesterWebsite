@@ -31,19 +31,31 @@ public class UpdatetestPreferencesServlet extends HttpServlet {
 		String testDescription = request.getParameter("updatedtestdescription");
 		String testInstructions = request.getParameter("updatedtestinstructions");
 		String testDateStart= request.getParameter("updatedtestdatestart");
-		String displaystart=request.getParameter("updateddisplaystart");;
-		String displayend=request.getParameter("updateddisplayend");;
+		
 		String testDateEnd= request.getParameter("updatedtestdateend");
 		String availibility = request.getParameter("updatedavailability"); 
-		String forcedCompletion = request.getParameter("updatedforcecomplete"); 
+		
 		String allowBackButton = request.getParameter("updatedallowbackbutton");
-		String scrambleTest = request.getParameter("updatedscrambletest");
 		String showQuestionOnebyOne = request.getParameter("updatedshowquestions1b1");//default is false so it will show the whole test as default.
-		String timelimit = request.getParameter("updatedtimelimit"); 
 		String amtOfAttempts = request.getParameter("updatedamountofattempts");
 		String releaseGrade = request.getParameter("updatedreleasegrade");
 		String allowSeeAttempt = request.getParameter("updatedallowseeattempt");
 		String showcorrectans = request.getParameter("updatedshowcorrectans");
+		
+		//not implemented yet.
+//		String scrambleTest = request.getParameter("updatedscrambletest");
+//		String timelimit = request.getParameter("updatedtimelimit"); 
+//		String forcedCompletion = request.getParameter("updatedforcecomplete"); 
+//		String displaystart=request.getParameter("updateddisplaystart");
+//		String displayend=request.getParameter("updateddisplayend");
+		
+		//default values for parameters above.
+		String scrambleTest = "0";
+		String timelimit = "0"; 
+		String forcedCompletion = "0"; 
+		String displaystart= "0";
+		String displayend= "0";
+		
 		//System.out.println("Testname: "+testName+"\n testDescription: "+testDescription+"\n testInstructions: "+testInstructions+"\n testDateStart: "+testDateStart+"\n displaystart: "+displaystart+"\n displayend: "+displayend+"\n testDateEnd: "+testDateEnd+"\n availibility: "+availibility+"\n forcedCompletion: "+forcedCompletion+"\n allowBackButton: "+allowBackButton+"\n scrambleTest: "+scrambleTest+"\n showQuestionOnebyOne: "+showQuestionOnebyOne+"\n timelimit: "+timelimit+"\n amtOfAttempts: "+amtOfAttempts);
 		Connection connection = DBConnection.getDBConnection();
 		try {

@@ -40,7 +40,7 @@
 		}
 	%>
 	<%
-	System.out.println("ClassManageStudents.jsp");
+	/* System.out.println("ClassManageStudents.jsp"); */
 	Connection con = DBConnection.getDBConnection();
 	//System.out.println(session.getAttribute("username"));
 	ResultSet rset;

@@ -135,8 +135,13 @@
                  <h3>Create Class </h3>
                   <hr /> <!-- adds line -->
               	<form action="CreateNewClassServlet" method="post">
-              		<span style =  "color: red;"> ${joinclasserror} </span><br>
-					<input type="text" name="coursecode" placeholder="Course Code"> 
+					<span style =  "color: red;"> ${createclasserror} </span><br>
+					<input type="text" name="coursecode" placeholder="Course Code"> optional (if none provided or if code in use, a new code will be auto generated)<br>
+					<input type="text" name="courseprefix" placeholder="Course prefix" required> 
+					<input type="text" name="coursenumber" placeholder="Course number" required><br>
+					<input type="text" name ="coursename" placeholder="Course name" required><br>
+					<input type="text" name ="semester" placeholder="Semester" required><br>
+					<input type="date" name="datestart" placeholder="Date Start"><input type="date" name="dateend" placeholder="Date End"> optional <br>
 					<input type="submit" value="create class">
 				</form>
                  <!-- /. ROW  -->           

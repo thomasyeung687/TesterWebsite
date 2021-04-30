@@ -66,7 +66,7 @@ public class StudentFromFile extends HttpServlet {
 				}else { //account is not found to exist in the database, then we create the student profile and add it to the studenttoclass db
 					
 					System.out.println("not found");
-					String insertquery ="INSERT INTO testersitedatabase.studentprofiles (name,username, password, email, classid) VALUES ('"+name+"','"+array[1]+"','"+array[0]+"','"+array[4]+"','"+classid+"')";
+					String insertquery ="INSERT INTO testersitedatabase.studentprofiles (name,username, password, email) VALUES ('"+name+"','"+array[1]+"','"+array[0]+"','"+array[4]+"')";
 					System.out.println(insertquery);
 					st.execute(insertquery); //creating new studentprofile
 					rset = st.executeQuery("SELECT idstudentprofiles from testersitedatabase.studentprofiles where username = '"+array[1]+"';"); //regets the student profile we just created so we can fetch the idstudentprofile

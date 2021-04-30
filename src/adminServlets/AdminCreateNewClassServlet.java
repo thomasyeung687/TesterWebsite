@@ -33,7 +33,6 @@ public class AdminCreateNewClassServlet extends HttpServlet {
 			response.sendRedirect("AManageProfessors.jsp");
 		}
 		Professor prof = (Professor) session.getAttribute("professorObj");
-		String coursecode = request.getParameter("coursecode");
 		String courseprefix = request.getParameter("courseprefix");
 		String coursenumber = request.getParameter("coursenumber");
 		String coursename = request.getParameter("coursename");
