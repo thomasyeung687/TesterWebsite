@@ -10,6 +10,16 @@ public class FillInTheBlankQuestion extends Question{
 	private boolean casesensitive;
 	private String str1;
 	private String str2;
+
+	/**
+	 * FillInTheBlankQuestion constructor
+	 * @param questionid id of question in sql db
+	 * @param pointsWorth num of points worth
+	 * @param questiontitle title of question
+	 * @param question the actual question text displayed when test is taken
+	 * @param correctans the answer choice that is correct
+	 * @param casesensitive is this answer case sensitive?
+	 */
 	public FillInTheBlankQuestion(int questionid,  int pointsWorth,String questiontitle, String question, String correctans, boolean casesensitive) {
 		super(questionid, questiontitle,"FillInTheBlankQuestion", pointsWorth, question); //default #question title is the num answers there are.
 		setCorrectAnswerString(correctans);
@@ -44,7 +54,17 @@ public class FillInTheBlankQuestion extends Question{
 		}
 		this.casesensitive = casesensitive;
 	}
-	
+
+	/**
+	 * FillInTheBlankQuestion constructor with an answer response provided.
+	 * @param questionid id of question in sql db
+	 * @param pointsWorth num of points worth
+	 * @param questiontitle title of question
+	 * @param question the actual question text displayed when test is taken
+	 * @param correctans the answer choice that is correct
+	 * @param casesensitive is this answer case sensitive?
+	 * @param answerChosen answer chosen by user.
+	 */
 	public FillInTheBlankQuestion(int questionid,  int pointsWorth,String questiontitle, String question,String answerChosen, String correctans, boolean casesensitive) {
 		super(questionid, questiontitle,"FillInTheBlankQuestion", pointsWorth, question); //default #question title is the num answers there are.
 		
@@ -123,6 +143,9 @@ public class FillInTheBlankQuestion extends Question{
 		fib.calculatePtsReceived();
 	}
 	@Override
+	/**
+	 * Calculates the points received by comparing the answerChosen and the correctans
+	 */
 	public double calculatePtsReceived() {
 		System.out.println("Question: "+this.getQuestion());
 		System.out.println("Correct Answer(s)  : "+this.correctans);

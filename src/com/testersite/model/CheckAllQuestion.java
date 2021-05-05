@@ -16,12 +16,39 @@ public class CheckAllQuestion extends Question{
 	//CA (CORRECT ANSWERS = Users receive points for each correct answer they select and for each incorrect answer they leave blank.)
 	//CA NOT IMPLEMENTED
 	private final String DEFAULT_GRADING_TYPE = "AON";
-	public CheckAllQuestion(int questionid,  int pointsWorth,String questiontitle, String question, String answers, String correctans) {
+
+	/**
+	 * the methoc creates a new checkallquestion and it splits the answers and the correctans param and stores it into the answers or the correctans list
+	 *  respectively
+	 * @param questionid id of question in sql db
+ 	 * @param pointsWorth num of points worth
+	 * @param questiontitle title of question
+	 * @param question the actual question text displayed when test is taken
+	 * @param answers the answers given as a single string seperated with "~"
+	 * @param correctans the answer choice that is correct
+	 */
+	public CheckAllQuestion(int questionid,  int pointsWorth, String questiontitle, String question, String answers, String correctans) {
 		super(questionid, questiontitle,"CheckAllQuestion", pointsWorth, question); //default #question title is the num answers there are.
 		this.setCorrectAnswerString(correctans);
 		this.answers = Arrays.asList(answers.split("~"));
 		this.correctanswers = Arrays.asList(correctans.split("~"));
 	}
+
+	/**
+	 * the method creates a new checkallquestion and it splits the answers and the correctans param and stores it into the answers or the correctans list
+	 *  respectively
+	 *  This one allows the user to specify the grading type of this checkallquestion
+	 * @param questionid id of question in sql db
+	 * @param pointsWorth num of points worth
+	 * @param questiontitle title of question
+	 * @param question the actual question text displayed when test is taken
+	 * @param answers the answers given as a single string seperated with "~"
+	 * @param correctans the answer choice that is correct
+	 * @param gradingType //AON (ALL OR NOTHING =  Users receive full points for the question only if they select all the correct answers and none of the incorrect answers. Users receive zero points for the entire question if they miss any correct answers or select any incorrect answers.),
+	 * 	//RMW (RIGHT MINUS WRONG = Users receive points equal to the number of right answers they choose minus the number of incorrect answers they choose. Users can receive a minimum of zero on a question),
+	 * 	//CA (CORRECT ANSWERS = Users receive points for each correct answer they select and for each incorrect answer they leave blank.)
+	 * 	//CA NOT IMPLEMENTED
+	 */
 	public CheckAllQuestion(int questionid,  int pointsWorth,String questiontitle, String question, String answers, String correctans,String gradingType) {
 		super(questionid, questiontitle,"CheckAllQuestion", pointsWorth, question); //default #question title is the num answers there are.
 		this.setCorrectAnswerString(correctans);
@@ -34,6 +61,24 @@ public class CheckAllQuestion extends Question{
 			this.gradingType = DEFAULT_GRADING_TYPE;
 		}
 	}
+
+	/**
+	 * the method creates a new checkallquestion and it splits the answers and the correctans param and stores it into the answers or the correctans list
+	 *  respectively
+	 *  This one allows specification of the grading type of this checkallquestion
+	 *  as well as the answers chosen for this question
+	 * @param questionid id of question in sql db
+	 * @param pointsWorth num of points worth
+	 * @param questiontitle title of question
+	 * @param question the actual question text displayed when test is taken
+	 * @param answers the answers given as a single string seperated with "~"
+	 * @param correctans the answer choice that is correct
+	 * @param gradingType //AON (ALL OR NOTHING =  Users receive full points for the question only if they select all the correct answers and none of the incorrect answers. Users receive zero points for the entire question if they miss any correct answers or select any incorrect answers.),
+	 * 	//RMW (RIGHT MINUS WRONG = Users receive points equal to the number of right answers they choose minus the number of incorrect answers they choose. Users can receive a minimum of zero on a question),
+	 * 	//CA (CORRECT ANSWERS = Users receive points for each correct answer they select and for each incorrect answer they leave blank.)
+	 * 	//CA NOT IMPLEMENTED
+	 * @param answersChosen the answers given. usually used in result of a user taking the test and answering this question
+	 */
 	public CheckAllQuestion(int questionid,  int pointsWorth,String questiontitle, String question, String answers, String correctans, String gradingType, String answersChosen) {
 		super(questionid, questiontitle,"CheckAllQuestion", pointsWorth, question); //default #question title is the num answers there are.
 		this.setCorrectAnswerString(correctans);
@@ -50,6 +95,7 @@ public class CheckAllQuestion extends Question{
 			this.gradingType = DEFAULT_GRADING_TYPE;
 		}
 	}
+
 	public List<String> getCorrectanswers() {
 		return correctanswers;
 	}
@@ -87,6 +133,9 @@ public class CheckAllQuestion extends Question{
 		
 	}
 	@Override
+	/**
+	 * This method will be able to score this checkallquestion based on the grading type.
+	 */
 	public double calculatePtsReceived() {
 		System.out.println("Question: "+this.getQuestion());
 		System.out.println("Answer  : "+this.getCorrectAnswerString());

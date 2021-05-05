@@ -1,11 +1,16 @@
 package com.testersite.model;
 
 public class ClassObject {
+	//deprecated class
 	String InstructorName;
 	String Coursename;
 	String Classid; //one in the sql db
 	String dateStart;
 	String dateEnd;
+
+	/**
+	 * This class is deprecated, should use TesterClass instead. The web app has yet to fully rid of ClassObjects
+	 */
 	public ClassObject() {
 	}
 	public String getInstructorName() {

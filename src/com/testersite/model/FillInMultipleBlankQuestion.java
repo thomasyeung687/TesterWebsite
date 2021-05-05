@@ -13,6 +13,18 @@ public class FillInMultipleBlankQuestion extends Question{
 	List<String> eachblankscorrectanswers = new ArrayList<String>();
 	private boolean casesensitive;
 	private boolean partialcredit;
+
+
+	/**
+	 * FillInMultipleBlankQuestion constructor
+	 * @param questionid id of question in sql db
+	 * @param pointsWorth num of points worth
+	 * @param questiontitle title of question
+	 * @param question the actual question text displayed when test is taken
+	 * @param correctans the answer choice that is correct
+	 * @param casesensitive is this answer case sensitive?
+	 * @param partialcredit does this question give partial credit?
+	 */
 	public FillInMultipleBlankQuestion(int questionid,  int pointsWorth,String questiontitle, String question, String correctans, boolean casesensitive, boolean partialcredit) {
 		super(questionid, questiontitle,"FillInMultipleBlankQuestion", pointsWorth, question); //default #question title is the num answers there are.
 		if(!casesensitive) {
@@ -54,6 +66,18 @@ public class FillInMultipleBlankQuestion extends Question{
 		this.casesensitive = casesensitive;
 		this.partialcredit = partialcredit;
 	}
+
+	/**
+	 * FillInMultipleBlankQuestion constructor with an answer response provided.
+	 * @param questionid id of question in sql db
+	 * @param pointsWorth num of points worth
+	 * @param questiontitle title of question
+	 * @param question the actual question text displayed when test is taken
+	 * @param correctans the answer choice that is correct
+	 * @param casesensitive is this answer case sensitive?
+	 * @param partialcredit does this question give partial credit?
+	 * @param answerChosen the answer provided.
+	 */
 	public FillInMultipleBlankQuestion(int questionid,  int pointsWorth,String questiontitle, String question, String correctans, boolean casesensitive, boolean partialcredit, String answerChosen) {
 		super(questionid, questiontitle,"FillInTheBlankQuestion", pointsWorth, question); //default #question title is the num answers there are.
 		if(!casesensitive) {
@@ -163,6 +187,10 @@ public class FillInMultipleBlankQuestion extends Question{
 		System.out.println("pts worth:"+question.getPointsWorth()+" pts received:"+question.calculatePtsReceived());
 	}
 	@Override
+	/**
+	 * Calculates the points received by compareing the answerChosen and the correctAnswerString as well as taking
+	 * into account whether the question is case sensitive or if partial credit is allowed.
+	 */
 	public double calculatePtsReceived() {
 		System.out.println("Question: "+this.getQuestion());
 		System.out.println("Answer  : "+this.getCorrectAnswerString());

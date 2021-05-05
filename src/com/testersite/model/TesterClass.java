@@ -22,7 +22,13 @@ public class TesterClass {
 	String classcode = "not set";
 	String semester = "not set";
 	ArrayList<Student> students = new ArrayList<Student>();
-	
+
+
+	/**
+	 * will use the idclass param to find all the information of the specified class and create a TesterClass obj
+	 * @param idclass id of class to fetch from db
+	 * @throws Exception
+	 */
 	public TesterClass(String idclass) throws Exception {
 		Connection con = DBConnection.getDBConnection();
 		try {
@@ -116,13 +122,13 @@ public class TesterClass {
 	
 	/**
 	 * 
-	 * @param idprofessorprofiles
-	 * @param courseprefix
-	 * @param coursenumber
-	 * @param coursename
-	 * @param datestart
-	 * @param dateend
-	 * @param semester
+	 * @param idprofessorprofiles the id of professor that created this test
+	 * @param courseprefix ex CSE
+	 * @param coursenumber ex 214
+	 * @param coursename ex Introduction to Computer Science
+	 * @param datestart start date of class
+	 * @param dateend end date of class
+	 * @param semester semester that this class will take place
 	 * @param newClasscode new class code- if its "" then the method will generate a unique one using 
 	 * @param idadminprofiles
 	 * @return String that is the id of the new class created "null" if class was not created.
@@ -161,7 +167,18 @@ public class TesterClass {
 		}
 		return "null";
 	}
-	
+
+	/**
+	 * updates the class with idclass in db
+	 * @param idclass new idclass
+	 * @param courseprefix new courseprefix
+	 * @param coursenumber new coursenumber
+	 * @param coursename new coursename
+	 * @param datestart new datestart
+	 * @param dateend new dateend
+	 * @param semester new semester
+	 * @throws Exception if error is encounterd
+	 */
 	public static void editTesterClass(String idclass, String courseprefix, String coursenumber, String coursename, String datestart, String dateend, String semester) throws Exception {
 		String query;
 		query = "UPDATE testersitedatabase.allclasses SET courseprefix = '"+courseprefix+"', coursenumber = '"+coursenumber+"', coursename = '"+coursename+"', datestart = '"+datestart+"', dateend = '"+dateend+"' , semester = '"+semester+"' WHERE idclass = '"+idclass+"';"; 

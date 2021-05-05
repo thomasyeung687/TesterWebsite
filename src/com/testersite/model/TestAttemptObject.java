@@ -16,7 +16,17 @@ public class TestAttemptObject {
 	int gradeOutOf = 0;
 	double percentageScore = 0;
 	String notes;
-	
+
+	/**
+	 *
+	 * @param idattempt the id of the attempt in the db
+	 * @param attemptNumber the count of the number of times the test was taken (attempt number)
+ 	 * @param idstudentprofiles student who this attempt belongs to
+	 * @param idtest the id of the test taken in this attempt
+	 * @param grade the number of points received in this attempt
+	 * @param gradeOutOf the number of points that was possible to get on the test
+	 * @param notes notes that were given by professor after grading the exam
+	 */
 	public TestAttemptObject(int idattempt, int attemptNumber,int idstudentprofiles, int idtest,int grade, int gradeOutOf,String notes) {
 		this.idattempt = idattempt;
 		this.attemptNumber = attemptNumber;
@@ -64,7 +74,7 @@ public class TestAttemptObject {
 	}
 	
 	/**
-	 * 
+	 * retreived attempt information using idstudentprofiles and idtest by finding a row in the attempts table with those two value
 	 * @param idstudentprofiles Student profile id in DB
 	 * @param idtest test id in DB
 	 * @return TestAttemptObject if TAO is found in DB. Else returns a null;
@@ -91,7 +101,7 @@ public class TestAttemptObject {
 	}
 	
 	/**
-	 * 
+	 * gets the attempt with the id of parameter idattempt
 	 * @param idattempt primary key for an attempt stored in DB
 	 * @return TestAttemptObject if TAO is found in DB. Else returns a null;
 	 */

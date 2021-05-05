@@ -36,6 +36,11 @@ public class Test{
 	
 	
 	public Test() {}
+
+	/**
+	 *
+	 * @param testid
+	 */
 	public Test(String testid) {
 		Connection connection = DBConnection.getDBConnection();
 		try {
@@ -46,44 +51,64 @@ public class Test{
 			System.out.println(e.getLocalizedMessage());
 		}
 	}
-	public Test(String testName, String testDateStart, String testDateEnd, String testid, String testDescription, String testInstructions) {
-		this.testName = testName;
-		this.testDateStart = testDateStart;
-		this.testDateEnd = testDateEnd;
-		this.testid = testid;
-		this.setTestDescription(testDescription);
-		this.setTestInstructions(testInstructions);
-	}
-	public Test(String testName, String testDateStart, String testDateEnd, String testid, String testDescription, String testInstructions, boolean availibility) {
-		this.testName = testName;
-		this.testDateStart = testDateStart;
-		this.testDateEnd = testDateEnd;
-		this.testid = testid;
-		this.setTestDescription(testDescription);
-		this.setTestInstructions(testInstructions);
-		this.setAvailibility(availibility);
-	}
-	public Test(String testName, String testDateStart, String testDateEnd, String testid, String testDescription, String testInstructions, boolean availibility, int timelimit) {
-		this.testName = testName;
-		this.testDateStart = testDateStart;
-		this.testDateEnd = testDateEnd;
-		this.testid = testid;
-		this.setTestDescription(testDescription);
-		this.setTestInstructions(testInstructions);
-		this.setAvailibility(availibility);
-		this.setTimelimit(timelimit);
-	}
-	public Test(String testName, String testDateStart, String testDateEnd, String testid, String testDescription, String testInstructions, boolean availibility, int timelimit, int amtOfAttempts) {
-		this.testName = testName;
-		this.testDateStart = testDateStart;
-		this.testDateEnd = testDateEnd;
-		this.testid = testid;
-		this.setTestDescription(testDescription);
-		this.setTestInstructions(testInstructions);
-		this.setAvailibility(availibility);
-		this.setTimelimit(timelimit);
-		this.amtOfAttempts = amtOfAttempts;
-	}
+
+//	public Test(String testName, String testDateStart, String testDateEnd, String testid, String testDescription, String testInstructions) {
+//		this.testName = testName;
+//		this.testDateStart = testDateStart;
+//		this.testDateEnd = testDateEnd;
+//		this.testid = testid;
+//		this.setTestDescription(testDescription);
+//		this.setTestInstructions(testInstructions);
+//	}
+//	public Test(String testName, String testDateStart, String testDateEnd, String testid, String testDescription, String testInstructions, boolean availibility) {
+//		this.testName = testName;
+//		this.testDateStart = testDateStart;
+//		this.testDateEnd = testDateEnd;
+//		this.testid = testid;
+//		this.setTestDescription(testDescription);
+//		this.setTestInstructions(testInstructions);
+//		this.setAvailibility(availibility);
+//	}
+//	public Test(String testName, String testDateStart, String testDateEnd, String testid, String testDescription, String testInstructions, boolean availibility, int timelimit) {
+//		this.testName = testName;
+//		this.testDateStart = testDateStart;
+//		this.testDateEnd = testDateEnd;
+//		this.testid = testid;
+//		this.setTestDescription(testDescription);
+//		this.setTestInstructions(testInstructions);
+//		this.setAvailibility(availibility);
+//		this.setTimelimit(timelimit);
+//	}
+//	public Test(String testName, String testDateStart, String testDateEnd, String testid, String testDescription, String testInstructions, boolean availibility, int timelimit, int amtOfAttempts) {
+//		this.testName = testName;
+//		this.testDateStart = testDateStart;
+//		this.testDateEnd = testDateEnd;
+//		this.testid = testid;
+//		this.setTestDescription(testDescription);
+//		this.setTestInstructions(testInstructions);
+//		this.setAvailibility(availibility);
+//		this.setTimelimit(timelimit);
+//		this.amtOfAttempts = amtOfAttempts;
+//	}
+	
+	/**
+	 * constructor of a Test object
+	 * @param testName name of test
+	 * @param testDateStart start date of the test
+	 * @param displaystart when should this test be displated on the start date
+	 * @param displayend  when should this test be displayed on the end date
+	 * @param testDateEnd end date of the test
+	 * @param testid id of this test in the db
+	 * @param testDescription breif description of the test
+	 * @param testInstructions breif instructions about this test
+	 * @param availibility is the test visible currently
+	 * @param forcedComplete will this test have to be completed in one sitting
+	 * @param allowBackButton only used for when showQuestionOnebyOne is true. if true, user will not have option to revisit past questions
+	 * @param scrambleTest should the test questions be scrambled
+	 * @param showQuestionOnebyOne when user takes test, will the test questions be shown one by one
+	 * @param timelimit time to take the exam
+	 * @param amtOfAttempts the number of attempts for this exam
+	 */
 	public Test(String testName, String testDateStart,String displaystart, String displayend,  String testDateEnd, String testid, String testDescription, String testInstructions, boolean availibility, boolean forcedComplete, boolean allowBackButton,boolean scrambleTest,boolean showQuestionOnebyOne,int timelimit, int amtOfAttempts) {
 		this.testName = testName;
 		this.testDateStart = testDateStart;
@@ -233,6 +258,11 @@ public class Test{
 	public void setDisplaystart(String displaystart) {
 		this.displaystart = displaystart;
 	}
+	
+	/**
+	 * calculates the points received for each question in this test and returns the sum
+	 * @return the sum of all the questions in this test
+	 */
 	public double scoreTest() {
 		int totalPtsReceived = 0;
 		for(Question question: questions) { //for each question in this multipart question, calculate pts received.
@@ -241,15 +271,26 @@ public class Test{
 		this.totalPtsReceived = totalPtsReceived;
 		return totalPtsReceived;
 	}
+	
+	/**
+	 * returns totalPtsReceived. if totalPtsReceived == 0, scoresTest then returns totalPtsReceived
+	 * @return totalPtsReceived
+	 */
 	public int getTotalPtsReceived() {
 		if(totalPtsReceived == 0) {
 			this.scoreTest();
 		}
 		return totalPtsReceived;
 	}
+	
 	public void setTotalPtsReceived(int totalPtsReceived) {
 		this.totalPtsReceived = totalPtsReceived;
 	}
+	
+	/**
+	 * calculates the total amount of points that can be gotten on this exam
+	 * @return the total amount of points that can be gotten on this exam
+	 */
 	public int getTotalPts() {//total pts of this test by adding all the ptsworth of each question in questions list
 		int sumOfPts = 0;
 		for(Question question : questions) {
@@ -263,6 +304,12 @@ public class Test{
 	public void addAttemptObject(TestAttemptObject attempt) {
 		attempts.add(attempt);
 	}
+	
+	/**
+	 * retreived only the preferences of the test with the id idTest
+	 * @param idtest id of test we are trying to get from db
+	 * @return a Test obj with just the preference information retreived from db
+	 */
 	public static Test getTestWithOnlyPreferences(String idtest) {
 		Connection con = DBConnection.getDBConnection();
 		Test test = null;
@@ -307,6 +354,13 @@ public class Test{
 		}
 		return test;
 	}
+	
+	/**
+	 * gets the completed Test from db which includes the test preferences, the questions, as well as the answers
+	 * @param idstudentprofiles student who's test results we are fetching
+	 * @param idtest the id of test taken by student
+	 * @return completed Test from db which includes the test preferences, the questions, as well as the answers
+	 */
 	public static Test getCompletedTestFromDB(String idstudentprofiles, String idtest) {
 		System.out.println("getCompletedTestFromDB idtest="+idtest);
 		TestAttemptObject tao = TestAttemptObject.getAttemptFromDB(idstudentprofiles, idtest); //getting TestAttemptObject
@@ -409,6 +463,11 @@ public class Test{
 		return test;
 	}
 	
+	/**
+	 * gets the completed Test from db which includes the test preferences, the questions
+	 * @param idtest the id of test we want from the db
+	 * @return completed Test from db which includes the test preferences, the questions
+	 */
 	public static Test getTestFromDB(String idtest) {
 		Connection con = DBConnection.getDBConnection();
 		System.out.println("idtest="+idtest);

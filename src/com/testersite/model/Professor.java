@@ -16,7 +16,13 @@ public class Professor {
 	String username;
 	String password;
 	ArrayList<TesterClass> testerClasses = new ArrayList<TesterClass>();
-	
+
+	/**
+	 * will use the profid parameter to fetch the professors information from the db and use that info to create a
+	 * Professor obj
+	 * @param profid the id of the professor to fetch from the db
+	 * @throws Exception if error was thrown
+	 */
 	public Professor(String profid) throws Exception {
 		Connection con = DBConnection.getDBConnection();
 		try {
@@ -37,6 +43,12 @@ public class Professor {
 			throw e;
 		}
 	}
+
+	/**
+	 * will use the ResultSet obj provided to pull the professors information from to create a Professor obj
+	 * @param rset rset to extract professor information from
+	 * @throws Exception if error was thrown
+	 */
 	public Professor(ResultSet rset) throws Exception {
 		try {
 			this.idprofessorprofiles = rset.getString("idprofessorprofiles");
@@ -49,7 +61,17 @@ public class Professor {
 			throw e;
 		}
 	}
-	
+
+	/**
+	 * Creates a new professor obj and saves the information to the db
+	 * @param username username of new professor
+	 * @param password password of new professor
+	 * @param email email of new professor
+	 * @param name name of new professor
+	 * @param adminid admin that created this new professor
+	 * @return the professor obj created
+	 * @throws Exception if error was thrown
+	 */
 	public static String addNewProfessor(String username, String password, String email, String name, String adminid) throws Exception {
 		Connection con = DBConnection.getDBConnection();
 		try {
@@ -70,7 +92,13 @@ public class Professor {
 			throw e;
 		}
 	}
-	
+
+	/**
+	 * gets the classes of the professor whos id is indicated by idprofessorprofiles
+	 * @param idprofessorprofiles gets the classes of the professor whos id is indicated by idprofessorprofiles
+	 * @return an ArrayList<TesterClass>
+	 * @throws Exception if error was thrown
+	 */
 	public ArrayList<TesterClass> geTesterClassesStaticMethod(String idprofessorprofiles) throws Exception{
 		return TesterClass.geTesterClasses(idprofessorprofiles);
 	}

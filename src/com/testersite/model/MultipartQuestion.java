@@ -14,6 +14,14 @@ import com.testersite.dao.DBConnection;
 public class MultipartQuestion extends Question {
 	private ArrayList<Question> questions = new ArrayList<Question>();
 	String questioncomponentids; // this will contain a string with the idquestion of the Question instances that make up this question
+
+	/**
+	 *
+	 * @param questionid id of question in sql db
+	 * @param pointsWorth num of points worth
+	 * @param questiontitle title of question
+	 * @param questioncomponentids a string with all the question components seperated by commas
+	 */
 	public MultipartQuestion(int questionid,String questiontitle, String question, String questioncomponentids) {
 		super(questionid, questiontitle,"MultipartQuestion" , question);
 		this.questioncomponentids = questioncomponentids;
@@ -34,12 +42,20 @@ public class MultipartQuestion extends Question {
 	public void addQuestion(Question question) {
 		questions.add(question);
 	}
+
+	/**
+	 * sets a question at a certain index in the array
+	 * @param index position of question to change
+	 * @param question question to replace question at index with
+	 */
 	public void setQuestionInQuestionsArray(int index, Question question) {
 		questions.set(index, question);
 	}
+
 	public ArrayList<Question> getQuestions(){
 		return questions;
 	}
+
 	public String getQuestionCompoentids(){
 		return questioncomponentids;
 	}
@@ -52,6 +68,11 @@ public class MultipartQuestion extends Question {
 		tostring += "Points Worth ="+getPointsWorth();
 		return tostring;
 	}
+
+	/**
+	 * THis method retreives the questions that make up this multipart question from the databse using the
+	 * questions components variable
+	 */
 	private void GetQuestions() { //gets the questions from the DB using the questioncompoentids string.
 		String questioncomponents = getQuestionCompoentids();
 		String[] questionids = questioncomponents.split(",");
@@ -117,7 +138,12 @@ public class MultipartQuestion extends Question {
 			System.out.println(exception.getLocalizedMessage());
 		}
 	}
-	
+
+	/**
+	 * used in Test.getCompletedTestFromDB() when we encounter a multipart question
+	 * @param idAttempt this will go into the db and look for an attempt with this id.
+	 *                  it will then get the multipart question using the resultset of that search
+	 */
 	private void GetQuestions(String idAttempt) {//used in Test.getCompletedTestFromDB() when we encounter a multipart question 
 		String questioncomponents = getQuestionCompoentids();
 		String[] questionids = questioncomponents.split(",");
@@ -209,6 +235,10 @@ public class MultipartQuestion extends Question {
 	}
 
 	@Override
+	/**
+	 * This method iterates through every question in the questions arraylist and calls getPointsRecevied() on each
+	 * one summing it up and returning it.
+	 */
 	public double calculatePtsReceived() {
 		int totalPtsReceived = 0;
 		for(Question question: questions) { //for each question in this multipart question, calculate pts received.
@@ -217,6 +247,7 @@ public class MultipartQuestion extends Question {
 		super.setPointsReceived(totalPtsReceived); //setting pts received in the parent class
 		return totalPtsReceived;
 	}
+
 	/**
 	 * This method goes through each question in the questions array and returns the total number of pts this mpq is worth.
 	 * It also sets this ptsworth to the total.
